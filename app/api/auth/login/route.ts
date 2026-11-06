@@ -12,7 +12,8 @@ export async function POST(request: Request) {
     if (!email || !password) {
       return NextResponse.json({ error: "Email dan password wajib diisi." }, { status: 400 });
     }
-    const user = getDb().users.find((item) => item.email.toLowerCase() === email);
+    const db = await getDb();
+    const user = db.users.find((item) => item.email.toLowerCase() === email);
     if (!user || !verifyPassword(password, user.salt, user.passwordHash)) {
       return NextResponse.json({ error: "Email atau password salah." }, { status: 401 });
     }

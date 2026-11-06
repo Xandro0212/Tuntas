@@ -104,12 +104,12 @@ export default function LoginForm({ initialMode = "login" }: { initialMode?: Mod
               <Sparkles className="h-3.5 w-3.5" /> {t("KANBAN + AI UNTUK UMKM")}
             </span>
             <h1 className="mt-5 text-[46px] font-extrabold leading-[1.05] tracking-[-0.045em] text-ink">
-              {lang === "en" ? "PLAN IT." : "Dari cerita klien,"}
+              {lang === "en" ? "From a client's story," : "Dari cerita klien,"}
               <br />
-              {lang === "en" ? "TRACK IT." : "Jadi rencana"}
+              {lang === "en" ? "Into a plan" : "Jadi rencana"}
               <br />
               <span className="text-gradient">
-                {lang === "en" ? "GET IT DONE." : "Yang tuntas."}
+                {lang === "en" ? "That gets done." : "Yang tuntas."}
               </span>
             </h1>
             <p className="mt-5 max-w-[430px] text-[15px] leading-relaxed text-ink-2/85">
@@ -212,7 +212,7 @@ export default function LoginForm({ initialMode = "login" }: { initialMode?: Mod
 
           <div className="relative mt-auto flex items-center gap-2 pt-8 text-[11.5px] text-muted">
             <ShieldCheck className="h-3.5 w-3.5" />
-            {t("Data demo disimpan lokal · tidak ada pesan yang terkirim otomatis")}
+            {t("Data demo disimpan di Supabase · tidak ada pesan yang terkirim otomatis")}
           </div>
         </section>
 
@@ -271,7 +271,7 @@ export default function LoginForm({ initialMode = "login" }: { initialMode?: Mod
                       {t("Akun demo siap dipakai")}
                     </div>
                     <div className="mt-1 text-[11.5px] leading-relaxed text-green/70">
-                      {t("Sudah berisi 4 proyek, 47 tugas, kalender, dan hari libur contoh.")}
+                      {t("Sudah berisi 5 proyek, 65 tugas, kalender, dan hari libur contoh.")}
                     </div>
                     <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] text-green/80">
                       <span>demo@tuntas.id</span>
@@ -429,7 +429,7 @@ export default function LoginForm({ initialMode = "login" }: { initialMode?: Mod
 
             <div className="mt-8 flex items-center justify-center gap-2 text-[11px] text-muted/80">
               <ShieldCheck className="h-3.5 w-3.5" />
-              {t("Password di-hash · sesi aman di server lokal")}
+              {t("Password di-hash · sesi aman di server")}
             </div>
           </div>
         </section>

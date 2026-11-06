@@ -1005,7 +1005,7 @@ export function ProjectWizard({
 
             <div className="panel flex items-center gap-2 p-3 text-[10.5px] text-muted">
               <Check className="h-3.5 w-3.5 shrink-0 text-green" />
-              {t("Data proyek & klien disimpan lokal di server ini.")}
+              {t("Data proyek & klien disimpan di Supabase.")}
             </div>
           </aside>
         </div>

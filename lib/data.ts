@@ -44,15 +44,20 @@ export function localizeHoliday(lang: Lang, holiday: Holiday): Holiday {
   return { ...holiday, name: translate(lang, holiday.name) };
 }
 
-export function getProjectsForUser(userId: string, lang: Lang = "id"): Project[] {
-  return getDb()
-    .projects.filter((project) => project.userId === userId)
+export async function getProjectsForUser(
+  userId: string,
+  lang: Lang = "id",
+): Promise<Project[]> {
+  const db = await getDb();
+  return db.projects
+    .filter((project) => project.userId === userId)
     .sort((a, b) => a.deadline.localeCompare(b.deadline))
     .map((project) => localizeProject(lang, project));
 }
 
-export function getHolidays(lang: Lang = "id"): Holiday[] {
-  return [...getDb().holidays]
+export async function getHolidays(lang: Lang = "id"): Promise<Holiday[]> {
+  const db = await getDb();
+  return [...db.holidays]
     .sort((a, b) => a.date.localeCompare(b.date))
     .map((holiday) => localizeHoliday(lang, holiday));
 }
@@ -91,12 +96,12 @@ export function summarizeProject(
   };
 }
 
-export function getProjectBundle(
+export async function getProjectBundle(
   userId: string,
   projectId: string,
   lang: Lang = "id",
-): ProjectBundle | null {
-  const db = getDb();
+): Promise<ProjectBundle | null> {
+  const db = await getDb();
   const rawProject = db.projects.find((item) => item.id === projectId && item.userId === userId);
   if (!rawProject) return null;
   const project = localizeProject(lang, rawProject);
@@ -108,7 +113,7 @@ export function getProjectBundle(
     .filter((task) => task.projectId === projectId)
     .sort((a, b) => a.order - b.order)
     .map((task) => localizeTask(lang, task));
-  const holidays = getHolidays(lang);
+  const holidays = await getHolidays(lang);
   return {
     project,
     phases,
@@ -118,8 +123,8 @@ export function getProjectBundle(
   };
 }
 
-export function getUserTasks(userId: string, lang: Lang = "id"): Task[] {
-  const db = getDb();
+export async function getUserTasks(userId: string, lang: Lang = "id"): Promise<Task[]> {
+  const db = await getDb();
   const projectIds = new Set(
     db.projects.filter((project) => project.userId === userId).map((project) => project.id),
   );
@@ -139,12 +144,12 @@ export interface OtherProjectTask {
   status: Task["status"];
 }
 
-export function getOtherProjectTasks(
+export async function getOtherProjectTasks(
   userId: string,
   excludeProjectId: string,
   lang: Lang = "id",
-): OtherProjectTask[] {
-  const db = getDb();
+): Promise<OtherProjectTask[]> {
+  const db = await getDb();
   const projects = new Map(
     db.projects
       .filter((project) => project.userId === userId && project.id !== excludeProjectId)
@@ -181,8 +186,11 @@ export interface ClientRecord {
   totalValue: number;
 }
 
-export function getClients(userId: string, lang: Lang = "id"): ClientRecord[] {
-  const projects = getProjectsForUser(userId, lang);
+export async function getClients(
+  userId: string,
+  lang: Lang = "id",
+): Promise<ClientRecord[]> {
+  const projects = await getProjectsForUser(userId, lang);
   const map = new Map<string, ClientRecord>();
   for (const project of projects) {
     const key = `${project.clientName.toLowerCase()}|${normalizeWhatsApp(project.clientWa)}`;
@@ -203,13 +211,18 @@ export function getClients(userId: string, lang: Lang = "id"): ClientRecord[] {
   return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export function getWorkspaceOverview(user: PublicUser, lang: Lang = "id") {
-  const projects = getProjectsForUser(user.id, lang);
-  const bundles = projects.map((project) => getProjectBundle(user.id, project.id, lang)!);
-  const allTasks = bundles.flatMap((bundle) => bundle.tasks);
+export async function getWorkspaceOverview(user: PublicUser, lang: Lang = "id") {
+  const projects = await getProjectsForUser(user.id, lang);
+  const bundles = await Promise.all(
+    projects.map((project) => getProjectBundle(user.id, project.id, lang)),
+  );
+  const presentBundles = bundles.filter(
+    (bundle): bundle is ProjectBundle => Boolean(bundle),
+  );
+  const allTasks = presentBundles.flatMap((bundle) => bundle.tasks);
   return {
     projects,
-    bundles,
+    bundles: presentBundles,
     totals: {
       projects: projects.length,
       active: projects.filter((project) => project.deadline >= todayISO()).length,

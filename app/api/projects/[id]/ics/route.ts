@@ -26,7 +26,7 @@ export async function GET(
   if (!user) return new Response("Unauthorized", { status: 401 });
   const { id } = await params;
   const lang = await getLang();
-  const db = getDb();
+  const db = await getDb();
   const rawProject = db.projects.find((item) => item.id === id && item.userId === user.id);
   if (!rawProject) return new Response("Not found", { status: 404 });
   const project = localizeProject(lang, rawProject);

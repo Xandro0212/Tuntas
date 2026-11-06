@@ -38,19 +38,24 @@ export default async function ProjectsPage() {
   const lang = await getLang();
   const t = (source: string, vars?: Record<string, string | number>) =>
     translate(lang, source, vars);
-  const projects = getProjectsForUser(user.id, lang);
-  const bundles = projects.map((project) => getProjectBundle(user.id, project.id, lang)!);
+  const projects = await getProjectsForUser(user.id, lang);
+  const bundles = await Promise.all(
+    projects.map((project) => getProjectBundle(user.id, project.id, lang)),
+  );
+  const projectBundles = bundles.filter(
+    (bundle): bundle is NonNullable<typeof bundle> => Boolean(bundle),
+  );
   const today = todayISO();
 
-  const totalTasks = bundles.reduce((sum, bundle) => sum + bundle.tasks.length, 0);
-  const doneTasks = bundles.reduce((sum, bundle) => sum + bundle.summary.done, 0);
-  const active = bundles.filter(
+  const totalTasks = projectBundles.reduce((sum, bundle) => sum + bundle.tasks.length, 0);
+  const doneTasks = projectBundles.reduce((sum, bundle) => sum + bundle.summary.done, 0);
+  const active = projectBundles.filter(
     (bundle) => bundle.summary.done < bundle.summary.total,
   ).length;
   const totalValue = projects.reduce((sum, project) => sum + (project.value ?? 0), 0);
   const nearest = [...projects].sort((a, b) => a.deadline.localeCompare(b.deadline))[0];
   const priority = buildPriorityPlan(
-    bundles.map((bundle) => ({
+    projectBundles.map((bundle) => ({
       project: bundle.project,
       tasks: bundle.tasks,
       summary: bundle.summary,
@@ -304,7 +309,7 @@ export default async function ProjectsPage() {
 
       {projects.length ? (
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {bundles.map((bundle) => {
+          {projectBundles.map((bundle) => {
             const { project, phases, summary } = bundle;
             const done = summary.total > 0 && summary.done === summary.total;
             const late = project.deadline < today && !done;

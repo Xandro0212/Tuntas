@@ -66,7 +66,7 @@ export async function POST(request: Request) {
       ? body.workdays
       : [1, 2, 3, 4, 5, 6];
     const team = Array.isArray(body.team) ? body.team.filter(Boolean).slice(0, 20) : [];
-    const holidays = getHolidays();
+    const holidays = await getHolidays();
     const holidayDates = holidays.map((holiday) => holiday.date);
 
     const projectId = `p_${randomUUID()}`;

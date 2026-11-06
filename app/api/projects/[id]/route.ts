@@ -22,7 +22,8 @@ export async function DELETE(
 
   try {
     const { id } = await params;
-    const project = getDb().projects.find(
+    const db = await getDb();
+    const project = db.projects.find(
       (item) => item.id === id && item.userId === user.id,
     );
     if (!project) {

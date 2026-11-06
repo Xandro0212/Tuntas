@@ -273,6 +273,7 @@ export function KanbanView({
           onToggleDone={(task) =>
             updateStatus(task, task.status === "done" ? "todo" : "done")
           }
+          onMove={updateStatus}
           onAdd={() => setAdding("todo")}
         />
       ) : (
@@ -412,6 +413,34 @@ export function KanbanView({
                             )}
                           </div>
                           <Avatar name={task.assignee} size="sm" />
+                        </div>
+
+                        {/* Touch devices cannot use HTML5 drag-and-drop reliably. */}
+                        <div
+                          className="mt-2 flex items-center gap-1.5 rounded-lg border border-line bg-paper px-2 py-1.5 xl:hidden"
+                          draggable={false}
+                          onDragStart={(event) => event.preventDefault()}
+                          onClick={(event) => event.stopPropagation()}
+                        >
+                          <span className="shrink-0 text-[9px] font-bold uppercase tracking-[0.08em] text-muted">
+                            {t("Pindah")}
+                          </span>
+                          <select
+                            aria-label={t("Pindahkan tugas ke kolom lain")}
+                            value={task.status}
+                            onChange={(event) =>
+                              updateStatus(task, event.target.value as TaskStatus)
+                            }
+                            onMouseDown={(event) => event.stopPropagation()}
+                            onTouchStart={(event) => event.stopPropagation()}
+                            className="min-w-0 flex-1 cursor-pointer bg-transparent text-[11px] font-semibold text-ink outline-none"
+                          >
+                            {STATUSES.map((option) => (
+                              <option key={option.id} value={option.id}>
+                                {t(option.label)}
+                              </option>
+                            ))}
+                          </select>
                         </div>
                       </article>
                     );
@@ -565,6 +594,7 @@ function TaskList({
   today,
   onOpen,
   onToggleDone,
+  onMove,
   onAdd,
 }: {
   tasks: Task[];
@@ -572,6 +602,7 @@ function TaskList({
   today: string;
   onOpen: (task: Task) => void;
   onToggleDone: (task: Task) => void;
+  onMove: (task: Task, status: TaskStatus) => void;
   onAdd: () => void;
 }) {
   const { lang, t } = useI18n();
@@ -652,6 +683,23 @@ function TaskList({
                     {formatDateRange(task.startDate, task.dueDate, lang)}
                   </span>
                   <div className="col-span-2 flex items-center justify-end gap-2 sm:col-span-1 sm:justify-start">
+                    <select
+                      aria-label={t("Pindahkan tugas ke kolom lain")}
+                      value={task.status}
+                      onChange={(event) =>
+                        onMove(task, event.target.value as TaskStatus)
+                      }
+                      onClick={(event) => event.stopPropagation()}
+                      onMouseDown={(event) => event.stopPropagation()}
+                      onTouchStart={(event) => event.stopPropagation()}
+                      className="mr-auto max-w-[140px] cursor-pointer rounded-md border border-line bg-card px-1.5 py-1 text-[10px] font-semibold text-ink-2 outline-none xl:hidden"
+                    >
+                      {STATUSES.map((status) => (
+                        <option key={status.id} value={status.id}>
+                          {t(status.label)}
+                        </option>
+                      ))}
+                    </select>
                     <Avatar name={task.assignee} size="xs" />
                     <span className="hidden truncate text-[10.5px] text-muted sm:inline">
                       {task.assignee}

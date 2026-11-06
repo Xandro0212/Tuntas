@@ -205,6 +205,8 @@ const EN: Record<string, string> = {
   "Tugas ditandai selesai.": "Task marked as done.",
   "Dipindah ke {status}.": "Moved to {status}.",
   "Gagal memindahkan tugas.": "Failed to move the task.",
+  "Pindah": "Move",
+  "Pindahkan tugas ke kolom lain": "Move task to another column",
   "Mantap, tugas selesai.": "Nice, task completed.",
   "Tugas dibuka kembali.": "Task reopened.",
   "Gagal memperbarui tugas.": "Failed to update the task.",
@@ -335,8 +337,8 @@ const EN: Record<string, string> = {
   "Cukup 30 detik. Setelah itu kamu bisa langsung menceritakan proyek pertama.":
     "Takes 30 seconds. Then you can tell us about your first project.",
   "Akun demo siap dipakai": "Demo account ready",
-  "Sudah berisi 4 proyek, 47 tugas, kalender, dan hari libur contoh.":
-    "Includes 4 projects, 47 tasks, a calendar, and sample holidays.",
+  "Sudah berisi 5 proyek, 65 tugas, kalender, dan hari libur contoh.":
+    "Includes 5 projects, 65 tasks, a calendar, and sample holidays.",
   "Masuk dengan akun demo": "Sign in with the demo account",
   "Membuka demo…": "Opening demo…",
   "Email": "Email",
@@ -348,8 +350,8 @@ const EN: Record<string, string> = {
   "Belum punya akun?": "No account yet?",
   "Buat akun baru": "Create a new account",
   "Sudah punya akun?": "Already have an account?",
-  "Password di-hash · sesi aman di server lokal":
-    "Passwords are hashed · sessions stay on the local server",
+  "Password di-hash · sesi aman di server":
+    "Passwords are hashed · sessions stay on the server",
   "Minimal 6 karakter": "At least 6 characters",
   "Gagal masuk.": "Failed to sign in.",
   "Gagal membuat akun.": "Failed to create the account.",
@@ -362,8 +364,8 @@ const EN: Record<string, string> = {
   "Drag, selesai, langsung tersimpan": "Drag, complete, auto-saved",
   "PROYEK AKTIF": "ACTIVE PROJECT",
   "2 hari cadangan": "2 buffer days",
-  "Data demo disimpan lokal · tidak ada pesan yang terkirim otomatis":
-    "Demo data stays local · no messages are sent automatically",
+  "Data demo disimpan di Supabase · tidak ada pesan yang terkirim otomatis":
+    "Demo data is stored in Supabase · no messages are sent automatically",
 
   // Wizard
   "Cerita proyek": "Project story",
@@ -416,8 +418,8 @@ const EN: Record<string, string> = {
   "Minggu dan hari libur dilewati.": "Sundays and holidays are skipped.",
   "Cadangan 10% durasi, minimal 1 hari kerja.": "A 10% buffer, at least 1 working day.",
   "Kamu tetap pemutus akhir sebelum masuk Kanban.": "You still make the final call before Kanban.",
-  "Data proyek & klien disimpan lokal di server ini.":
-    "Project and client data stay on this local server.",
+  "Data proyek & klien disimpan di Supabase.":
+    "Project and client data is stored in Supabase.",
   "Yang AI pahami": "What AI understood",
   "Ubah": "Edit",
   "Cerita": "Story",

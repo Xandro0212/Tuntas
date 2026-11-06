@@ -52,7 +52,8 @@ export async function getSessionUser(): Promise<PublicUser | null> {
   if (!token) return null;
   const userId = decodeSession(token);
   if (!userId) return null;
-  const user = getDb().users.find((item) => item.id === userId);
+  const db = await getDb();
+  const user = db.users.find((item) => item.id === userId);
   return user ? toPublicUser(user) : null;
 }
 

@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       status?: TaskStatus;
       progressNote?: string;
     };
-    const db = getDb();
+    const db = await getDb();
     const project = db.projects.find((item) => item.id === body.projectId && item.userId === user.id);
     if (!project) return NextResponse.json({ error: "Proyek tidak ditemukan." }, { status: 404 });
     const phase = db.phases.find((item) => item.id === body.phaseId && item.projectId === project.id);
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     }
 
     const durationDays = Math.min(60, Math.max(1, Math.round(Number(body.durationDays) || 1)));
-    const holidays = getHolidays().map((holiday) => holiday.date);
+    const holidays = (await getHolidays()).map((holiday) => holiday.date);
     const date = scheduleSingleTask({
       deadline: project.deadline,
       bufferDays: project.bufferDays,
@@ -85,7 +85,7 @@ export async function DELETE(request: Request) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
     if (!id) return NextResponse.json({ error: "Tugas tidak ditemukan." }, { status: 404 });
-    const db = getDb();
+    const db = await getDb();
     const task = db.tasks.find((item) => item.id === id);
     if (!task) return NextResponse.json({ error: "Tugas tidak ditemukan." }, { status: 404 });
     const project = db.projects.find((item) => item.id === task.projectId && item.userId === user.id);

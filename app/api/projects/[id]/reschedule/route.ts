@@ -12,7 +12,7 @@ export async function POST(
   if (!user) return NextResponse.json({ error: "Silakan masuk terlebih dahulu." }, { status: 401 });
   try {
     const { id } = await params;
-    const db = getDb();
+    const db = await getDb();
     const project = db.projects.find((item) => item.id === id && item.userId === user.id);
     if (!project) return NextResponse.json({ error: "Proyek tidak ditemukan." }, { status: 404 });
     const tasks = db.tasks
@@ -20,7 +20,7 @@ export async function POST(
       .sort((a, b) => a.order - b.order);
     if (!tasks.length) return NextResponse.json({ error: "Proyek belum punya tugas." }, { status: 400 });
 
-    const holidays = getHolidays().map((holiday) => holiday.date);
+    const holidays = (await getHolidays()).map((holiday) => holiday.date);
     const schedule = scheduleTasks({
       deadline: project.deadline,
       workdays: project.workdays,

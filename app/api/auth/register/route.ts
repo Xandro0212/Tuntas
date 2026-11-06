@@ -24,7 +24,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Format email belum benar." }, { status: 400 });
     if (password.length < 6)
       return NextResponse.json({ error: "Password minimal 6 karakter." }, { status: 400 });
-    if (getDb().users.some((user) => user.email.toLowerCase() === email)) {
+    const db = await getDb();
+    if (db.users.some((user) => user.email.toLowerCase() === email)) {
       return NextResponse.json({ error: "Email ini sudah terdaftar." }, { status: 409 });
     }
 

@@ -89,7 +89,7 @@ const ID: LandingCopy = {
     ctaHow: "Lihat cara kerja",
     trust: ["Akun demo siap", "Tanpa kartu kredit", "Bahasa Indonesia"],
     signedInAs: "Masuk sebagai",
-    demoStats: "4 proyek · 47 tugas di akun demo",
+    demoStats: "5 proyek · 65 tugas di akun demo",
     explore: "Jelajahi fitur",
   },
   stats: [
@@ -197,12 +197,12 @@ const ID: LandingCopy = {
   demo: {
     title: "Coba Tuntas dengan akun demo.",
     description:
-      "Tidak perlu mengisi apa pun. Akun demo sudah berisi proyek patung kuda, katering, relief, dan ukiran — lengkap dengan tugas, kalender, dan peringatan.",
+      "Tidak perlu mengisi apa pun. Akun demo sudah berisi proyek patung kuda, katering, relief, ukiran, dan desain ruang kantor — lengkap dengan tugas, kalender, dan peringatan.",
     signIn: "Masuk sebagai demo",
     manual: "Masuk manual",
-    note: "Data demo lokal · tidak ada pesan yang terkirim otomatis",
+    note: "Data demo tersimpan di Supabase · tidak ada pesan yang terkirim otomatis",
     workspace: "Ruang kerja demo",
-    stats: "47 tugas · 3 hari libur",
+    stats: "65 tugas · 3 hari libur",
     ready: "Siap dijelajahi",
   },
   footer: {
@@ -235,9 +235,9 @@ const EN: LandingCopy = {
   language: "Language",
   hero: {
     badge: "Kanban + AI for small business",
-    line1: "PLAN IT. TRACK IT.",
-    line2: "GET IT DONE.",
-    line3: "",
+    line1: "From a client's story,",
+    line2: "Into a plan",
+    line3: "That gets done.",
     tagline: "Tell us your deadline. Tuntas builds the roadmap to get you there.",
     description:
       "Tuntas transforms your project story into an actionable task plan, calculates every deadline backward, skips Sundays and holidays, and protects buffer time so you can finish without the last-minute chaos.",
@@ -245,7 +245,7 @@ const EN: LandingCopy = {
     ctaHow: "See how it works",
     trust: ["No sign-up needed", "AI builds the task plan", "Buffer time protected"],
     signedInAs: "Signed in as",
-    demoStats: "4 projects · 47 tasks in the demo account",
+    demoStats: "5 projects · 65 tasks in the demo account",
     explore: "Explore features",
   },
   stats: [
@@ -353,12 +353,12 @@ const EN: LandingCopy = {
   demo: {
     title: "Try Tuntas with the demo account.",
     description:
-      "Nothing to fill in. The demo account already has a horse statue project, catering, relief, and a carved door — complete with tasks, calendar, and reminders.",
+      "Nothing to fill in. The demo account already has a horse statue project, catering, relief, a carved door, and an office design project — complete with tasks, calendar, and reminders.",
     signIn: "Sign in as demo",
     manual: "Sign in manually",
-    note: "Local demo data · no messages sent automatically",
+    note: "Demo data stored in Supabase · no messages sent automatically",
     workspace: "Demo workspace",
-    stats: "47 tasks · 3 holidays",
+    stats: "65 tasks · 3 holidays",
     ready: "Ready to explore",
   },
   footer: {

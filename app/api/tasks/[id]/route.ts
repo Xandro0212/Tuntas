@@ -20,7 +20,7 @@ export async function PATCH(
 
   try {
     const { id } = await params;
-    const db = getDb();
+    const db = await getDb();
     const task = db.tasks.find((item) => item.id === id);
     if (!task) return NextResponse.json({ error: "Tugas tidak ditemukan." }, { status: 404 });
     const project = db.projects.find((item) => item.id === task.projectId && item.userId === user.id);
@@ -83,7 +83,7 @@ export async function PATCH(
       if (startDate > dueDate) {
         return NextResponse.json({ error: "Tanggal mulai harus sebelum tanggal selesai." }, { status: 400 });
       }
-      const holidayDates = getHolidays().map((holiday) => holiday.date);
+      const holidayDates = (await getHolidays()).map((holiday) => holiday.date);
       if (
         !isWorkday(startDate, project.workdays, new Set(holidayDates)) ||
         !isWorkday(dueDate, project.workdays, new Set(holidayDates))
@@ -125,7 +125,7 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Silakan masuk terlebih dahulu." }, { status: 401 });
   try {
     const { id } = await params;
-    const db = getDb();
+    const db = await getDb();
     const task = db.tasks.find((item) => item.id === id);
     if (!task) return NextResponse.json({ error: "Tugas tidak ditemukan." }, { status: 404 });
     const project = db.projects.find((item) => item.id === task.projectId && item.userId === user.id);

@@ -39,8 +39,8 @@ Di halaman login ada tombol **“Masuk dengan akun demo”** yang langsung membu
 
 Akun demo berisi:
 
-- **4 proyek** (patung kuda, nasi kotak katering, relief garuda, ukiran pintu)
-- **47 tugas** dengan status, tanggal, penanggung jawab, dan ketergantungan
+- **5 proyek** (patung kuda, nasi kotak katering, relief garuda, ukiran pintu, desain ruang kantor)
+- **65 tugas** dengan status, tanggal, penanggung jawab, dan ketergantungan
 - Kalender dengan hari libur, hari cadangan, dan deadline klien
 - Peringatan tugas terlambat + draf pesan WhatsApp
 - Halaman **Hari ini** dengan tugas per orang
@@ -52,7 +52,7 @@ Akun demo berisi:
 - **Pertanyaan AI** — maksimal 3 pertanyaan pilihan ganda sebelum menyusun rencana
 - **Draf rencana** — tahap, tugas, durasi, ketergantungan, PJ, risiko; bisa diedit, dihapus, ditambah sebelum diterapkan
 - **Penjadwalan mundur** — Minggu selalu libur, hari libur nasional/Bali/ditambahkan sendiri dilewati, cadangan 10% durasi (minimal 1 hari kerja)
-- **Kanban** — kolom Belum mulai · Sedang dikerjakan · Menunggu klien · Selesai, drag & drop, tersimpan langsung
+- **Kanban** — kolom Belum mulai · Sedang dikerjakan · Menunggu klien · Selesai, drag & drop di desktop, plus pemilih **Pindah** yang ramah sentuhan di mobile/tablet
 - **Deskripsi progres** — setiap tugas bisa punya update singkat; tampil di kartu, detail tugas, dan ringkasan **Progres tahap**
 - **Prioritas proyek** — urutan pengerjaan berdasarkan deadline, sisa durasi, progres, dan cadangan; AI memberi rekomendasi pembagian tim saat ada deadline bertabrakan
 - **Kalender** — tampilan bulanan/timeline, warna per tahap, deadline klien, hari cadangan, hari libur, opsi menampilkan proyek lain; ada agenda khusus mobile
@@ -79,33 +79,44 @@ Endpoint yang dipakai adalah `POST /chat/completions` yang kompatibel dengan Ope
 
 ## Penyimpanan data
 
-Data disimpan di `data/db.json` (dibuat otomatis dari seed saat pertama kali dijalankan). Lampiran disimpan di `public/uploads/`.
+Tuntas memakai **Supabase** untuk penyimpanan persisten saat berjalan di Vercel. Data disimpan sebagai satu dokumen JSONB di tabel `public.tuntas_state`, lengkap dengan nomor versi agar dua perangkat tidak saling menimpa.
 
-Reset ke kondisi demo awal:
+### Setup Supabase
 
-```bash
-# hentikan server, lalu:
-rm data/db.json
-rm -rf public/uploads/*
-npm run dev
+1. Buat project di <https://supabase.com/dashboard>.
+2. Buka **SQL Editor**, lalu jalankan isi `supabase/schema.sql`.
+3. Buka **Project Settings → API**, salin:
+   - **Project URL** → `SUPABASE_URL`
+   - **service_role key** → `SUPABASE_SERVICE_ROLE_KEY`
+4. Isi `.env.local` untuk lokal dan **Environment Variables** di Vercel untuk produksi:
+
+```env
+SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOi...
 ```
 
-Di Windows PowerShell:
+Saat pertama kali dijalankan, aplikasi otomatis mengisi tabel dengan data demo jika masih kosong. Akun demo langsung bisa dipakai tanpa langkah seeding manual.
 
-```powershell
-Remove-Item data\db.json -Force
-Remove-Item public\uploads\* -Force
-```
+> Gunakan **service_role key** hanya di server. Jangan pernah memakai prefix `NEXT_PUBLIC_` untuk key ini.
+
+Jika `SUPABASE_URL` dan key belum diisi, aplikasi memakai fallback `data/db.json` untuk pengembangan lokal. Fallback ini **tidak bisa menulis di Vercel Serverless** karena filesystem produksi read-only.
+
+Reset data demo di Supabase: hapus baris `id = 'main'` dari tabel `tuntas_state`, lalu buka aplikasi lagi. Data demo akan dibuat ulang otomatis.
+
+### Lampiran
+
+Lampiran saat ini disimpan di `public/uploads/` pada mode lokal. Untuk produksi Vercel, gunakan Supabase Storage atau object storage lain agar file lampiran ikut persisten.
 
 ## Stack
 
 - Next.js 16 (App Router) + React 19 + TypeScript
 - Tailwind CSS v4
 - Lucide icons + Sonner toast
-- Penyimpanan JSON lokal (tanpa database eksternal)
+- Supabase (PostgREST + JSONB state) untuk penyimpanan persisten
+- Fallback JSON lokal untuk pengembangan tanpa Supabase
 - Auth cookie ber-HMAC + password scrypt
 - Web Speech API untuk rekam suara
-- Drag & drop native HTML5
+- Drag & drop native HTML5 + pemilih status ramah sentuhan
 
 ## Struktur singkat
 
@@ -116,7 +127,9 @@ lib/
   schedule.ts        penjadwalan mundur (hari kerja, libur, cadangan)
   ai.ts              planner lokal + integrasi LLM opsional
   seed.ts            data akun demo
-  store.ts           penyimpanan JSON
+  store.ts           Supabase + fallback JSON lokal
   auth.ts            sesi & cookie
   data.ts            query + ringkasan proyek
+supabase/
+  schema.sql         tabel state Supabase
 ```
