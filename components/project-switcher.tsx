@@ -17,7 +17,7 @@ export function ProjectSwitcher({
   const current = projects.find((project) => project.id === currentId);
 
   return (
-    <label className="relative inline-flex h-[38px] max-w-[240px] items-center gap-2 rounded-lg border border-line bg-card px-3 text-[12px] font-semibold text-ink-2 transition hover:border-line-strong">
+    <label className="relative inline-flex h-[38px] max-w-[190px] items-center gap-2 rounded-lg border border-line bg-card px-3 text-[12px] font-semibold text-ink-2 transition hover:border-line-strong sm:max-w-[240px]">
       <FolderKanban className="h-3.5 w-3.5 shrink-0 text-muted" />
       <span className="truncate">{current?.title ?? t("Pilih proyek")}</span>
       <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted" />

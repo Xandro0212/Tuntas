@@ -125,7 +125,7 @@ const ID: LandingCopy = {
       tag: "Kanban",
       title: "Papan yang mengikuti ritme kerjamu.",
       description:
-        "Empat kolom yang jelas. Drag kartu, status langsung tersimpan, dan semua orang tahu apa yang harus dikerjakan.",
+        "Empat kolom yang jelas. Geser kartu, status langsung tersimpan, dan semua orang tahu apa yang harus dikerjakan.",
     },
     calendar: {
       tag: "Kalender",
@@ -168,7 +168,7 @@ const ID: LandingCopy = {
           "AI hanya bertanya hal yang benar-benar mengubah pembagian tugas: pemasangan, persetujuan, dan bahan.",
       },
       {
-        title: "Cek & edit rencana",
+        title: "Cek & ubah rencana",
         description:
           "Draf 18 tugas, 4 tahap, durasi, dan PJ bisa diedit, dihapus, atau ditambah sebelum diterapkan.",
       },
@@ -385,6 +385,9 @@ export const LANDING_COPY: Record<Lang, LandingCopy> = { id: ID, en: EN };
 
 export const HERO_BOARD_COPY = {
   id: {
+    workspace: "Ruang kerja Made Art Studio",
+    aria:
+      "Pratinjau papan Kanban Tuntas untuk proyek Patung kuda, dengan deadline 7 Desember, progres 6 dari 18 tugas, dan cadangan 2 hari kerja.",
     activeProject: "Proyek aktif",
     progress: "Progres",
     ofTasks: "dari 18 tugas",
@@ -404,6 +407,9 @@ export const HERO_BOARD_COPY = {
     bufferValue: "2 hari kerja",
   },
   en: {
+    workspace: "Made Art Studio workspace",
+    aria:
+      "Preview of the Tuntas Kanban board for the horse statue project, with a 7 December deadline, 6 of 18 tasks complete, and 2 working days of buffer.",
     activeProject: "Active project",
     progress: "Progress",
     ofTasks: "of 18 tasks",

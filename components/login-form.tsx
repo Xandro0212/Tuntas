@@ -46,7 +46,7 @@ export default function LoginForm({ initialMode = "login" }: { initialMode?: Mod
         body: JSON.stringify({ email, password }),
       });
       const payload = (await response.json()) as { error?: string };
-      if (!response.ok) throw new Error(payload.error ?? "Gagal masuk.");
+      if (!response.ok) throw new Error(payload.error ? t(payload.error) : t("Gagal masuk."));
       window.location.href = "/kanban";
     } catch (err) {
       setError(err instanceof Error ? err.message : t("Gagal masuk."));
@@ -71,7 +71,8 @@ export default function LoginForm({ initialMode = "login" }: { initialMode?: Mod
         body: JSON.stringify(form),
       });
       const payload = (await response.json()) as { error?: string };
-      if (!response.ok) throw new Error(payload.error ?? "Gagal membuat akun.");
+      if (!response.ok)
+        throw new Error(payload.error ? t(payload.error) : t("Gagal membuat akun."));
       toast.success(t("Akun dibuat. Selamat datang di Tuntas!"));
       window.location.href = "/proyek/baru";
     } catch (err) {
@@ -148,7 +149,11 @@ export default function LoginForm({ initialMode = "login" }: { initialMode?: Mod
             <div className="mb-3 flex items-center justify-between">
               <div>
                 <div className="text-[11px] font-semibold text-muted">{t("PROYEK AKTIF")}</div>
-                <div className="text-[13px] font-bold">Patung kuda — Dinas Provinsi</div>
+                <div className="text-[13px] font-bold">
+                  {lang === "en"
+                    ? "Horse statue — Provincial Office"
+                    : "Patung kuda — Dinas Provinsi"}
+                </div>
               </div>
               <div className="rounded-full border border-green/25 bg-green-soft px-2.5 py-1 text-[10.5px] font-bold text-green">
                 {t("2 hari cadangan")}
@@ -160,25 +165,31 @@ export default function LoginForm({ initialMode = "login" }: { initialMode?: Mod
                   label: lang === "en" ? "Todo" : "Belum",
                   tone: "#c7b9a6",
                   text: "#475569",
-                  items: ["Dempul & amplas", "Finishing cat"],
+                  items:
+                    lang === "en"
+                      ? ["Sanding & filling", "Finishing coat"]
+                      : ["Dempul & amplas", "Finishing cat"],
                 },
                 {
                   label: lang === "en" ? "In progress" : "Jalan",
                   tone: "#8b5cf6",
                   text: "#6d28d9",
-                  items: ["Cetak fiberglass"],
+                  items: lang === "en" ? ["Fiberglass casting"] : ["Cetak fiberglass"],
                 },
                 {
                   label: lang === "en" ? "Client" : "Klien",
                   tone: "#fb923c",
                   text: "#c2410c",
-                  items: ["Konfirmasi plakat"],
+                  items: lang === "en" ? ["Nameplate confirmation"] : ["Konfirmasi plakat"],
                 },
                 {
                   label: lang === "en" ? "Done" : "Selesai",
                   tone: "#5b21b6",
                   text: "#4c1d95",
-                  items: ["Sketsa 3 tampak", "Rangka besi"],
+                  items:
+                    lang === "en"
+                      ? ["3-view sketch", "Steel frame"]
+                      : ["Sketsa 3 tampak", "Rangka besi"],
                 },
               ].map((column) => (
                 <div key={column.label} className="rounded-lg border border-line bg-card p-1.5">
@@ -342,7 +353,7 @@ export default function LoginForm({ initialMode = "login" }: { initialMode?: Mod
                     className="field pl-9"
                     value={form.email}
                     onChange={(event) => update("email", event.target.value)}
-                    placeholder="nama@usaha.id"
+                    placeholder={lang === "en" ? "name@business.id" : "nama@usaha.id"}
                     autoComplete="email"
                     required
                   />

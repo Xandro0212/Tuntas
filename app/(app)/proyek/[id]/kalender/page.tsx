@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const user = await requireUser();
   const lang = await getLang();
-  const bundle = getProjectBundle(user.id, id);
+  const bundle = getProjectBundle(user.id, id, lang);
   return {
     title: bundle
       ? `${lang === "en" ? "Calendar" : "Kalender"} · ${bundle.project.title}`
@@ -25,14 +25,15 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function CalendarPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await requireUser();
-  const bundle = getProjectBundle(user.id, id);
+  const lang = await getLang();
+  const bundle = getProjectBundle(user.id, id, lang);
   if (!bundle) notFound();
 
-  const projects = getProjectsForUser(user.id).map((project) => ({
+  const projects = getProjectsForUser(user.id, lang).map((project) => ({
     id: project.id,
     title: project.title,
   }));
-  const otherTasks = getOtherProjectTasks(user.id, id);
+  const otherTasks = getOtherProjectTasks(user.id, id, lang);
 
   return (
     <>

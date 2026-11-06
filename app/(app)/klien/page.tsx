@@ -24,12 +24,12 @@ export default async function ClientsPage() {
   const lang = await getLang();
   const t = (source: string, vars?: Record<string, string | number>) =>
     translate(lang, source, vars);
-  const clients = getClients(user.id);
+  const clients = getClients(user.id, lang);
   const today = todayISO();
   const summaries = new Map(
     clients
       .flatMap((client) => client.projects)
-      .map((project) => [project.id, getProjectBundle(user.id, project.id)!]),
+      .map((project) => [project.id, getProjectBundle(user.id, project.id, lang)!]),
   );
   const totalValue = clients.reduce((sum, client) => sum + client.totalValue, 0);
   const activeProjects = clients.reduce(
@@ -50,7 +50,7 @@ export default async function ClientsPage() {
             {t("{clients} klien · {active} proyek berjalan · {value} modal tercatat.", {
               clients: clients.length,
               active: activeProjects,
-              value: formatCompactRupiah(totalValue),
+              value: formatCompactRupiah(totalValue, lang),
             })}
           </p>
         </div>
@@ -79,7 +79,7 @@ export default async function ClientsPage() {
                     </div>
                     <div className="mt-0.5 text-[11px] text-muted">
                       {client.wa || t("Nomor WhatsApp belum diisi")} ·{" "}
-                      {formatCompactRupiah(client.totalValue)}
+                      {formatCompactRupiah(client.totalValue, lang)}
                     </div>
                     <div className="mt-2 flex flex-wrap gap-2">
                       {wa && (

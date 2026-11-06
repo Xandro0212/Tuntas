@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth";
 import { getDb, mutateDb } from "@/lib/store";
-import { getHolidays } from "@/lib/data";
+import { getHolidays, localizeTask } from "@/lib/data";
+import { getLang } from "@/lib/lang-server";
 import { todayISO } from "@/lib/dates";
 import { isWorkday } from "@/lib/schedule";
 import type { TaskStatus, TaskType } from "@/lib/types";
@@ -14,6 +15,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const user = await getSessionUser();
+  const lang = await getLang();
   if (!user) return NextResponse.json({ error: "Silakan masuk terlebih dahulu." }, { status: 401 });
 
   try {
@@ -106,7 +108,10 @@ export async function PATCH(
       if (owner) owner.updatedAt = new Date().toISOString();
     });
 
-    return NextResponse.json({ ok: true, task: { ...task, ...updates } });
+    return NextResponse.json({
+      ok: true,
+      task: localizeTask(lang, { ...task, ...updates }),
+    });
   } catch {
     return NextResponse.json({ error: "Gagal memperbarui tugas." }, { status: 500 });
   }

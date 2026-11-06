@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { getProjectBundle, getProjectsForUser } from "@/lib/data";
+import { getLang } from "@/lib/lang-server";
 import { ProjectTracker } from "@/components/project-tracker";
 import { KanbanView } from "@/components/kanban-view";
 import { todayISO } from "@/lib/dates";
@@ -10,8 +11,9 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await requireUser();
-  const bundle = getProjectBundle(user.id, id);
-  return { title: bundle?.project.title ?? "Proyek" };
+  const lang = await getLang();
+  const bundle = getProjectBundle(user.id, id, lang);
+  return { title: bundle?.project.title ?? (lang === "en" ? "Project" : "Proyek") };
 }
 
 export default async function ProjectPage({
@@ -24,10 +26,11 @@ export default async function ProjectPage({
   const { id } = await params;
   const { view } = await searchParams;
   const user = await requireUser();
-  const bundle = getProjectBundle(user.id, id);
+  const lang = await getLang();
+  const bundle = getProjectBundle(user.id, id, lang);
   if (!bundle) notFound();
 
-  const projects = getProjectsForUser(user.id).map((project) => ({
+  const projects = getProjectsForUser(user.id, lang).map((project) => ({
     id: project.id,
     title: project.title,
   }));

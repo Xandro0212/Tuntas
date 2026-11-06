@@ -1,13 +1,22 @@
 import { getSessionUser } from "@/lib/auth";
+import { getLang } from "@/lib/lang-server";
 import { LandingPage } from "@/components/landing/landing-page";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "Tuntas — Dari cerita klien jadi rencana yang tuntas",
-  description:
-    "Kanban + kalender proyek klien untuk UMKM. AI memecah cerita proyek menjadi tugas, tanggal dihitung mundur dari deadline, Minggu dan hari libur dilewati.",
-};
+export async function generateMetadata() {
+  const lang = await getLang();
+  return {
+    title:
+      lang === "en"
+        ? "Tuntas — From a client story to a plan that gets done"
+        : "Tuntas — Dari cerita klien jadi rencana yang tuntas",
+    description:
+      lang === "en"
+        ? "Kanban + client project calendar for small businesses. AI turns a project story into tasks, counting dates backward from the deadline and skipping Sundays and holidays."
+        : "Kanban + kalender proyek klien untuk UMKM. AI memecah cerita proyek menjadi tugas, tanggal dihitung mundur dari deadline, Minggu dan hari libur dilewati.",
+  };
+}
 
 export default async function HomePage() {
   const user = await getSessionUser();

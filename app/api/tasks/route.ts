@@ -3,7 +3,8 @@ import { randomUUID } from "node:crypto";
 import { getSessionUser } from "@/lib/auth";
 import { mutateDb, getDb } from "@/lib/store";
 import { scheduleSingleTask } from "@/lib/schedule";
-import { getHolidays } from "@/lib/data";
+import { getHolidays, localizeTask } from "@/lib/data";
+import { getLang } from "@/lib/lang-server";
 import { todayISO } from "@/lib/dates";
 import type { TaskStatus, TaskType } from "@/lib/types";
 
@@ -12,6 +13,7 @@ const STATUSES = new Set<TaskStatus>(["todo", "doing", "waiting", "done"]);
 
 export async function POST(request: Request) {
   const user = await getSessionUser();
+  const lang = await getLang();
   if (!user) return NextResponse.json({ error: "Silakan masuk terlebih dahulu." }, { status: 401 });
 
   try {
@@ -70,7 +72,7 @@ export async function POST(request: Request) {
       if (target) target.updatedAt = new Date().toISOString();
     });
 
-    return NextResponse.json({ task });
+    return NextResponse.json({ task: localizeTask(lang, task) });
   } catch {
     return NextResponse.json({ error: "Gagal menambah tugas." }, { status: 500 });
   }

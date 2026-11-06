@@ -67,7 +67,7 @@ export function HeroBoard({ lang }: { lang: Lang }) {
     <div
       className="relative mx-auto w-full max-w-[590px] px-3 py-4 sm:px-5"
       role="img"
-      aria-label="Pratinjau papan Kanban Tuntas untuk proyek Patung kuda, dengan deadline 7 Desember, progres 6 dari 18 tugas, dan cadangan 2 hari kerja."
+      aria-label={t.aria}
     >
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -right-10 top-0 h-56 w-56 rounded-full bg-green/20 blur-[80px] animate-glow" />
@@ -81,7 +81,7 @@ export function HeroBoard({ lang }: { lang: Lang }) {
           <BrandMark className="h-5 w-5" />
           <span className="text-[9.5px] font-bold tracking-[-0.02em] text-ink">Tuntas</span>
           <span className="ml-1 h-1 w-1 rounded-full bg-line" />
-          <span className="text-[8.5px] text-muted">Ruang kerja Made Art Studio</span>
+          <span className="text-[8.5px] text-muted">{t.workspace}</span>
           <span className="ml-auto flex items-center gap-1">
             <span className="h-1.5 w-1.5 rounded-full bg-line" />
             <span className="h-1.5 w-1.5 rounded-full bg-line" />

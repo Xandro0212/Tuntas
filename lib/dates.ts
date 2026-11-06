@@ -137,7 +137,17 @@ export function formatRupiah(value: number): string {
   }).format(value);
 }
 
-export function formatCompactRupiah(value: number): string {
+export function formatCompactRupiah(value: number, lang: Lang = "id"): string {
+  if (lang === "en") {
+    if (value >= 1_000_000_000) {
+      return `Rp ${(value / 1_000_000_000).toFixed(1).replace(".0", "")}B`;
+    }
+    if (value >= 1_000_000) {
+      return `Rp ${(value / 1_000_000).toFixed(1).replace(".0", "")}M`;
+    }
+    if (value >= 1_000) return `Rp ${(value / 1_000).toFixed(0)}k`;
+    return formatRupiah(value);
+  }
   if (value >= 1_000_000_000) return `Rp ${(value / 1_000_000_000).toFixed(1).replace(".0", "")} M`;
   if (value >= 1_000_000) return `Rp ${(value / 1_000_000).toFixed(1).replace(".0", "")} jt`;
   if (value >= 1_000) return `Rp ${(value / 1_000).toFixed(0)} rb`;

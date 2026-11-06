@@ -1,3 +1,6 @@
+import { CONTENT_EN } from "./content-i18n";
+import { PLAN_EN } from "./plan-i18n";
+
 export type Lang = "id" | "en";
 
 export const LANG_COOKIE = "tuntas_lang";
@@ -12,15 +15,27 @@ export function normalizeLang(value?: string | null): Lang {
  * translated through `t()`.
  */
 const EN: Record<string, string> = {
+  ...PLAN_EN,
+  ...CONTENT_EN,
   // Shared
   "Hari ini": "Today",
-  Besok: "Tomorrow",
-  Kemarin: "Yesterday",
+  "Besok": "Tomorrow",
+  "Kemarin": "Yesterday",
   "Tutup": "Close",
   "Batal": "Cancel",
   "Hapus": "Delete",
+  "Hapus proyek": "Delete project",
+  "Hapus proyek?": "Delete project?",
+  "Proyek akan dihapus permanen dari ruang kerja ini.":
+    "The project will be permanently deleted from this workspace.",
+  "Semua tugas, tahap, dan lampiran proyek ini akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.":
+    "All tasks, phases, and attachments for this project will be permanently deleted. This action cannot be undone.",
+  "Proyek dihapus.": "Project deleted.",
+  "Gagal menghapus proyek.": "Failed to delete the project.",
+  "Menghapus…": "Deleting…",
   "Simpan": "Save",
   "Menyimpan…": "Saving…",
+  "Menyiapkan…": "Preparing…",
   "Memproses…": "Processing…",
   "Memuat…": "Loading…",
   "Semua": "All",
@@ -36,6 +51,7 @@ const EN: Record<string, string> = {
   "Tipe": "Type",
   "Mulai": "Start",
   "Selesai": "Done",
+  "selesai": "done",
   "Durasi": "Duration",
   "opsional": "optional",
   "wajib diisi": "required",
@@ -184,6 +200,7 @@ const EN: Record<string, string> = {
     "A short update shown on the card and phase.",
   "Durasi (hari kerja)": "Duration (working days)",
   "Saya": "Me",
+  "Tugas baru": "New task",
   "Tanpa tahap": "No phase",
   "Tugas ditandai selesai.": "Task marked as done.",
   "Dipindah ke {status}.": "Moved to {status}.",
@@ -253,6 +270,7 @@ const EN: Record<string, string> = {
   "belum ada proyek": "no projects yet",
   "Buka papan": "Open board",
   "Buka kalender": "Open calendar",
+  "Kalender {title}": "Calendar {title}",
   "Lewat deadline": "Past deadline",
   "Aktif": "Active",
   "{done}/{total} tugas": "{done}/{total} tasks",
@@ -505,7 +523,7 @@ const EN: Record<string, string> = {
   "tanggal menyesuaikan": "dates adjust automatically",
   "Belum ada tugas di tahap ini.": "No tasks in this phase yet.",
   "Deadline klien: {date}": "Client deadline: {date}",
-  "tiba": "arrive",
+  "tiba": "arrive at",
   "Ubah jawaban": "Change answers",
   "Semua tugas masuk kolom Belum mulai. Kamu bisa drag & edit setelahnya.":
     "All tasks go to the Not started column. You can drag and edit them afterward.",
@@ -513,6 +531,66 @@ const EN: Record<string, string> = {
     "Describe the order as you would to your team: materials, size, color, who installs it, what the client must approve, and the things that often cause delays…",
   "Target mulai sudah lewat. Deadline mungkin terlalu dekat — pertimbangkan mengurangi durasi atau menambah orang.":
     "The start target is already in the past. The deadline may be too tight — consider shortening durations or adding people.",
+  "Silakan masuk terlebih dahulu.": "Please sign in first.",
+  "Proyek tidak valid.": "Invalid project.",
+  "Gagal menyimpan proyek aktif.": "Failed to save the active project.",
+  "Email dan password wajib diisi.": "Email and password are required.",
+  "Email atau password salah.": "Incorrect email or password.",
+  "Gagal masuk. Coba lagi.": "Failed to sign in. Try again.",
+  "Gagal membuka akun demo.": "Failed to open the demo account.",
+  "Nama minimal 2 karakter.": "Name must be at least 2 characters.",
+  "Nama usaha minimal 2 karakter.": "Business name must be at least 2 characters.",
+  "Format email belum benar.": "Invalid email format.",
+  "Password minimal 6 karakter.": "Password must be at least 6 characters.",
+  "Email ini sudah terdaftar.": "This email is already registered.",
+  "Gagal membuat akun. Coba lagi.": "Failed to create the account. Try again.",
+  "Tanggal dan nama libur wajib diisi.": "Date and holiday name are required.",
+  "Tanggal itu sudah ditandai libur.": "That date is already marked as a holiday.",
+  "Libur tidak ditemukan.": "Holiday not found.",
+  "Hari libur nasional/bali hanya bisa dilihat, tidak dihapus.":
+    "National/Bali holidays can only be viewed, not deleted.",
+  "Jenis pekerjaan tidak dikenal.": "Unknown work type.",
+  "Nama proyek dan cerita proyek perlu diisi lebih lengkap.":
+    "Project name and story need more detail.",
+  "Permintaan tidak bisa diproses.": "The request could not be processed.",
+  "Jenis pekerjaan tidak valid.": "Invalid work type.",
+  "Deadline belum diisi.": "Deadline is missing.",
+  "Rencana belum punya tahap.": "The plan has no phases.",
+  "Rencana belum punya tugas.": "The plan has no tasks.",
+  "Terlalu banyak tugas dalam satu proyek.": "Too many tasks in one project.",
+  "Gagal menyimpan proyek. Coba lagi.": "Failed to save the project. Try again.",
+  "Proyek tidak ditemukan.": "Project not found.",
+  "Tahap tidak ditemukan.": "Phase not found.",
+  "Judul tugas wajib diisi.": "Task title is required.",
+  "Batas tugas proyek tercapai.": "The project task limit has been reached.",
+  "Tugas tidak ditemukan.": "Task not found.",
+  "Status tidak valid.": "Invalid status.",
+  "Judul tugas terlalu pendek.": "Task title is too short.",
+  "Tipe tugas tidak valid.": "Invalid task type.",
+  "Format tanggal tidak valid.": "Invalid date format.",
+  "Tanggal mulai harus sebelum tanggal selesai.":
+    "The start date must be before the due date.",
+  "Tidak ada perubahan.": "No changes.",
+  "File tidak ditemukan.": "File not found.",
+  "Ukuran file maksimal 5 MB.": "Maximum file size is 5 MB.",
+  "Format file harus JPG, PNG, WEBP, GIF, atau PDF.":
+    "File format must be JPG, PNG, WEBP, GIF, or PDF.",
+  "Gagal mengunggah file.": "Failed to upload the file.",
+  "Gagal mengunggah.": "Failed to upload.",
+  "AI tidak mengembalikan JSON.": "AI did not return JSON.",
+  "Struktur JSON dari AI tidak sesuai skema.": "AI JSON does not match the schema.",
+  "AI tidak mengembalikan fase.": "AI did not return phases.",
+  "AI tidak mengembalikan tugas yang bisa dipakai.": "AI did not return usable tasks.",
+  "Layanan AI mengembalikan jawaban kosong.": "The AI service returned an empty response.",
+  "Layanan AI membalas {status}.": "The AI service responded with status {status}.",
+  "Gagal memanggil AI.": "Failed to call the AI service.",
+  "Gagal menyusun rencana dengan AI.": "Failed to build the plan with AI.",
+  "Proyek belum punya tugas.": "The project has no tasks.",
+  "Gagal menyusun ulang jadwal.": "Failed to rebuild the schedule.",
+  "AI belum bisa menyusun rencana: {message} Coba lagi sebentar.":
+    "AI could not build the plan: {message} Please try again shortly.",
+  "AI belum bisa menyusun rencana. Coba lagi sebentar.":
+    "AI could not build the plan. Please try again shortly.",
   "Rencana masih kosong.": "The plan is still empty.",
   "Masih ada tugas dengan judul kosong.": "Some tasks still have an empty title.",
   "Gagal menerapkan rencana.": "Failed to apply the plan.",

@@ -77,7 +77,8 @@ export function TodayView({
         body: JSON.stringify({ status: next }),
       });
       const payload = (await response.json()) as { error?: string };
-      if (!response.ok) throw new Error(payload.error ?? "Gagal memperbarui tugas.");
+      if (!response.ok)
+        throw new Error(payload.error ? t(payload.error) : t("Gagal memperbarui tugas."));
       toast.success(next === "done" ? t("Mantap, tugas selesai.") : t("Tugas dibuka kembali."));
       router.refresh();
     } catch (error) {
@@ -128,7 +129,9 @@ export function TodayView({
                   <div className="mt-1.5 text-[12px] text-white/70">
                     {formatShortDate(nearest.project.deadline, lang)} ·{" "}
                     {relativeDeadline(nearest.project.deadline, lang)}
-                    {nearest.project.deadlineTime ? ` · tiba ${nearest.project.deadlineTime}` : ""}
+                    {nearest.project.deadlineTime
+                      ? ` · ${t("tiba")} ${nearest.project.deadlineTime}`
+                      : ""}
                   </div>
                 </div>
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition group-hover:bg-white/20">
@@ -143,7 +146,10 @@ export function TodayView({
                   />
                 </div>
                 <span className="shrink-0 text-[11px] font-bold text-white">
-                  {nearest.done}/{nearest.total} tugas
+                  {t("{done}/{total} tugas", {
+                    done: nearest.done,
+                    total: nearest.total,
+                  })}
                 </span>
               </div>
             </Link>

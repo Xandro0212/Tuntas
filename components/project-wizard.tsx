@@ -235,7 +235,7 @@ export function ProjectWizard({
         engine?: "demo" | "llm";
       };
       if (!response.ok || !data.questions) {
-        throw new Error(data.error ?? t("AI belum bisa membaca cerita ini."));
+        throw new Error(data.error ? t(data.error) : t("AI belum bisa membaca cerita ini."));
       }
       setQuestions(data.questions);
       setEngine(data.engine === "llm" ? "llm" : "demo");
@@ -266,7 +266,7 @@ export function ProjectWizard({
         engine?: "demo" | "llm";
       };
       if (!response.ok || !data.plan) {
-        throw new Error(data.error ?? t("AI belum bisa menyusun rencana."));
+        throw new Error(data.error ? t(data.error) : t("AI belum bisa menyusun rencana."));
       }
       const plan = data.plan;
       setEngine(data.engine === "llm" ? "llm" : "demo");
@@ -321,7 +321,8 @@ export function ProjectWizard({
         }),
       });
       const data = (await response.json()) as { error?: string; id?: string };
-      if (!response.ok || !data.id) throw new Error(data.error ?? t("Gagal menerapkan rencana."));
+      if (!response.ok || !data.id)
+        throw new Error(data.error ? t(data.error) : t("Gagal menerapkan rencana."));
       toast.success(t("Rencana diterapkan. Selamat bekerja!"));
       window.location.href = `/proyek/${data.id}`;
     } catch (err) {
@@ -356,11 +357,11 @@ export function ProjectWizard({
       {
         tempId,
         phaseIndex,
-        title: "Tugas baru",
+        title: t("Tugas baru"),
         type: "internal",
         durationDays: 1,
         dependsOn: [],
-        assignee: form.team[0] ?? "Saya",
+        assignee: form.team[0] ?? t("Saya"),
         source: "manual",
       },
     ]);
@@ -391,7 +392,8 @@ export function ProjectWizard({
         body.append("file", file);
         const response = await fetch("/api/upload", { method: "POST", body });
         const data = (await response.json()) as { error?: string; url?: string; name?: string; size?: number };
-        if (!response.ok || !data.url) throw new Error(data.error ?? "Gagal mengunggah.");
+        if (!response.ok || !data.url)
+          throw new Error(data.error ? t(data.error) : t("Gagal mengunggah."));
         uploaded.push({ url: data.url, name: data.name ?? file.name, size: data.size ?? file.size });
       } catch (err) {
         toast.error(

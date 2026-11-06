@@ -15,10 +15,10 @@ export async function generateMetadata() {
 export default async function TodayPage() {
   const user = await requireUser();
   const lang = await getLang();
-  const projects = getProjectsForUser(user.id);
+  const projects = getProjectsForUser(user.id, lang);
   const today = todayISO();
   const tomorrow = addDays(today, 1);
-  const bundles = projects.map((project) => getProjectBundle(user.id, project.id)!);
+  const bundles = projects.map((project) => getProjectBundle(user.id, project.id, lang)!);
 
   const allTasks: TodayTask[] = bundles.flatMap((bundle) => {
     const phaseMap = new Map(bundle.phases.map((phase) => [phase.id, phase.name]));

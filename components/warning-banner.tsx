@@ -167,7 +167,8 @@ export function WarningBanner({
     try {
       const response = await fetch(`/api/projects/${project.id}/reschedule`, { method: "POST" });
       const payload = (await response.json()) as { error?: string };
-      if (!response.ok) throw new Error(payload.error ?? "Gagal mengatur ulang.");
+      if (!response.ok)
+        throw new Error(payload.error ? t(payload.error) : t("Gagal mengatur ulang."));
       toast.success(t("Jadwal disusun ulang. Tanggal tugas sudah diperbarui."));
       window.location.reload();
     } catch (error) {
@@ -178,7 +179,7 @@ export function WarningBanner({
 
   return (
     <>
-      <div className="flex flex-col gap-3 rounded-2xl border border-rust/30 bg-rust-soft px-4 py-3.5 backdrop-blur-xl md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-3 rounded-2xl border border-rust/30 bg-rust-soft px-4 py-3.5 backdrop-blur-xl xl:flex-row xl:items-center xl:justify-between">
         <div className="flex items-start gap-3">
           <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-rust/25 bg-rust/15 text-rust">
             <AlertTriangle className="h-4 w-4" />
@@ -190,7 +191,7 @@ export function WarningBanner({
             </div>
           </div>
         </div>
-        <div className="flex shrink-0 flex-wrap gap-2 md:pl-3">
+        <div className="flex shrink-0 flex-wrap gap-2 xl:pl-3">
           <button type="button" className="btn-primary btn-sm" onClick={() => setWaOpen(true)}>
             <MessageCircle className="h-3.5 w-3.5" /> {t("Kirim pengingat via WhatsApp")}
           </button>

@@ -44,7 +44,7 @@ export function LandingHeader({
       }`}
     >
       <div className="mx-auto flex h-[72px] max-w-[1280px] items-center justify-between gap-4 px-5 sm:px-6 lg:px-8">
-        <Link href="/" aria-label="Tuntas — beranda">
+        <Link href="/" aria-label={lang === "en" ? "Tuntas — home" : "Tuntas — beranda"}>
           <Logo variant="dark" />
         </Link>
 

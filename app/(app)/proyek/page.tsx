@@ -25,6 +25,7 @@ import {
   todayISO,
 } from "@/lib/dates";
 import { CATEGORY_LABEL, phaseTone } from "@/lib/constants";
+import { DeleteProjectButton } from "@/components/delete-project-button";
 
 export const dynamic = "force-dynamic";
 export async function generateMetadata() {
@@ -37,8 +38,8 @@ export default async function ProjectsPage() {
   const lang = await getLang();
   const t = (source: string, vars?: Record<string, string | number>) =>
     translate(lang, source, vars);
-  const projects = getProjectsForUser(user.id);
-  const bundles = projects.map((project) => getProjectBundle(user.id, project.id)!);
+  const projects = getProjectsForUser(user.id, lang);
+  const bundles = projects.map((project) => getProjectBundle(user.id, project.id, lang)!);
   const today = todayISO();
 
   const totalTasks = bundles.reduce((sum, bundle) => sum + bundle.tasks.length, 0);
@@ -273,7 +274,7 @@ export default async function ProjectsPage() {
             <div>
               <span className="section-title">{t("Modal proyek")}</span>
               <div className="mt-2 whitespace-nowrap text-[20px] font-extrabold tracking-[-0.03em] sm:text-[24px]">
-                {formatCompactRupiah(totalValue)}
+                {formatCompactRupiah(totalValue, lang)}
               </div>
               <div className="text-[10.5px] text-muted">{t("total modal tercatat")}</div>
             </div>
@@ -367,7 +368,7 @@ export default async function ProjectsPage() {
                   </span>
                   {project.value ? (
                     <span className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap font-semibold text-ink-2">
-                      <Wallet className="h-3 w-3" /> {formatCompactRupiah(project.value)}
+                      <Wallet className="h-3 w-3" /> {formatCompactRupiah(project.value, lang)}
                     </span>
                   ) : null}
                 </div>
@@ -382,11 +383,16 @@ export default async function ProjectsPage() {
                   <Link
                     href={`/proyek/${project.id}/kalender`}
                     className="btn-ghost btn-sm px-2.5"
-                    title="Buka kalender"
-                    aria-label={`Kalender ${project.title}`}
+                    title={t("Buka kalender")}
+                    aria-label={t("Kalender {title}", { title: project.title })}
                   >
                     <CalendarDays className="h-4 w-4" />
                   </Link>
+                  <DeleteProjectButton
+                    projectId={project.id}
+                    projectTitle={project.title}
+                    className="btn-ghost btn-sm px-2.5 text-muted hover:bg-rust-soft hover:text-rust"
+                  />
                 </div>
               </article>
             );

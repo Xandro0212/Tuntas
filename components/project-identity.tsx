@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Download, MessageCircle } from "lucide-react";
 import { ProjectSwitcher } from "./project-switcher";
+import { DeleteProjectButton } from "./delete-project-button";
 import { useI18n } from "./language-provider";
 import { normalizeWhatsApp, relativeDeadline } from "@/lib/dates";
 import { CATEGORY_LABEL } from "@/lib/constants";
@@ -22,7 +23,7 @@ export function ProjectIdentity({
   const { lang, t } = useI18n();
   const wa = normalizeWhatsApp(project.clientWa);
   return (
-    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+    <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-x-1.5 text-[11px] font-medium text-muted">
           <span>{t("Proyek")}</span>
@@ -73,6 +74,7 @@ export function ProjectIdentity({
         <Link href="/proyek/baru" className="btn-primary btn-sm hidden sm:inline-flex">
           {t("+ Proyek")}
         </Link>
+        <DeleteProjectButton projectId={project.id} projectTitle={project.title} />
       </div>
     </div>
   );

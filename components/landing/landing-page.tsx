@@ -127,8 +127,9 @@ function AiFeature({ lang, copy }: { lang: Lang; copy: LandingCopy["features"]["
     >
       <div className="space-y-2">
         <div className="ml-auto max-w-[88%] rounded-2xl rounded-br-md border border-line bg-paper p-3 text-[10.5px] leading-relaxed text-ink-2">
-          “Patung kuda fiberglass 2 meter, finishing perunggu. Deadline 7 Des, dipasang di lobby
-          kantor dinas. Klien mau lihat sketsa dulu.”
+          {lang === "en"
+            ? "“2-meter fiberglass horse statue, bronze finish. Deadline 7 Dec, installed in the provincial office lobby. The client wants to see the sketch first.”"
+            : "“Patung kuda fiberglass 2 meter, finishing perunggu. Deadline 7 Des, dipasang di lobby kantor dinas. Klien mau lihat sketsa dulu.”"}
         </div>
         <div className="max-w-[93%] rounded-2xl rounded-bl-md border border-green/20 bg-green-soft p-3">
           <div className="flex items-center gap-1.5 text-[9.5px] font-bold text-green">
@@ -259,7 +260,10 @@ function CalendarFeature({ lang, copy }: { lang: Lang; copy: LandingCopy["featur
     >
       <div className="rounded-xl border border-line bg-paper p-2.5">
         <div className="grid grid-cols-7 gap-1 text-center text-[7px] font-bold text-muted">
-          {["S", "S", "R", "K", "J", "S", "M"].map((day, index) => (
+          {(lang === "en"
+            ? ["M", "T", "W", "T", "F", "S", "S"]
+            : ["S", "S", "R", "K", "J", "S", "M"]
+          ).map((day, index) => (
             <span key={`${day}-${index}`}>{day}</span>
           ))}
         </div>
@@ -336,7 +340,7 @@ function TodayFeature({ lang, copy }: { lang: Lang; copy: LandingCopy["features"
             </div>
             {(item.time === "terlambat" || item.time === "late") && (
               <span className="shrink-0 rounded-full bg-rust-soft px-1.5 py-0.5 text-[6.5px] font-bold text-rust">
-                Late
+                {lang === "en" ? "Late" : "Terlambat"}
               </span>
             )}
           </div>
@@ -357,8 +361,9 @@ function WhatsAppFeature({ lang, copy }: { lang: Lang; copy: LandingCopy["featur
     >
       <div className="space-y-2">
         <div className="rounded-2xl rounded-bl-md border border-green/20 bg-green-soft p-3 text-[9.5px] leading-relaxed text-ink-2">
-          Om swastyastu Bu Ayu, untuk proyek Patung Kuda kami menunggu konfirmasi teks plakat nama.
-          Boleh dibantu konfirmasi hari ini? 🙏
+          {lang === "en"
+            ? "Om swastyastu Ms. Ayu, for the Horse Statue project we are waiting for confirmation of the nameplate text. Could you confirm today? 🙏"
+            : "Om swastyastu Bu Ayu, untuk proyek Patung Kuda kami menunggu konfirmasi teks plakat nama. Boleh dibantu konfirmasi hari ini? 🙏"}
         </div>
         <div className="ml-auto flex w-fit items-center gap-1.5 rounded-full bg-green px-2.5 py-1 text-[8px] font-bold text-white">
           <MessageCircle className="h-2.5 w-2.5" /> {lang === "en" ? "Open WhatsApp" : "Buka WhatsApp"}
@@ -808,12 +813,20 @@ export function LandingPage({
                     <BrandMark className="h-8 w-8" />
                   </div>
                   <div className="mt-3 space-y-1.5">
-                    {[
-                      ["Patung kuda — Dinas Provinsi", "7 Des", "6/18", "amber"],
-                      ["Nasi kotak 150 porsi", "19 Nov", "4/13", "mint"],
-                      ["Relief garuda — Hotel Ubud", "15 Des", "4/9", "mint"],
-                      ["Ukiran pintu — Villa Canggu", "9 Jan", "1/7", "muted"],
-                    ].map(([title, date, progress, tone]) => (
+                    {(lang === "en"
+                      ? [
+                          ["Horse statue — Provincial Office", "7 Dec", "6/18", "amber"],
+                          ["150 lunch boxes", "19 Nov", "4/13", "mint"],
+                          ["Garuda relief — Hotel Ubud", "15 Dec", "4/9", "mint"],
+                          ["Carved door — Villa Canggu", "9 Jan", "1/7", "muted"],
+                        ]
+                      : [
+                          ["Patung kuda — Dinas Provinsi", "7 Des", "6/18", "amber"],
+                          ["Nasi kotak 150 porsi", "19 Nov", "4/13", "mint"],
+                          ["Relief garuda — Hotel Ubud", "15 Des", "4/9", "mint"],
+                          ["Ukiran pintu — Villa Canggu", "9 Jan", "1/7", "muted"],
+                        ]
+                    ).map(([title, date, progress, tone]) => (
                       <div
                         key={title}
                         className="flex items-center gap-2 rounded-lg border border-line bg-paper px-2.5 py-2"

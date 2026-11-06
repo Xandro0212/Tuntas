@@ -1,6 +1,7 @@
 import { getDb } from "./store";
 import { diffDays, normalizeWhatsApp, todayISO } from "./dates";
 import { getBufferDates } from "./schedule";
+import { translate, type Lang } from "./i18n";
 import type {
   Holiday,
   Phase,
@@ -18,14 +19,42 @@ export interface ProjectBundle {
   summary: ProjectSummary;
 }
 
-export function getProjectsForUser(userId: string): Project[] {
-  return getDb()
-    .projects.filter((project) => project.userId === userId)
-    .sort((a, b) => a.deadline.localeCompare(b.deadline));
+export function localizeProject(lang: Lang, project: Project): Project {
+  return {
+    ...project,
+    title: translate(lang, project.title),
+    clientName: translate(lang, project.clientName),
+  };
 }
 
-export function getHolidays(): Holiday[] {
-  return [...getDb().holidays].sort((a, b) => a.date.localeCompare(b.date));
+export function localizePhase(lang: Lang, phase: Phase): Phase {
+  return { ...phase, name: translate(lang, phase.name) };
+}
+
+export function localizeTask(lang: Lang, task: Task): Task {
+  return {
+    ...task,
+    title: translate(lang, task.title),
+    assignee: translate(lang, task.assignee),
+    progressNote: task.progressNote ? translate(lang, task.progressNote) : task.progressNote,
+  };
+}
+
+export function localizeHoliday(lang: Lang, holiday: Holiday): Holiday {
+  return { ...holiday, name: translate(lang, holiday.name) };
+}
+
+export function getProjectsForUser(userId: string, lang: Lang = "id"): Project[] {
+  return getDb()
+    .projects.filter((project) => project.userId === userId)
+    .sort((a, b) => a.deadline.localeCompare(b.deadline))
+    .map((project) => localizeProject(lang, project));
+}
+
+export function getHolidays(lang: Lang = "id"): Holiday[] {
+  return [...getDb().holidays]
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map((holiday) => localizeHoliday(lang, holiday));
 }
 
 export function summarizeProject(
@@ -62,17 +91,24 @@ export function summarizeProject(
   };
 }
 
-export function getProjectBundle(userId: string, projectId: string): ProjectBundle | null {
+export function getProjectBundle(
+  userId: string,
+  projectId: string,
+  lang: Lang = "id",
+): ProjectBundle | null {
   const db = getDb();
-  const project = db.projects.find((item) => item.id === projectId && item.userId === userId);
-  if (!project) return null;
+  const rawProject = db.projects.find((item) => item.id === projectId && item.userId === userId);
+  if (!rawProject) return null;
+  const project = localizeProject(lang, rawProject);
   const phases = db.phases
     .filter((phase) => phase.projectId === projectId)
-    .sort((a, b) => a.order - b.order);
+    .sort((a, b) => a.order - b.order)
+    .map((phase) => localizePhase(lang, phase));
   const tasks = db.tasks
     .filter((task) => task.projectId === projectId)
-    .sort((a, b) => a.order - b.order);
-  const holidays = getHolidays();
+    .sort((a, b) => a.order - b.order)
+    .map((task) => localizeTask(lang, task));
+  const holidays = getHolidays(lang);
   return {
     project,
     phases,
@@ -82,12 +118,14 @@ export function getProjectBundle(userId: string, projectId: string): ProjectBund
   };
 }
 
-export function getUserTasks(userId: string): Task[] {
+export function getUserTasks(userId: string, lang: Lang = "id"): Task[] {
   const db = getDb();
   const projectIds = new Set(
     db.projects.filter((project) => project.userId === userId).map((project) => project.id),
   );
-  return db.tasks.filter((task) => projectIds.has(task.projectId));
+  return db.tasks
+    .filter((task) => projectIds.has(task.projectId))
+    .map((task) => localizeTask(lang, task));
 }
 
 export interface OtherProjectTask {
@@ -101,7 +139,11 @@ export interface OtherProjectTask {
   status: Task["status"];
 }
 
-export function getOtherProjectTasks(userId: string, excludeProjectId: string): OtherProjectTask[] {
+export function getOtherProjectTasks(
+  userId: string,
+  excludeProjectId: string,
+  lang: Lang = "id",
+): OtherProjectTask[] {
   const db = getDb();
   const projects = new Map(
     db.projects
@@ -114,11 +156,11 @@ export function getOtherProjectTasks(userId: string, excludeProjectId: string): 
     .map((task) => ({
       id: task.id,
       projectId: task.projectId,
-      projectTitle: projects.get(task.projectId)!.title,
-      title: task.title,
+      projectTitle: translate(lang, projects.get(task.projectId)!.title),
+      title: translate(lang, task.title),
       startDate: task.startDate,
       dueDate: task.dueDate,
-      phaseName: phases.get(task.phaseId)?.name ?? "Tugas",
+      phaseName: translate(lang, phases.get(task.phaseId)?.name ?? "Tugas"),
       status: task.status,
     }));
 }
@@ -139,8 +181,8 @@ export interface ClientRecord {
   totalValue: number;
 }
 
-export function getClients(userId: string): ClientRecord[] {
-  const projects = getProjectsForUser(userId);
+export function getClients(userId: string, lang: Lang = "id"): ClientRecord[] {
+  const projects = getProjectsForUser(userId, lang);
   const map = new Map<string, ClientRecord>();
   for (const project of projects) {
     const key = `${project.clientName.toLowerCase()}|${normalizeWhatsApp(project.clientWa)}`;
@@ -161,9 +203,9 @@ export function getClients(userId: string): ClientRecord[] {
   return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export function getWorkspaceOverview(user: PublicUser) {
-  const projects = getProjectsForUser(user.id);
-  const bundles = projects.map((project) => getProjectBundle(user.id, project.id)!);
+export function getWorkspaceOverview(user: PublicUser, lang: Lang = "id") {
+  const projects = getProjectsForUser(user.id, lang);
+  const bundles = projects.map((project) => getProjectBundle(user.id, project.id, lang)!);
   const allTasks = bundles.flatMap((bundle) => bundle.tasks);
   return {
     projects,

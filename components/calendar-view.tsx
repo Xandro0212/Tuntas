@@ -148,7 +148,7 @@ export function CalendarView({
         adjustedProjects?: number;
       };
       if (!response.ok || !payload.holiday) {
-        throw new Error(payload.error ?? t("Gagal menambah hari libur."));
+        throw new Error(payload.error ? t(payload.error) : t("Gagal menambah hari libur."));
       }
       setHolidayList((current) => [...current, payload.holiday!]);
       setHolidayForm({ date: today, name: "" });
@@ -172,7 +172,8 @@ export function CalendarView({
     try {
       const response = await fetch(`/api/holidays?id=${id}`, { method: "DELETE" });
       const payload = (await response.json()) as { error?: string };
-      if (!response.ok) throw new Error(payload.error ?? t("Gagal menghapus hari libur."));
+      if (!response.ok)
+        throw new Error(payload.error ? t(payload.error) : t("Gagal menghapus hari libur."));
       setHolidayList((current) => current.filter((holiday) => holiday.id !== id));
       toast.success(t("Hari libur dihapus."));
       router.refresh();
@@ -265,7 +266,7 @@ export function CalendarView({
         </span>
       </div>
 
-      <div className="panel hidden overflow-hidden sm:block">
+      <div className="panel hidden overflow-hidden xl:block">
         <div className="overflow-x-auto">
           <div className="min-w-[700px]">
             <div className="grid grid-cols-7 border-b border-line bg-paper/70">
@@ -357,7 +358,10 @@ export function CalendarView({
                         ))}
                       {remaining > 0 && (
                         <div className="px-1 text-[8.5px] font-semibold text-muted">
-                          +{remaining} tugas
+                          +{" "}
+                          {remaining === 1
+                            ? t("1 tugas")
+                            : t("{n} tugas", { n: remaining })}
                         </div>
                       )}
                     </div>
@@ -368,7 +372,7 @@ export function CalendarView({
           </div>
         </div>
       </div>
-      <div className="sm:hidden">
+      <div className="xl:hidden">
         <div className="mb-2 flex items-center justify-between px-1">
           <h3 className="text-[12px] font-bold text-ink-2">{t("Jadwal per hari")}</h3>
           <span className="text-[10px] text-muted">{t("Hari yang ada kegiatan")}</span>
@@ -444,7 +448,7 @@ export function CalendarView({
                             </div>
                             <div className="mt-0.5 text-[8.5px] opacity-65">
                               {phase?.name}
-                              {task.status === "done" ? " · selesai" : ""}
+                              {task.status === "done" ? ` · ${t("selesai")}` : ""}
                             </div>
                           </div>
                         );

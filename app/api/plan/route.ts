@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth";
 import { getLang } from "@/lib/lang-server";
+import { translate } from "@/lib/i18n";
 import { generateLlmPlan, generateMockPlan, generateQuestions, type PlanInput } from "@/lib/ai";
 import type { Category } from "@/lib/types";
 
@@ -8,6 +9,7 @@ const CATEGORIES = new Set<Category>(["kerajinan", "katering", "konveksi", "jasa
 
 export async function POST(request: Request) {
   const user = await getSessionUser();
+  const lang = await getLang();
   if (!user) return NextResponse.json({ error: "Silakan masuk terlebih dahulu." }, { status: 401 });
 
   try {
@@ -48,14 +50,14 @@ export async function POST(request: Request) {
 
     if (body.mode !== "plan") {
       return NextResponse.json({
-        questions: generateQuestions(input, await getLang()),
+        questions: generateQuestions(input, lang),
         engine: process.env.AI_API_KEY || process.env.OPENAI_API_KEY ? "llm" : "demo",
       });
     }
 
     const answers = body.answers ?? {};
     try {
-      const llmPlan = await generateLlmPlan(input, answers);
+      const llmPlan = await generateLlmPlan(input, answers, lang);
       if (llmPlan) {
         return NextResponse.json({ plan: llmPlan, engine: "llm" });
       }
@@ -64,15 +66,19 @@ export async function POST(request: Request) {
         {
           error:
             error instanceof Error
-              ? `AI belum bisa menyusun rencana: ${error.message} Coba lagi sebentar.`
-              : "AI belum bisa menyusun rencana. Coba lagi sebentar.",
+              ? translate(
+                  lang,
+                  "AI belum bisa menyusun rencana: {message} Coba lagi sebentar.",
+                  { message: translate(lang, error.message) },
+                )
+              : translate(lang, "AI belum bisa menyusun rencana. Coba lagi sebentar."),
         },
         { status: 502 },
       );
     }
 
     return NextResponse.json({
-      plan: generateMockPlan(input, answers),
+      plan: generateMockPlan(input, answers, lang),
       engine: "demo",
     });
   } catch {

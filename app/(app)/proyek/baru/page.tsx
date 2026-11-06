@@ -16,10 +16,11 @@ export default async function NewProjectPage({
   searchParams: Promise<{ cerita?: string }>;
 }) {
   const user = await requireUser();
+  const lang = await getLang();
   const { cerita } = await searchParams;
-  const projects = getProjectsForUser(user.id);
+  const projects = getProjectsForUser(user.id, lang);
   const lastProject = [...projects].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))[0];
-  const holidays = getHolidays();
+  const holidays = getHolidays(lang);
 
   return (
     <ProjectWizard

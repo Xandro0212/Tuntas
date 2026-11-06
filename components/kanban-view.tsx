@@ -106,7 +106,8 @@ export function KanbanView({
         body: JSON.stringify({ status }),
       });
       const payload = (await response.json()) as { error?: string };
-      if (!response.ok) throw new Error(payload.error ?? "Gagal memindahkan tugas.");
+      if (!response.ok)
+        throw new Error(payload.error ? t(payload.error) : t("Gagal memindahkan tugas."));
       toast.success(
         status === "done"
           ? t("Tugas ditandai selesai.")
@@ -498,7 +499,7 @@ function PhaseProgress({ phases, tasks }: { phases: Phase[]; tasks: Task[] }) {
         <span className="section-title">{t("Progres tahap")}</span>
         <span className="text-[10px] text-muted">{t("Update singkat tiap tahap")}</span>
       </div>
-      <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1 xl:grid xl:grid-cols-4 xl:overflow-visible">
+      <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
         {phases.map((phase, index) => {
           const tone = phaseTone(phase.name, index);
           const list = tasks.filter((task) => task.phaseId === phase.id);
@@ -526,7 +527,7 @@ function PhaseProgress({ phases, tasks }: { phases: Phase[]; tasks: Task[] }) {
           return (
             <div
               key={phase.id}
-              className="glass-soft w-[248px] shrink-0 rounded-xl p-3 xl:w-auto"
+              className="glass-soft rounded-xl p-3"
             >
               <div className="flex items-center gap-1.5">
                 <span
@@ -719,10 +720,23 @@ function TaskEditModal({
       const response = await fetch(`/api/tasks/${task.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          status: form.status,
+          phaseId: form.phaseId,
+          type: form.type,
+          startDate: form.startDate,
+          dueDate: form.dueDate,
+          durationDays: form.durationDays,
+          ...(form.title !== task.title ? { title: form.title } : {}),
+          ...(form.assignee !== task.assignee ? { assignee: form.assignee } : {}),
+          ...(form.progressNote !== (task.progressNote ?? "")
+            ? { progressNote: form.progressNote }
+            : {}),
+        }),
       });
       const payload = (await response.json()) as { error?: string; task?: Task };
-      if (!response.ok || !payload.task) throw new Error(payload.error ?? t("Gagal menyimpan tugas."));
+      if (!response.ok || !payload.task)
+        throw new Error(payload.error ? t(payload.error) : t("Gagal menyimpan tugas."));
       toast.success(t("Tugas diperbarui."));
       onSaved(payload.task);
     } catch (err) {
@@ -737,7 +751,8 @@ function TaskEditModal({
     try {
       const response = await fetch(`/api/tasks/${task.id}`, { method: "DELETE" });
       const payload = (await response.json()) as { error?: string };
-      if (!response.ok) throw new Error(payload.error ?? t("Gagal menghapus tugas."));
+      if (!response.ok)
+        throw new Error(payload.error ? t(payload.error) : t("Gagal menghapus tugas."));
       toast.success(t("Tugas dihapus."));
       onDeleted(task.id);
     } catch (err) {
@@ -956,7 +971,8 @@ function AddTaskModal({
         body: JSON.stringify({ ...form, projectId }),
       });
       const payload = (await response.json()) as { error?: string; task?: Task };
-      if (!response.ok || !payload.task) throw new Error(payload.error ?? t("Gagal menambah tugas."));
+      if (!response.ok || !payload.task)
+        throw new Error(payload.error ? t(payload.error) : t("Gagal menambah tugas."));
       toast.success(t("Tugas ditambahkan."));
       onCreated(payload.task);
     } catch (err) {

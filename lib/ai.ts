@@ -1,5 +1,5 @@
 import type { AiPlan, AiQuestion, AiTask, Category, TaskType } from "./types";
-import type { Lang } from "./i18n";
+import { translate, type Lang } from "./i18n";
 
 export interface PlanInput {
   category: Category;
@@ -104,14 +104,17 @@ class PlanBuilder {
   private phaseCounter = 0;
   private pick: (type: TaskType) => string;
 
-  constructor(team: string[]) {
+  constructor(
+    team: string[],
+    private lang: Lang = "id",
+  ) {
     this.pick = assigneePicker(team);
   }
 
   phase(name: string): string {
     this.phaseCounter += 1;
     const id = `p${this.phaseCounter}`;
-    this.phases.push({ id, name });
+    this.phases.push({ id, name: translate(this.lang, name) });
     return id;
   }
 
@@ -121,7 +124,7 @@ class PlanBuilder {
     this.tasks.push({
       id,
       phase,
-      title,
+      title: translate(this.lang, title),
       duration_days: Math.max(1, Math.round(days)),
       depends_on: deps.filter(Boolean),
       type,
@@ -131,8 +134,8 @@ class PlanBuilder {
   }
 }
 
-function craftPlan(input: PlanInput, answers: Record<string, string>): { tasks: AiTask[]; phases: { id: string; name: string }[]; risks: string[] } {
-  const b = new PlanBuilder(input.team);
+function craftPlan(input: PlanInput, answers: Record<string, string>, lang: Lang = "id"): { tasks: AiTask[]; phases: { id: string; name: string }[]; risks: string[] } {
+  const b = new PlanBuilder(input.team, lang);
   const approval = approvalDays(answers);
   const install = answers.install ?? "";
   const materials = answers.material ?? "";
@@ -202,8 +205,8 @@ function craftPlan(input: PlanInput, answers: Record<string, string>): { tasks: 
   return { tasks: b.tasks, phases: b.phases, risks };
 }
 
-function cateringPlan(input: PlanInput, answers: Record<string, string>): { tasks: AiTask[]; phases: { id: string; name: string }[]; risks: string[] } {
-  const b = new PlanBuilder(input.team);
+function cateringPlan(input: PlanInput, answers: Record<string, string>, lang: Lang = "id"): { tasks: AiTask[]; phases: { id: string; name: string }[]; risks: string[] } {
+  const b = new PlanBuilder(input.team, lang);
   const approval = approvalDays(answers);
   const install = answers.install ?? "";
   const materials = answers.material ?? "";
@@ -256,8 +259,8 @@ function cateringPlan(input: PlanInput, answers: Record<string, string>): { task
   };
 }
 
-function garmentPlan(input: PlanInput, answers: Record<string, string>): { tasks: AiTask[]; phases: { id: string; name: string }[]; risks: string[] } {
-  const b = new PlanBuilder(input.team);
+function garmentPlan(input: PlanInput, answers: Record<string, string>, lang: Lang = "id"): { tasks: AiTask[]; phases: { id: string; name: string }[]; risks: string[] } {
+  const b = new PlanBuilder(input.team, lang);
   const approval = approvalDays(answers);
 
   const p1 = b.phase("Desain & sampel");
@@ -294,8 +297,8 @@ function garmentPlan(input: PlanInput, answers: Record<string, string>): { tasks
   };
 }
 
-function servicePlan(input: PlanInput, answers: Record<string, string>): { tasks: AiTask[]; phases: { id: string; name: string }[]; risks: string[] } {
-  const b = new PlanBuilder(input.team);
+function servicePlan(input: PlanInput, answers: Record<string, string>, lang: Lang = "id"): { tasks: AiTask[]; phases: { id: string; name: string }[]; risks: string[] } {
+  const b = new PlanBuilder(input.team, lang);
   const approval = approvalDays(answers);
 
   const p1 = b.phase("Brief & penawaran");
@@ -329,8 +332,8 @@ function servicePlan(input: PlanInput, answers: Record<string, string>): { tasks
   };
 }
 
-function genericPlan(input: PlanInput, answers: Record<string, string>): { tasks: AiTask[]; phases: { id: string; name: string }[]; risks: string[] } {
-  const b = new PlanBuilder(input.team);
+function genericPlan(input: PlanInput, answers: Record<string, string>, lang: Lang = "id"): { tasks: AiTask[]; phases: { id: string; name: string }[]; risks: string[] } {
+  const b = new PlanBuilder(input.team, lang);
   const approval = approvalDays(answers);
 
   const p1 = b.phase("Persiapan");
@@ -362,7 +365,11 @@ function genericPlan(input: PlanInput, answers: Record<string, string>): { tasks
   };
 }
 
-export function generateMockPlan(input: PlanInput, answers: Record<string, string>): AiPlan {
+export function generateMockPlan(
+  input: PlanInput,
+  answers: Record<string, string>,
+  lang: Lang = "id",
+): AiPlan {
   const builder =
     input.category === "katering"
       ? cateringPlan
@@ -373,12 +380,12 @@ export function generateMockPlan(input: PlanInput, answers: Record<string, strin
           : input.category === "lainnya"
             ? genericPlan
             : craftPlan;
-  const plan = builder(input, answers);
+  const plan = builder(input, answers, lang);
   return {
     questions: [],
     phases: plan.phases,
     tasks: plan.tasks,
-    risks: plan.risks,
+    risks: plan.risks.map((risk) => translate(lang, risk)),
   };
 }
 
@@ -482,6 +489,7 @@ function normalizePlan(raw: unknown, input: PlanInput): AiPlan {
 export async function generateLlmPlan(
   input: PlanInput,
   answers: Record<string, string>,
+  lang: Lang = "id",
 ): Promise<AiPlan | null> {
   const apiKey = process.env.AI_API_KEY || process.env.OPENAI_API_KEY;
   if (!apiKey) return null;
@@ -519,13 +527,21 @@ Buat rencana tugasnya sekarang.`;
           temperature: 0.4,
           response_format: { type: "json_object" },
           messages: [
-            { role: "system", content: SYSTEM_PROMPT },
+            {
+              role: "system",
+              content:
+                lang === "en"
+                  ? `${SYSTEM_PROMPT}\n\nIMPORTANT: Write every task title, phase name, question, option, and risk in concise English. Keep all JSON keys unchanged.`
+                  : SYSTEM_PROMPT,
+            },
             { role: "user", content: userPrompt },
           ],
         }),
       });
       if (!response.ok) {
-        throw new Error(`Layanan AI membalas ${response.status}.`);
+        throw new Error(
+          translate(lang, "Layanan AI membalas {status}.", { status: response.status }),
+        );
       }
       const payload = (await response.json()) as {
         choices?: { message?: { content?: string } }[];

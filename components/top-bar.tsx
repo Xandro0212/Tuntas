@@ -170,7 +170,7 @@ export function TopBar({
           <Bell className="h-4 w-4" />
           <span className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-green ring-2 ring-white" />
         </Link>
-        <div className="ml-2 hidden items-center gap-2.5 border-l border-line pl-3 sm:flex">
+        <div className="ml-2 hidden items-center gap-2.5 border-l border-line pl-3 xl:flex">
           <Avatar name={user.name} size="md" />
           <div className="min-w-0">
             <div className="truncate text-[12px] font-semibold text-ink">{user.name}</div>
