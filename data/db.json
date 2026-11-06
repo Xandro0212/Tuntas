@@ -1,0 +1,1466 @@
+{
+  "users": [
+    {
+      "id": "u_demo_made",
+      "name": "Made Arta",
+      "businessName": "Made Art Studio",
+      "email": "demo@tuntas.id",
+      "passwordHash": "593e958bb2048371d821a0632d754108b64480e85513898d45b8bc14773583d80b0040d67e9760ac26127155e5c2d471377a260a3ffc37e1265da785b763b1a7",
+      "salt": "1848800bb6cf41a54946b1c00cd189cb",
+      "createdAt": "2026-11-06T04:00:01.221Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": "p_patung",
+      "userId": "u_demo_made",
+      "title": "Patung kuda – Kantor Dinas Provinsi",
+      "category": "kerajinan",
+      "clientName": "Bu Ayu",
+      "clientWa": "081234567890",
+      "deadline": "2026-12-07",
+      "bufferDays": 2,
+      "story": "Patung kuda dari fiberglass, tinggi kira-kira 2 meter, posisi kuda berdiri dengan dua kaki depan diangkat. Finishing warna perunggu, ada plakat nama di bagian bawah. Dipasang di lobby kantor dinas, harus sudah berdiri sebelum acara peresmian. Klien mau lihat sketsa dulu sebelum produksi. DP 50% setelah sketsa disetujui. Tim saya 3 orang, kerja Senin–Sabtu.",
+      "value": 45000000,
+      "team": [
+        "Made",
+        "Wayan",
+        "Komang"
+      ],
+      "workdays": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "createdAt": "2026-10-20T01:00:00.000Z",
+      "updatedAt": "2026-11-06T08:00:00.000Z",
+      "attachments": []
+    },
+    {
+      "id": "p_katering",
+      "userId": "u_demo_made",
+      "title": "Nasi kotak 150 porsi – Rapat Kantor Camat",
+      "category": "katering",
+      "clientName": "Bu Sari",
+      "clientWa": "081246801357",
+      "deadline": "2026-11-19",
+      "deadlineTime": "11:00",
+      "bufferDays": 1,
+      "story": "Nasi kotak 150 porsi untuk rapat kantor camat. Menu: nasi putih, ayam betutu, lawar, telur, sambal matah, dan buah. Acara Kamis 19 November, makanan tiba di lokasi jam 11.00. Butuh 3 orang tim. Klien sudah bayar DP 50%, sisanya setelah acara.",
+      "value": 7500000,
+      "team": [
+        "Made",
+        "Kadek",
+        "Putu",
+        "Komang"
+      ],
+      "workdays": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "createdAt": "2026-11-02T02:00:00.000Z",
+      "updatedAt": "2026-11-06T08:57:27.457Z",
+      "attachments": []
+    },
+    {
+      "id": "p_relief",
+      "userId": "u_demo_made",
+      "title": "Relief garuda – Hotel Ubud",
+      "category": "kerajinan",
+      "clientName": "Hotel Ubud",
+      "clientWa": "081337654321",
+      "deadline": "2026-12-15",
+      "bufferDays": 2,
+      "story": "Relief garuda untuk dinding lobby hotel, ukuran 180 x 90 cm, bahan fiberglass dengan finishing gold antique. Dipasang di dinding batu alam, perlu koordinasi dengan tim hotel untuk titik lampu. Deadline 15 Desember, acara pembukaan 18 Desember.",
+      "value": 18000000,
+      "team": [
+        "Made",
+        "Wayan",
+        "Komang"
+      ],
+      "workdays": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "createdAt": "2026-11-01T03:00:00.000Z",
+      "updatedAt": "2026-11-06T07:01:39.366Z",
+      "attachments": []
+    },
+    {
+      "id": "p_ukiran",
+      "userId": "u_demo_made",
+      "title": "Ukiran pintu – Villa Canggu",
+      "category": "kerajinan",
+      "clientName": "Villa Canggu",
+      "clientWa": "081999887766",
+      "deadline": "2027-01-09",
+      "bufferDays": 2,
+      "story": "Ukiran pintu utama villa dari kayu suar, motif flora Bali. Ukuran pintu 120 x 240 cm, sudah termasuk kusen. Klien minta finishing natural matte. Pengiriman ke Canggu, dipasang oleh tukang klien.",
+      "value": 9500000,
+      "team": [
+        "Made",
+        "Wayan",
+        "Komang"
+      ],
+      "workdays": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "createdAt": "2026-11-03T05:00:00.000Z",
+      "updatedAt": "2026-11-04T06:00:00.000Z",
+      "attachments": []
+    },
+    {
+      "id": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "userId": "u_demo_made",
+      "title": "desain ruang kantor",
+      "category": "kerajinan",
+      "clientName": "miss jenni",
+      "clientWa": "08123456789",
+      "deadline": "2027-01-28",
+      "bufferDays": 4,
+      "story": "Klien memesan jasa desain dan pembuatan custom furniture untuk kebutuhan interior kantor di Denpasar.\n\nSpesifikasi pekerjaan:\n- Produk: Meja resepsionis, lemari penyimpanan, dan meja kerja custom.\n- Material: Multipleks premium dengan finishing HPL.\n- Ukuran: Disesuaikan dengan dimensi ruangan dan kebutuhan klien.\n- Warna: Kombinasi cokelat kayu dan putih minimalis.\n- Desain: Modern minimalis dengan konsep elegan dan fungsional.\n- Produksi: Dikerjakan oleh 2 tenaga produksi dan 1 desainer interior.\n- Instalasi: Dilakukan oleh 2 tenaga pemasangan di lokasi klien.\n\nPersetujuan klien:\nDesain 3D, ukuran furniture, pilihan material, warna, dan estimasi biaya harus disetujui sebelum proses produksi dimulai.\n\nKendala yang perlu diperhatikan:\n- Keterlambatan pengiriman material.\n- Perubahan desain dari klien.\n- Kesalahan pengukuran ruangan.\n- Ketidaksesuaian hasil finishing dengan desain awal.\n- Keterlambatan proses produksi dan pemasangan.\n\nTarget pekerjaan adalah menyelesaikan desain, produksi, pengiriman, dan instalasi seluruh furniture sesuai spesifikasi dan deadline yang telah disepakati.",
+      "value": 1000,
+      "team": [
+        "Made",
+        "Wayan",
+        "Komang",
+        "nari"
+      ],
+      "workdays": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "attachments": [],
+      "createdAt": "2026-11-06T06:51:11.685Z",
+      "updatedAt": "2026-11-06T06:51:46.971Z"
+    }
+  ],
+  "phases": [
+    {
+      "id": "ph_patung_1",
+      "projectId": "p_patung",
+      "name": "Persiapan & desain",
+      "order": 1
+    },
+    {
+      "id": "ph_patung_2",
+      "projectId": "p_patung",
+      "name": "Produksi",
+      "order": 2
+    },
+    {
+      "id": "ph_patung_3",
+      "projectId": "p_patung",
+      "name": "Finishing",
+      "order": 3
+    },
+    {
+      "id": "ph_patung_4",
+      "projectId": "p_patung",
+      "name": "Kirim & serah terima",
+      "order": 4
+    },
+    {
+      "id": "ph_katering_1",
+      "projectId": "p_katering",
+      "name": "Persiapan menu",
+      "order": 1
+    },
+    {
+      "id": "ph_katering_2",
+      "projectId": "p_katering",
+      "name": "Belanja",
+      "order": 2
+    },
+    {
+      "id": "ph_katering_3",
+      "projectId": "p_katering",
+      "name": "Produksi",
+      "order": 3
+    },
+    {
+      "id": "ph_katering_4",
+      "projectId": "p_katering",
+      "name": "Pengiriman & acara",
+      "order": 4
+    },
+    {
+      "id": "ph_relief_1",
+      "projectId": "p_relief",
+      "name": "Persiapan & desain",
+      "order": 1
+    },
+    {
+      "id": "ph_relief_2",
+      "projectId": "p_relief",
+      "name": "Produksi",
+      "order": 2
+    },
+    {
+      "id": "ph_relief_3",
+      "projectId": "p_relief",
+      "name": "Finishing",
+      "order": 3
+    },
+    {
+      "id": "ph_relief_4",
+      "projectId": "p_relief",
+      "name": "Kirim & pemasangan",
+      "order": 4
+    },
+    {
+      "id": "ph_ukiran_1",
+      "projectId": "p_ukiran",
+      "name": "Desain & bahan",
+      "order": 1
+    },
+    {
+      "id": "ph_ukiran_2",
+      "projectId": "p_ukiran",
+      "name": "Produksi",
+      "order": 2
+    },
+    {
+      "id": "ph_ukiran_3",
+      "projectId": "p_ukiran",
+      "name": "Finishing & kirim",
+      "order": 3
+    },
+    {
+      "id": "ph_30d90dbf-516b-45d4-89c9-8ae322266193",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "name": "Persiapan & desain",
+      "order": 1
+    },
+    {
+      "id": "ph_5139c08c-c91d-4993-a256-0bc274f0fbbc",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "name": "Produksi",
+      "order": 2
+    },
+    {
+      "id": "ph_8e815a2a-d77a-4625-a7d2-6a4ca7b0d6f2",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "name": "Finishing",
+      "order": 3
+    },
+    {
+      "id": "ph_5d839126-3244-415f-8496-b5b007791004",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "name": "Kirim & serah terima",
+      "order": 4
+    }
+  ],
+  "tasks": [
+    {
+      "id": "t_patung_1",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_1",
+      "title": "Konfirmasi brief & ukuran",
+      "type": "waiting_client",
+      "startDate": "2026-10-26",
+      "dueDate": "2026-10-27",
+      "durationDays": 1,
+      "dependsOn": [],
+      "assignee": "Made",
+      "status": "done",
+      "source": "ai",
+      "order": 1,
+      "completedAt": "2026-10-27"
+    },
+    {
+      "id": "t_patung_2",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_1",
+      "title": "Sketsa 3 tampak",
+      "type": "internal",
+      "startDate": "2026-10-28",
+      "dueDate": "2026-10-30",
+      "durationDays": 3,
+      "dependsOn": [
+        "t_patung_1"
+      ],
+      "assignee": "Made",
+      "status": "done",
+      "source": "ai",
+      "order": 2,
+      "completedAt": "2026-10-30"
+    },
+    {
+      "id": "t_patung_3",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_1",
+      "title": "Revisi sketsa klien",
+      "type": "waiting_client",
+      "startDate": "2026-10-31",
+      "dueDate": "2026-11-02",
+      "durationDays": 2,
+      "dependsOn": [
+        "t_patung_2"
+      ],
+      "assignee": "Made",
+      "status": "done",
+      "source": "ai",
+      "order": 3,
+      "completedAt": "2026-11-02"
+    },
+    {
+      "id": "t_patung_4",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_1",
+      "title": "Persetujuan sketsa + DP 50%",
+      "type": "payment",
+      "startDate": "2026-11-03",
+      "dueDate": "2026-11-03",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_patung_3"
+      ],
+      "assignee": "Made",
+      "status": "done",
+      "source": "ai",
+      "order": 4,
+      "completedAt": "2026-11-03"
+    },
+    {
+      "id": "t_patung_5",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_2",
+      "title": "Belanja resin, serat fiber & besi",
+      "type": "internal",
+      "startDate": "2026-11-02",
+      "dueDate": "2026-11-02",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_patung_4"
+      ],
+      "assignee": "Wayan",
+      "status": "done",
+      "source": "ai",
+      "order": 5,
+      "completedAt": "2026-11-02"
+    },
+    {
+      "id": "t_patung_6",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_2",
+      "title": "Buat rangka besi",
+      "type": "internal",
+      "startDate": "2026-11-03",
+      "dueDate": "2026-11-04",
+      "durationDays": 2,
+      "dependsOn": [
+        "t_patung_5"
+      ],
+      "assignee": "Wayan",
+      "status": "done",
+      "source": "ai",
+      "order": 6,
+      "completedAt": "2026-11-04"
+    },
+    {
+      "id": "t_patung_7",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_2",
+      "title": "Cetak fiberglass",
+      "type": "internal",
+      "startDate": "2026-11-05",
+      "dueDate": "2026-11-09",
+      "durationDays": 4,
+      "dependsOn": [
+        "t_patung_6"
+      ],
+      "assignee": "Wayan",
+      "status": "doing",
+      "source": "ai",
+      "order": 7,
+      "completedAt": null,
+      "progressNote": "Cetakan kedua sedang dikeringkan; estimasi selesai 9 Nov."
+    },
+    {
+      "id": "t_patung_8",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_2",
+      "title": "Konfirmasi teks plakat nama",
+      "type": "waiting_client",
+      "startDate": "2026-11-05",
+      "dueDate": "2026-11-05",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_patung_4"
+      ],
+      "assignee": "Made",
+      "status": "waiting",
+      "source": "ai",
+      "order": 8,
+      "completedAt": null,
+      "progressNote": "Menunggu balasan Bu Ayu untuk teks plakat sejak 5 Nov."
+    },
+    {
+      "id": "t_patung_9",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_2",
+      "title": "Pesan plakat ke vendor",
+      "type": "vendor",
+      "startDate": "2026-11-10",
+      "dueDate": "2026-11-11",
+      "durationDays": 2,
+      "dependsOn": [
+        "t_patung_8"
+      ],
+      "assignee": "Komang",
+      "status": "todo",
+      "source": "ai",
+      "order": 9,
+      "completedAt": null,
+      "progressNote": "Plakat sedang dalam pengantaran dengan estimasi penyampaian tgl 10 Nov pukul 16:45."
+    },
+    {
+      "id": "t_patung_10",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_2",
+      "title": "Dempul & amplas",
+      "type": "internal",
+      "startDate": "2026-11-12",
+      "dueDate": "2026-11-14",
+      "durationDays": 3,
+      "dependsOn": [
+        "t_patung_7"
+      ],
+      "assignee": "Wayan",
+      "status": "todo",
+      "source": "ai",
+      "order": 10,
+      "completedAt": null,
+      "progressNote": "Belum mulai — menunggu cetakan fiberglass kering."
+    },
+    {
+      "id": "t_patung_11",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_2",
+      "title": "Finishing cat & detail kuda",
+      "type": "internal",
+      "startDate": "2026-11-16",
+      "dueDate": "2026-11-20",
+      "durationDays": 5,
+      "dependsOn": [
+        "t_patung_10",
+        "t_patung_9"
+      ],
+      "assignee": "Made",
+      "status": "todo",
+      "source": "ai",
+      "order": 11,
+      "completedAt": null
+    },
+    {
+      "id": "t_patung_12",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_3",
+      "title": "Pasang plakat & aksesori",
+      "type": "internal",
+      "startDate": "2026-11-23",
+      "dueDate": "2026-11-23",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_patung_11",
+        "t_patung_9"
+      ],
+      "assignee": "Komang",
+      "status": "todo",
+      "source": "ai",
+      "order": 12,
+      "completedAt": null
+    },
+    {
+      "id": "t_patung_13",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_3",
+      "title": "QC akhir & foto produk",
+      "type": "internal",
+      "startDate": "2026-11-24",
+      "dueDate": "2026-11-24",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_patung_12"
+      ],
+      "assignee": "Made",
+      "status": "todo",
+      "source": "ai",
+      "order": 13,
+      "completedAt": null
+    },
+    {
+      "id": "t_patung_14",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_3",
+      "title": "Packing kayu",
+      "type": "delivery",
+      "startDate": "2026-11-26",
+      "dueDate": "2026-11-28",
+      "durationDays": 3,
+      "dependsOn": [
+        "t_patung_13"
+      ],
+      "assignee": "Komang",
+      "status": "todo",
+      "source": "ai",
+      "order": 14,
+      "completedAt": null
+    },
+    {
+      "id": "t_patung_15",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_4",
+      "title": "Konfirmasi jadwal pengiriman",
+      "type": "waiting_client",
+      "startDate": "2026-11-30",
+      "dueDate": "2026-11-30",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_patung_13"
+      ],
+      "assignee": "Made",
+      "status": "todo",
+      "source": "ai",
+      "order": 15,
+      "completedAt": null
+    },
+    {
+      "id": "t_patung_16",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_4",
+      "title": "Sewa pickup & angkut",
+      "type": "vendor",
+      "startDate": "2026-12-01",
+      "dueDate": "2026-12-01",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_patung_14"
+      ],
+      "assignee": "Komang",
+      "status": "todo",
+      "source": "ai",
+      "order": 16,
+      "completedAt": null
+    },
+    {
+      "id": "t_patung_17",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_4",
+      "title": "Pengiriman & pemasangan",
+      "type": "delivery",
+      "startDate": "2026-12-02",
+      "dueDate": "2026-12-03",
+      "durationDays": 2,
+      "dependsOn": [
+        "t_patung_16",
+        "t_patung_15"
+      ],
+      "assignee": "Wayan",
+      "status": "todo",
+      "source": "ai",
+      "order": 17,
+      "completedAt": null
+    },
+    {
+      "id": "t_patung_18",
+      "projectId": "p_patung",
+      "phaseId": "ph_patung_4",
+      "title": "Pelunasan 50%",
+      "type": "payment",
+      "startDate": "2026-12-03",
+      "dueDate": "2026-12-03",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_patung_17"
+      ],
+      "assignee": "Made",
+      "status": "todo",
+      "source": "ai",
+      "order": 18,
+      "completedAt": null
+    },
+    {
+      "id": "t_relief_1",
+      "projectId": "p_relief",
+      "phaseId": "ph_relief_1",
+      "title": "Konfirmasi brief & ukuran",
+      "type": "waiting_client",
+      "startDate": "2026-11-09",
+      "dueDate": "2026-11-09",
+      "durationDays": 1,
+      "dependsOn": [],
+      "assignee": "Made",
+      "status": "done",
+      "source": "ai",
+      "order": 1,
+      "completedAt": "2026-11-09"
+    },
+    {
+      "id": "t_relief_2",
+      "projectId": "p_relief",
+      "phaseId": "ph_relief_1",
+      "title": "Desain relief garuda",
+      "type": "internal",
+      "startDate": "2026-11-10",
+      "dueDate": "2026-11-12",
+      "durationDays": 3,
+      "dependsOn": [
+        "t_relief_1"
+      ],
+      "assignee": "Made",
+      "status": "done",
+      "source": "ai",
+      "order": 2,
+      "completedAt": "2026-11-12"
+    },
+    {
+      "id": "t_relief_3",
+      "projectId": "p_relief",
+      "phaseId": "ph_relief_1",
+      "title": "Persetujuan desain klien",
+      "type": "waiting_client",
+      "startDate": "2026-11-13",
+      "dueDate": "2026-11-13",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_relief_2"
+      ],
+      "assignee": "Made",
+      "status": "done",
+      "source": "ai",
+      "order": 3,
+      "completedAt": "2026-11-13"
+    },
+    {
+      "id": "t_relief_4",
+      "projectId": "p_relief",
+      "phaseId": "ph_relief_2",
+      "title": "Belanja resin & serat fiber",
+      "type": "internal",
+      "startDate": "2026-11-16",
+      "dueDate": "2026-11-16",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_relief_3"
+      ],
+      "assignee": "Wayan",
+      "status": "done",
+      "source": "ai",
+      "order": 4,
+      "completedAt": "2026-11-16"
+    },
+    {
+      "id": "t_relief_5",
+      "projectId": "p_relief",
+      "phaseId": "ph_relief_2",
+      "title": "Cetak & bentuk relief",
+      "type": "internal",
+      "startDate": "2026-11-17",
+      "dueDate": "2026-11-21",
+      "durationDays": 5,
+      "dependsOn": [
+        "t_relief_4"
+      ],
+      "assignee": "Wayan",
+      "status": "doing",
+      "source": "ai",
+      "order": 5,
+      "completedAt": null,
+      "progressNote": "Relief sudah dicetak, sekarang masuk tahap pengeringan."
+    },
+    {
+      "id": "t_relief_6",
+      "projectId": "p_relief",
+      "phaseId": "ph_relief_3",
+      "title": "Finishing gold antique",
+      "type": "internal",
+      "startDate": "2026-11-23",
+      "dueDate": "2026-11-27",
+      "durationDays": 5,
+      "dependsOn": [
+        "t_relief_5"
+      ],
+      "assignee": "Komang",
+      "status": "waiting",
+      "source": "ai",
+      "order": 6,
+      "completedAt": null,
+      "progressNote": "Menunggu relief kering sebelum finishing gold."
+    },
+    {
+      "id": "t_relief_7",
+      "projectId": "p_relief",
+      "phaseId": "ph_relief_3",
+      "title": "QC & foto produk",
+      "type": "internal",
+      "startDate": "2026-11-30",
+      "dueDate": "2026-11-30",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_relief_6"
+      ],
+      "assignee": "Made",
+      "status": "doing",
+      "source": "ai",
+      "order": 7,
+      "completedAt": null
+    },
+    {
+      "id": "t_relief_8",
+      "projectId": "p_relief",
+      "phaseId": "ph_relief_4",
+      "title": "Pengiriman & pemasangan",
+      "type": "delivery",
+      "startDate": "2026-12-02",
+      "dueDate": "2026-12-03",
+      "durationDays": 2,
+      "dependsOn": [
+        "t_relief_7"
+      ],
+      "assignee": "Wayan",
+      "status": "todo",
+      "source": "ai",
+      "order": 8,
+      "completedAt": null
+    },
+    {
+      "id": "t_relief_9",
+      "projectId": "p_relief",
+      "phaseId": "ph_relief_4",
+      "title": "Pelunasan 50%",
+      "type": "payment",
+      "startDate": "2026-12-03",
+      "dueDate": "2026-12-03",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_relief_8"
+      ],
+      "assignee": "Made",
+      "status": "todo",
+      "source": "ai",
+      "order": 9,
+      "completedAt": null
+    },
+    {
+      "id": "t_ukiran_1",
+      "projectId": "p_ukiran",
+      "phaseId": "ph_ukiran_1",
+      "title": "Brief & ukuran pintu",
+      "type": "waiting_client",
+      "startDate": "2026-12-01",
+      "dueDate": "2026-12-01",
+      "durationDays": 1,
+      "dependsOn": [],
+      "assignee": "Made",
+      "status": "done",
+      "source": "ai",
+      "order": 1,
+      "completedAt": "2026-12-01"
+    },
+    {
+      "id": "t_ukiran_2",
+      "projectId": "p_ukiran",
+      "phaseId": "ph_ukiran_1",
+      "title": "Desain motif flora Bali",
+      "type": "internal",
+      "startDate": "2026-12-02",
+      "dueDate": "2026-12-04",
+      "durationDays": 3,
+      "dependsOn": [
+        "t_ukiran_1"
+      ],
+      "assignee": "Made",
+      "status": "doing",
+      "source": "ai",
+      "order": 2,
+      "completedAt": null,
+      "progressNote": "Sketsa motif sudah 60%; revisi internal dijadwalkan 4 Des."
+    },
+    {
+      "id": "t_ukiran_3",
+      "projectId": "p_ukiran",
+      "phaseId": "ph_ukiran_1",
+      "title": "Beli kayu suar",
+      "type": "internal",
+      "startDate": "2026-12-05",
+      "dueDate": "2026-12-05",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_ukiran_1"
+      ],
+      "assignee": "Wayan",
+      "status": "todo",
+      "source": "ai",
+      "order": 3,
+      "completedAt": null
+    },
+    {
+      "id": "t_ukiran_4",
+      "projectId": "p_ukiran",
+      "phaseId": "ph_ukiran_2",
+      "title": "Ukir & bentuk pintu",
+      "type": "internal",
+      "startDate": "2026-12-07",
+      "dueDate": "2026-12-12",
+      "durationDays": 6,
+      "dependsOn": [
+        "t_ukiran_2",
+        "t_ukiran_3"
+      ],
+      "assignee": "Wayan",
+      "status": "todo",
+      "source": "ai",
+      "order": 4,
+      "completedAt": null
+    },
+    {
+      "id": "t_ukiran_5",
+      "projectId": "p_ukiran",
+      "phaseId": "ph_ukiran_3",
+      "title": "Finishing natural matte",
+      "type": "internal",
+      "startDate": "2026-12-14",
+      "dueDate": "2026-12-18",
+      "durationDays": 5,
+      "dependsOn": [
+        "t_ukiran_4"
+      ],
+      "assignee": "Komang",
+      "status": "todo",
+      "source": "ai",
+      "order": 5,
+      "completedAt": null
+    },
+    {
+      "id": "t_ukiran_6",
+      "projectId": "p_ukiran",
+      "phaseId": "ph_ukiran_3",
+      "title": "Pengiriman ke Canggu",
+      "type": "delivery",
+      "startDate": "2026-12-21",
+      "dueDate": "2026-12-21",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_ukiran_5"
+      ],
+      "assignee": "Komang",
+      "status": "todo",
+      "source": "ai",
+      "order": 6,
+      "completedAt": null
+    },
+    {
+      "id": "t_ukiran_7",
+      "projectId": "p_ukiran",
+      "phaseId": "ph_ukiran_3",
+      "title": "Pelunasan",
+      "type": "payment",
+      "startDate": "2026-12-21",
+      "dueDate": "2026-12-21",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_ukiran_6"
+      ],
+      "assignee": "Made",
+      "status": "todo",
+      "source": "ai",
+      "order": 7,
+      "completedAt": null
+    },
+    {
+      "id": "t_kat_1",
+      "projectId": "p_katering",
+      "phaseId": "ph_katering_1",
+      "title": "Konfirmasi menu & jumlah porsi",
+      "type": "waiting_client",
+      "startDate": "2026-11-06",
+      "dueDate": "2026-11-06",
+      "durationDays": 1,
+      "dependsOn": [],
+      "assignee": "Made",
+      "status": "done",
+      "source": "ai",
+      "order": 1,
+      "completedAt": "2026-11-06"
+    },
+    {
+      "id": "t_kat_2",
+      "projectId": "p_katering",
+      "phaseId": "ph_katering_1",
+      "title": "Hitung porsi & kebutuhan bahan",
+      "type": "internal",
+      "startDate": "2026-11-06",
+      "dueDate": "2026-11-06",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_kat_1"
+      ],
+      "assignee": "Made",
+      "status": "done",
+      "source": "ai",
+      "order": 2,
+      "completedAt": "2026-11-06"
+    },
+    {
+      "id": "t_kat_3",
+      "projectId": "p_katering",
+      "phaseId": "ph_katering_1",
+      "title": "Persetujuan menu & DP 50%",
+      "type": "payment",
+      "startDate": "2026-11-04",
+      "dueDate": "2026-11-04",
+      "durationDays": 1,
+      "dependsOn": [],
+      "assignee": "Made",
+      "status": "done",
+      "source": "ai",
+      "order": 3,
+      "completedAt": "2026-11-04"
+    },
+    {
+      "id": "t_kat_4",
+      "projectId": "p_katering",
+      "phaseId": "ph_katering_2",
+      "title": "Belanja bahan kering & bumbu",
+      "type": "internal",
+      "startDate": "2026-11-03",
+      "dueDate": "2026-11-03",
+      "durationDays": 1,
+      "dependsOn": [],
+      "assignee": "Putu",
+      "status": "done",
+      "source": "ai",
+      "order": 4,
+      "completedAt": "2026-11-03"
+    },
+    {
+      "id": "t_kat_5",
+      "projectId": "p_katering",
+      "phaseId": "ph_katering_2",
+      "title": "Belanja sayur & bumbu di pasar",
+      "type": "internal",
+      "startDate": "2026-11-06",
+      "dueDate": "2026-11-06",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_kat_4"
+      ],
+      "assignee": "Putu",
+      "status": "done",
+      "source": "ai",
+      "order": 5,
+      "completedAt": "2026-11-06",
+      "progressNote": "Belanja pasar dijadwalkan pagi ini."
+    },
+    {
+      "id": "t_kat_6",
+      "projectId": "p_katering",
+      "phaseId": "ph_katering_2",
+      "title": "Ambil pesanan ayam 20 kg",
+      "type": "vendor",
+      "startDate": "2026-11-05",
+      "dueDate": "2026-11-05",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_kat_3"
+      ],
+      "assignee": "Kadek",
+      "status": "doing",
+      "source": "ai",
+      "order": 6,
+      "completedAt": null,
+      "progressNote": "Pesanan ayam sudah dikonfirmasi vendor; menunggu pickup."
+    },
+    {
+      "id": "t_kat_7",
+      "projectId": "p_katering",
+      "phaseId": "ph_katering_2",
+      "title": "Cek stok kotak, sendok & tisu",
+      "type": "internal",
+      "startDate": "2026-11-06",
+      "dueDate": "2026-11-06",
+      "durationDays": 1,
+      "dependsOn": [],
+      "assignee": "Komang",
+      "status": "todo",
+      "source": "ai",
+      "order": 7,
+      "completedAt": null
+    },
+    {
+      "id": "t_kat_8",
+      "projectId": "p_katering",
+      "phaseId": "ph_katering_2",
+      "title": "Persiapan bumbu & marinasi",
+      "type": "internal",
+      "startDate": "2026-11-07",
+      "dueDate": "2026-11-07",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_kat_6"
+      ],
+      "assignee": "Kadek",
+      "status": "todo",
+      "source": "ai",
+      "order": 8,
+      "completedAt": null,
+      "progressNote": "Bumbu sudah disiapkan; marinasi besok pagi."
+    },
+    {
+      "id": "t_kat_9",
+      "projectId": "p_katering",
+      "phaseId": "ph_katering_3",
+      "title": "Masak 150 porsi",
+      "type": "internal",
+      "startDate": "2026-11-18",
+      "dueDate": "2026-11-18",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_kat_8"
+      ],
+      "assignee": "Kadek",
+      "status": "todo",
+      "source": "ai",
+      "order": 9,
+      "completedAt": null
+    },
+    {
+      "id": "t_kat_10",
+      "projectId": "p_katering",
+      "phaseId": "ph_katering_3",
+      "title": "Packing 150 kotak",
+      "type": "internal",
+      "startDate": "2026-11-18",
+      "dueDate": "2026-11-18",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_kat_9"
+      ],
+      "assignee": "Putu",
+      "status": "todo",
+      "source": "ai",
+      "order": 10,
+      "completedAt": null
+    },
+    {
+      "id": "t_kat_11",
+      "projectId": "p_katering",
+      "phaseId": "ph_katering_4",
+      "title": "Muat & berangkat ke lokasi",
+      "type": "delivery",
+      "startDate": "2026-11-19",
+      "dueDate": "2026-11-19",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_kat_10"
+      ],
+      "assignee": "Made",
+      "status": "todo",
+      "source": "ai",
+      "order": 11,
+      "completedAt": null
+    },
+    {
+      "id": "t_kat_12",
+      "projectId": "p_katering",
+      "phaseId": "ph_katering_4",
+      "title": "Setup & serah terima",
+      "type": "delivery",
+      "startDate": "2026-11-19",
+      "dueDate": "2026-11-19",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_kat_11"
+      ],
+      "assignee": "Komang",
+      "status": "todo",
+      "source": "ai",
+      "order": 12,
+      "completedAt": null
+    },
+    {
+      "id": "t_kat_13",
+      "projectId": "p_katering",
+      "phaseId": "ph_katering_4",
+      "title": "Pelunasan 50%",
+      "type": "payment",
+      "startDate": "2026-11-19",
+      "dueDate": "2026-11-19",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_kat_11"
+      ],
+      "assignee": "Made",
+      "status": "todo",
+      "source": "ai",
+      "order": 13,
+      "completedAt": null
+    },
+    {
+      "id": "t_c685d16f-1b0e-4b2f-b423-515681ccedef",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_30d90dbf-516b-45d4-89c9-8ae322266193",
+      "title": "Konfirmasi brief & ukuran",
+      "type": "waiting_client",
+      "startDate": "2026-12-03",
+      "dueDate": "2026-12-03",
+      "durationDays": 1,
+      "dependsOn": [],
+      "assignee": "made",
+      "status": "waiting",
+      "source": "ai",
+      "order": 1,
+      "completedAt": null
+    },
+    {
+      "id": "t_a92b0d04-0c2a-4aae-9fbd-59d933ee2160",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_30d90dbf-516b-45d4-89c9-8ae322266193",
+      "title": "Sketsa & desain awal",
+      "type": "internal",
+      "startDate": "2026-12-04",
+      "dueDate": "2026-12-08",
+      "durationDays": 3,
+      "dependsOn": [
+        "t_c685d16f-1b0e-4b2f-b423-515681ccedef"
+      ],
+      "assignee": "Made",
+      "status": "doing",
+      "source": "ai",
+      "order": 2,
+      "completedAt": null
+    },
+    {
+      "id": "t_43d162a7-acf0-47c3-91da-c37b1e3d78da",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_30d90dbf-516b-45d4-89c9-8ae322266193",
+      "title": "Revisi sketsa klien",
+      "type": "waiting_client",
+      "startDate": "2026-12-09",
+      "dueDate": "2026-12-11",
+      "durationDays": 3,
+      "dependsOn": [
+        "t_a92b0d04-0c2a-4aae-9fbd-59d933ee2160"
+      ],
+      "assignee": "Made",
+      "status": "todo",
+      "source": "ai",
+      "order": 3,
+      "completedAt": null
+    },
+    {
+      "id": "t_16e7f70d-1580-4a09-8dd3-0c0cdad5b3ac",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_30d90dbf-516b-45d4-89c9-8ae322266193",
+      "title": "Persetujuan sketsa + DP 50%",
+      "type": "payment",
+      "startDate": "2026-12-14",
+      "dueDate": "2026-12-14",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_43d162a7-acf0-47c3-91da-c37b1e3d78da"
+      ],
+      "assignee": "Made",
+      "status": "done",
+      "source": "ai",
+      "order": 4,
+      "completedAt": "2026-11-06"
+    },
+    {
+      "id": "t_83f1a26a-00ca-464e-a293-dcb42b3f3ee3",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_5139c08c-c91d-4993-a256-0bc274f0fbbc",
+      "title": "Lengkapi bahan yang kurang",
+      "type": "internal",
+      "startDate": "2026-12-15",
+      "dueDate": "2026-12-15",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_16e7f70d-1580-4a09-8dd3-0c0cdad5b3ac"
+      ],
+      "assignee": "Wayan",
+      "status": "todo",
+      "source": "ai",
+      "order": 5,
+      "completedAt": null
+    },
+    {
+      "id": "t_48e43d36-0b32-4592-a2cc-abe5039298b9",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_5139c08c-c91d-4993-a256-0bc274f0fbbc",
+      "title": "Buat rangka & struktur dasar",
+      "type": "internal",
+      "startDate": "2026-12-16",
+      "dueDate": "2026-12-17",
+      "durationDays": 2,
+      "dependsOn": [
+        "t_83f1a26a-00ca-464e-a293-dcb42b3f3ee3"
+      ],
+      "assignee": "Komang",
+      "status": "doing",
+      "source": "ai",
+      "order": 6,
+      "completedAt": null
+    },
+    {
+      "id": "t_f5281bb9-ec2f-450e-a30f-9cead45ca1ce",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_5139c08c-c91d-4993-a256-0bc274f0fbbc",
+      "title": "Bentuk & cetak dasar",
+      "type": "internal",
+      "startDate": "2026-12-18",
+      "dueDate": "2026-12-22",
+      "durationDays": 3,
+      "dependsOn": [
+        "t_48e43d36-0b32-4592-a2cc-abe5039298b9"
+      ],
+      "assignee": "nari",
+      "status": "waiting",
+      "source": "ai",
+      "order": 7,
+      "completedAt": null
+    },
+    {
+      "id": "t_620c0892-ffaf-4891-a21f-49d5720d1694",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_5139c08c-c91d-4993-a256-0bc274f0fbbc",
+      "title": "Produksi utama",
+      "type": "internal",
+      "startDate": "2026-12-23",
+      "dueDate": "2026-12-29",
+      "durationDays": 4,
+      "dependsOn": [
+        "t_f5281bb9-ec2f-450e-a30f-9cead45ca1ce"
+      ],
+      "assignee": "Made",
+      "status": "todo",
+      "source": "ai",
+      "order": 8,
+      "completedAt": null
+    },
+    {
+      "id": "t_0cc2ee0f-0761-40fd-965e-71cdc9811559",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_5139c08c-c91d-4993-a256-0bc274f0fbbc",
+      "title": "Pesan komponen pendukung",
+      "type": "vendor",
+      "startDate": "2026-12-30",
+      "dueDate": "2026-12-31",
+      "durationDays": 2,
+      "dependsOn": [
+        "t_16e7f70d-1580-4a09-8dd3-0c0cdad5b3ac"
+      ],
+      "assignee": "nari",
+      "status": "todo",
+      "source": "ai",
+      "order": 9,
+      "completedAt": null
+    },
+    {
+      "id": "t_3b9aff5e-b1f4-4f25-93a9-48070425e26b",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_5139c08c-c91d-4993-a256-0bc274f0fbbc",
+      "title": "Dempul & amplas",
+      "type": "internal",
+      "startDate": "2026-12-30",
+      "dueDate": "2027-01-04",
+      "durationDays": 3,
+      "dependsOn": [
+        "t_620c0892-ffaf-4891-a21f-49d5720d1694"
+      ],
+      "assignee": "Wayan",
+      "status": "todo",
+      "source": "ai",
+      "order": 10,
+      "completedAt": null
+    },
+    {
+      "id": "t_e54ec5b0-278c-4c72-a2bd-f76852bef480",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_5139c08c-c91d-4993-a256-0bc274f0fbbc",
+      "title": "Konfirmasi detail komponen",
+      "type": "waiting_client",
+      "startDate": "2027-01-04",
+      "dueDate": "2027-01-04",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_0cc2ee0f-0761-40fd-965e-71cdc9811559"
+      ],
+      "assignee": "Made",
+      "status": "todo",
+      "source": "ai",
+      "order": 11,
+      "completedAt": null
+    },
+    {
+      "id": "t_9f2293bd-8bac-4470-8e1a-c75a5211a103",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_8e815a2a-d77a-4625-a7d2-6a4ca7b0d6f2",
+      "title": "Finishing akhir",
+      "type": "internal",
+      "startDate": "2027-01-05",
+      "dueDate": "2027-01-11",
+      "durationDays": 5,
+      "dependsOn": [
+        "t_3b9aff5e-b1f4-4f25-93a9-48070425e26b",
+        "t_e54ec5b0-278c-4c72-a2bd-f76852bef480"
+      ],
+      "assignee": "Komang",
+      "status": "todo",
+      "source": "ai",
+      "order": 12,
+      "completedAt": null
+    },
+    {
+      "id": "t_97bb3643-6ac8-420c-b380-a102e5f4c14d",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_8e815a2a-d77a-4625-a7d2-6a4ca7b0d6f2",
+      "title": "Pasang aksesori & komponen",
+      "type": "internal",
+      "startDate": "2027-01-12",
+      "dueDate": "2027-01-12",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_9f2293bd-8bac-4470-8e1a-c75a5211a103",
+        "t_e54ec5b0-278c-4c72-a2bd-f76852bef480"
+      ],
+      "assignee": "nari",
+      "status": "todo",
+      "source": "ai",
+      "order": 13,
+      "completedAt": null
+    },
+    {
+      "id": "t_645bb208-f19a-4759-8b69-20693afda51b",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_8e815a2a-d77a-4625-a7d2-6a4ca7b0d6f2",
+      "title": "QC akhir & foto produk",
+      "type": "internal",
+      "startDate": "2027-01-13",
+      "dueDate": "2027-01-13",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_97bb3643-6ac8-420c-b380-a102e5f4c14d"
+      ],
+      "assignee": "Made",
+      "status": "todo",
+      "source": "ai",
+      "order": 14,
+      "completedAt": null
+    },
+    {
+      "id": "t_ba0448ec-999c-4acb-8931-e2b4d3410725",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_5d839126-3244-415f-8496-b5b007791004",
+      "title": "Packing kayu",
+      "type": "delivery",
+      "startDate": "2027-01-14",
+      "dueDate": "2027-01-18",
+      "durationDays": 3,
+      "dependsOn": [
+        "t_645bb208-f19a-4759-8b69-20693afda51b"
+      ],
+      "assignee": "nari",
+      "status": "todo",
+      "source": "ai",
+      "order": 15,
+      "completedAt": null
+    },
+    {
+      "id": "t_a4abbb89-981c-4805-b613-bac2bdc38698",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_5d839126-3244-415f-8496-b5b007791004",
+      "title": "Konfirmasi jadwal pengiriman",
+      "type": "waiting_client",
+      "startDate": "2027-01-18",
+      "dueDate": "2027-01-18",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_645bb208-f19a-4759-8b69-20693afda51b"
+      ],
+      "assignee": "Made",
+      "status": "todo",
+      "source": "ai",
+      "order": 16,
+      "completedAt": null
+    },
+    {
+      "id": "t_4ba94883-b22b-4eb6-86f9-241e73775cec",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_5d839126-3244-415f-8496-b5b007791004",
+      "title": "Pengiriman & pemasangan",
+      "type": "delivery",
+      "startDate": "2027-01-19",
+      "dueDate": "2027-01-20",
+      "durationDays": 2,
+      "dependsOn": [
+        "t_ba0448ec-999c-4acb-8931-e2b4d3410725",
+        "t_a4abbb89-981c-4805-b613-bac2bdc38698"
+      ],
+      "assignee": "nari",
+      "status": "todo",
+      "source": "ai",
+      "order": 17,
+      "completedAt": null
+    },
+    {
+      "id": "t_87fbc4a7-e814-4698-ba5e-f417852c652f",
+      "projectId": "p_f06f59b0-8ef5-4132-95dd-827560eea3aa",
+      "phaseId": "ph_5d839126-3244-415f-8496-b5b007791004",
+      "title": "Pelunasan 50%",
+      "type": "payment",
+      "startDate": "2027-01-21",
+      "dueDate": "2027-01-21",
+      "durationDays": 1,
+      "dependsOn": [
+        "t_4ba94883-b22b-4eb6-86f9-241e73775cec"
+      ],
+      "assignee": "Made",
+      "status": "todo",
+      "source": "ai",
+      "order": 18,
+      "completedAt": null
+    }
+  ],
+  "holidays": [
+    {
+      "id": "h_odalan",
+      "date": "2026-11-25",
+      "name": "Libur odalan banjar",
+      "source": "user"
+    },
+    {
+      "id": "h_natal",
+      "date": "2026-12-25",
+      "name": "Hari Raya Natal",
+      "source": "national"
+    },
+    {
+      "id": "h_tahun_baru",
+      "date": "2027-01-01",
+      "name": "Tahun Baru 2027",
+      "source": "national"
+    }
+  ]
+}
