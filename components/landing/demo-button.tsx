@@ -29,10 +29,8 @@ export function DemoButton({
   async function openDemo() {
     setLoading(true);
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch("/api/auth/demo", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: "demo@tuntas.id", password: "demo123" }),
       });
       const payload = (await response.json()) as { error?: string };
       if (!response.ok)

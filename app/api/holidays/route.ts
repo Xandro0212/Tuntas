@@ -8,6 +8,12 @@ import { randomUUID } from "node:crypto";
 export async function POST(request: Request) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Silakan masuk terlebih dahulu." }, { status: 401 });
+  if (user.role !== "owner") {
+    return NextResponse.json(
+      { error: "Hanya Owner yang bisa mengatur hari libur." },
+      { status: 403 },
+    );
+  }
   try {
     const body = (await request.json()) as { date?: string; name?: string };
     const date = (body.date ?? "").trim();
@@ -16,12 +22,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Tanggal dan nama libur wajib diisi." }, { status: 400 });
     }
     const db = await getDb();
-    if (db.holidays.some((holiday) => holiday.date === date)) {
+    if (
+      db.holidays.some(
+        (holiday) =>
+          holiday.date === date &&
+          (holiday.workspaceId === user.workspaceId ||
+            holiday.workspaceId === "*"),
+      )
+    ) {
       return NextResponse.json({ error: "Tanggal itu sudah ditandai libur." }, { status: 409 });
     }
 
     const holiday = {
       id: `h_${randomUUID()}`,
+      workspaceId: user.workspaceId,
       date,
       name: name.slice(0, 80),
       source: "user" as const,
@@ -32,8 +46,10 @@ export async function POST(request: Request) {
 
     // Sesuaikan jadwal proyek milik pengguna yang punya tugas pada tanggal tersebut.
     let adjustedProjects = 0;
-    const userProjects = db.projects.filter((project) => project.userId === user.id);
-    const holidays = (await getHolidays()).map((holiday) => holiday.date);
+    const userProjects = db.projects.filter(
+      (project) => project.workspaceId === user.workspaceId,
+    );
+    const holidays = (await getHolidays(user.workspaceId)).map((holiday) => holiday.date);
     const updates: {
       projectId: string;
       dates: Record<string, { startDate: string; dueDate: string }>;
@@ -91,12 +107,20 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Silakan masuk terlebih dahulu." }, { status: 401 });
+  if (user.role !== "owner") {
+    return NextResponse.json(
+      { error: "Hanya Owner yang bisa mengatur hari libur." },
+      { status: 403 },
+    );
+  }
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
     if (!id) return NextResponse.json({ error: "Libur tidak ditemukan." }, { status: 404 });
     const db = await getDb();
-    const holiday = db.holidays.find((item) => item.id === id);
+    const holiday = db.holidays.find(
+      (item) => item.id === id && item.workspaceId === user.workspaceId,
+    );
     if (!holiday) return NextResponse.json({ error: "Libur tidak ditemukan." }, { status: 404 });
     if (holiday.source !== "user") {
       return NextResponse.json(

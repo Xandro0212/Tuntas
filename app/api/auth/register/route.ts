@@ -31,15 +31,25 @@ export async function POST(request: Request) {
 
     const { salt, hash } = createPasswordHash(password);
     const id = `u_${randomUUID()}`;
+    const workspaceId = `w_${randomUUID()}`;
+    const now = new Date().toISOString();
     await mutateDb((db) => {
+      db.workspaces.push({
+        id: workspaceId,
+        name: businessName,
+        ownerId: id,
+        createdAt: now,
+      });
       db.users.push({
         id,
+        workspaceId,
+        role: "owner",
         name,
         businessName,
         email,
         salt,
         passwordHash: hash,
-        createdAt: new Date().toISOString(),
+        createdAt: now,
       });
     });
 

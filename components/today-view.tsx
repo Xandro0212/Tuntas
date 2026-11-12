@@ -67,6 +67,10 @@ export function TodayView({
   }
 
   async function toggle(task: TodayTask) {
+    if (user.role !== "owner" && task.assigneeUserId !== user.id) {
+      toast.error(t("Tugas ini bukan untukmu."));
+      return;
+    }
     const current = statusOf(task);
     const next = current === "done" ? "todo" : "done";
     setOverrides((value) => ({ ...value, [task.id]: next }));
@@ -204,12 +208,14 @@ export function TodayView({
                       {list.map((task) => {
                         const done = statusOf(task) === "done";
                         const late = task.dueDate < today;
+                        const canToggle = user.role === "owner" || task.assigneeUserId === user.id;
                         return (
                           <button
                             key={task.id}
                             type="button"
                             onClick={() => toggle(task)}
-                            className="flex w-full items-start gap-3 border-b border-line/70 px-4 py-3 text-left transition last:border-0 hover:bg-paper/45"
+                            disabled={!canToggle}
+                            className="flex w-full items-start gap-3 border-b border-line/70 px-4 py-3 text-left transition last:border-0 hover:bg-paper/45 disabled:cursor-not-allowed disabled:opacity-60"
                           >
                             <span
                               className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition ${

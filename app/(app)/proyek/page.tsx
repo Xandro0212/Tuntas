@@ -38,9 +38,10 @@ export default async function ProjectsPage() {
   const lang = await getLang();
   const t = (source: string, vars?: Record<string, string | number>) =>
     translate(lang, source, vars);
-  const projects = await getProjectsForUser(user.id, lang);
+  const canManage = user.role === "owner";
+  const projects = await getProjectsForUser(user, lang);
   const bundles = await Promise.all(
-    projects.map((project) => getProjectBundle(user.id, project.id, lang)),
+    projects.map((project) => getProjectBundle(user, project.id, lang)),
   );
   const projectBundles = bundles.filter(
     (bundle): bundle is NonNullable<typeof bundle> => Boolean(bundle),
@@ -85,9 +86,11 @@ export default async function ProjectsPage() {
             )}
           </p>
         </div>
-        <Link href="/proyek/baru" className="btn-primary shrink-0">
-          <Plus className="h-4 w-4" /> {t("Proyek baru")}
-        </Link>
+        {canManage && (
+          <Link href="/proyek/baru" className="btn-primary shrink-0">
+            <Plus className="h-4 w-4" /> {t("Proyek baru")}
+          </Link>
+        )}
       </div>
 
       <section className="panel relative overflow-hidden p-4 sm:p-5">
@@ -393,16 +396,19 @@ export default async function ProjectsPage() {
                   >
                     <CalendarDays className="h-4 w-4" />
                   </Link>
-                  <DeleteProjectButton
-                    projectId={project.id}
-                    projectTitle={project.title}
-                    className="btn-ghost btn-sm px-2.5 text-muted hover:bg-rust-soft hover:text-rust"
-                  />
+                  {canManage && (
+                    <DeleteProjectButton
+                      projectId={project.id}
+                      projectTitle={project.title}
+                      className="btn-ghost btn-sm px-2.5 text-muted hover:bg-rust-soft hover:text-rust"
+                    />
+                  )}
                 </div>
               </article>
             );
           })}
 
+          {canManage && (
           <Link
             href="/proyek/baru"
             className="flex min-h-[260px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-line-strong bg-card p-6 text-center transition hover:border-green/45 hover:bg-paper"
@@ -415,6 +421,7 @@ export default async function ProjectsPage() {
               {t("Ceritakan pesanan klien, AI memecahnya jadi tugas dan jadwal.")}
             </span>
           </Link>
+          )}
         </div>
       ) : (
         <div className="panel flex flex-col items-center px-6 py-16 text-center">
@@ -427,9 +434,11 @@ export default async function ProjectsPage() {
               "Mulai dengan menceritakan pesanan klien. AI akan menyusun tahap, tugas, dan tanggal mundur dari deadline.",
             )}
           </p>
-          <Link href="/proyek/baru" className="btn-primary mt-4">
-            <Plus className="h-4 w-4" /> {t("Buat proyek pertama")}
-          </Link>
+          {canManage && (
+            <Link href="/proyek/baru" className="btn-primary mt-4">
+              <Plus className="h-4 w-4" /> {t("Buat proyek pertama")}
+            </Link>
+          )}
         </div>
       )}
     </div>

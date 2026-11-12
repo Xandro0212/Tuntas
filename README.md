@@ -35,12 +35,12 @@ Halaman utama di `/` adalah landing page publik dengan animasi (hero board, marq
 | Email | `demo@tuntas.id` |
 | Password | `demo123` |
 
-Di halaman login ada tombol **“Masuk dengan akun demo”** yang langsung membuka ruang kerja contoh.
+Tombol **“Coba demo”** dan **“Masuk dengan akun demo”** sekarang membuat **workspace demo sementara** yang terpisah untuk setiap pengunjung. Data demo lama dibersihkan otomatis setelah 24 jam, sehingga pengunjung lain tidak bisa merusak data yang sedang dilihat juri.
 
-Akun demo berisi:
+Akun demo bersama tetap tersedia untuk akses manual:
 
-- **5 proyek** (patung kuda, nasi kotak katering, relief garuda, ukiran pintu, desain ruang kantor)
-- **65 tugas** dengan status, tanggal, penanggung jawab, dan ketergantungan
+- **5 proyek seed** (patung kuda, nasi kotak katering, relief garuda, ukiran pintu, desain ruang kantor)
+- **65 tugas seed** dengan status, tanggal, penanggung jawab, dan ketergantungan
 - Kalender dengan hari libur, hari cadangan, dan deadline klien
 - Peringatan tugas terlambat + draf pesan WhatsApp
 - Halaman **Hari ini** dengan tugas per orang
@@ -48,14 +48,17 @@ Akun demo berisi:
 ## Fitur yang sudah jalan
 
 - **Landing page ID/EN** — pilihan bahasa Indonesia/Inggris di header landing, tersimpan di `localStorage` + cookie
+- **Owner & Employee** — Owner mengelola workspace, proyek, tim, dan tugas; Employee hanya bisa memperbarui tugas yang ditugaskan kepadanya. UMKM tanpa karyawan tetap berjalan sebagai Owner tunggal
+- **Tim** — Owner bisa menambah/menghapus akun karyawan dan menugaskan tugas ke akun tersebut
 - **Buat proyek** — form cerita proyek, **Modal proyek**, rekam suara (Web Speech API), tempel chat WA, lampiran foto/PDF
+- **Edit proyek** — Owner bisa mengubah judul, klien, deadline, cerita, dan nilai proyek; perubahan deadline otomatis menyusun ulang tanggal tugas
 - **Pertanyaan AI** — maksimal 3 pertanyaan pilihan ganda sebelum menyusun rencana
 - **Draf rencana** — tahap, tugas, durasi, ketergantungan, PJ, risiko; bisa diedit, dihapus, ditambah sebelum diterapkan
 - **Penjadwalan mundur** — Minggu selalu libur, hari libur nasional/Bali/ditambahkan sendiri dilewati, cadangan 10% durasi (minimal 1 hari kerja)
 - **Kanban** — kolom Belum mulai · Sedang dikerjakan · Menunggu klien · Selesai, drag & drop di desktop, plus pemilih **Pindah** yang ramah sentuhan di mobile/tablet
 - **Deskripsi progres** — setiap tugas bisa punya update singkat; tampil di kartu, detail tugas, dan ringkasan **Progres tahap**
 - **Prioritas proyek** — urutan pengerjaan berdasarkan deadline, sisa durasi, progres, dan cadangan; AI memberi rekomendasi pembagian tim saat ada deadline bertabrakan
-- **Kalender** — tampilan bulanan/timeline, warna per tahap, deadline klien, hari cadangan, hari libur, opsi menampilkan proyek lain; ada agenda khusus mobile
+- **Kalender** — tampilan bulanan, warna per tahap, deadline klien, hari cadangan, hari libur, opsi menampilkan proyek lain; ada agenda khusus mobile
 - **Hari ini** — tugas per orang dengan centang selesai, deadline terdekat, jadwal besok
 - **Klien** — daftar klien otomatis dari proyek, tautan WhatsApp
 - **Peringatan** — banner tugas terlambat atau cadangan tinggal 1 hari, tombol draf WhatsApp (tidak mengirim otomatis)
@@ -81,6 +84,14 @@ Endpoint yang dipakai adalah `POST /chat/completions` yang kompatibel dengan Ope
 
 Tuntas memakai **Supabase** untuk penyimpanan persisten saat berjalan di Vercel. Data disimpan sebagai satu dokumen JSONB di tabel `public.tuntas_state`, lengkap dengan nomor versi agar dua perangkat tidak saling menimpa.
 
+Model datanya sekarang memiliki:
+
+- `workspaces` — satu workspace per usaha
+- `users` — identity login dengan `workspaceId` dan role `owner` / `employee`
+- `projects.workspaceId` — isolasi proyek per workspace
+- `tasks.assigneeUserId` — penugasan tugas ke akun karyawan
+- `holidays.workspaceId` — hari libur per workspace; hari libur nasional/Bali memakai workspace `*`
+
 ### Setup Supabase
 
 1. Buat project di <https://supabase.com/dashboard>.
@@ -105,7 +116,7 @@ Reset data demo di Supabase: hapus baris `id = 'main'` dari tabel `tuntas_state`
 
 ### Lampiran
 
-Lampiran saat ini disimpan di `public/uploads/` pada mode lokal. Untuk produksi Vercel, gunakan Supabase Storage atau object storage lain agar file lampiran ikut persisten.
+Lampiran disimpan di **Supabase Storage** (bucket `tuntas-uploads`) saat environment Supabase tersedia. Pada mode lokal tanpa Supabase, fallback memakai `public/uploads/`. Ekstensi file ditentukan dari MIME yang diizinkan, bukan dari nama file asli.
 
 ## Stack
 
@@ -113,7 +124,8 @@ Lampiran saat ini disimpan di `public/uploads/` pada mode lokal. Untuk produksi 
 - Tailwind CSS v4
 - Lucide icons + Sonner toast
 - Supabase (PostgREST + JSONB state) untuk penyimpanan persisten
-- Fallback JSON lokal untuk pengembangan tanpa Supabase
+- Supabase Storage untuk lampiran produksi
+- Workspace + role `owner`/`employee` + task assignment
 - Auth cookie ber-HMAC + password scrypt
 - Web Speech API untuk rekam suara
 - Drag & drop native HTML5 + pemilih status ramah sentuhan
@@ -122,14 +134,16 @@ Lampiran saat ini disimpan di `public/uploads/` pada mode lokal. Untuk produksi 
 
 ```
 app/                 halaman + API routes
-components/          shell, kanban, kalender, wizard, hari ini, modal
+components/          shell, kanban, kalender, wizard, tim, hari ini, modal
 lib/
   schedule.ts        penjadwalan mundur (hari kerja, libur, cadangan)
   ai.ts              planner lokal + integrasi LLM opsional
   seed.ts            data akun demo
   store.ts           Supabase + fallback JSON lokal
-  auth.ts            sesi & cookie
-  data.ts            query + ringkasan proyek
+  migrate.ts         migrasi data lama ke workspace/role
+  auth.ts            sesi, cookie, owner guard
+  data.ts            query + ringkasan proyek per workspace
+  uploads.ts         Supabase Storage + fallback lokal
 supabase/
   schema.sql         tabel state Supabase
 ```

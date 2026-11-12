@@ -1,4 +1,5 @@
 import seedData from "../data/db.json";
+import { migrateDatabase } from "./migrate";
 import type { Database } from "./types";
 
 /**
@@ -9,5 +10,5 @@ import type { Database } from "./types";
  * the same projects, phases, tasks, and holidays.
  */
 export function createSeedDatabase(): Database {
-  return structuredClone(seedData as unknown as Database);
+  return migrateDatabase(seedData as unknown as Database).db;
 }

@@ -607,6 +607,63 @@ const EN: Record<string, string> = {
   "Chat WhatsApp ditempel ke cerita.": "WhatsApp chat pasted into the story.",
   "Clipboard tidak bisa dibaca. Tempel manual dengan Ctrl+V.":
     "Could not read the clipboard. Paste manually with Ctrl+V.",
+
+  // Team and roles
+  "Tim": "Team",
+  "Owner": "Owner",
+  "Karyawan": "Employee",
+  "Kamu": "You",
+  "Anggota workspace": "Workspace members",
+  "Tambah karyawan": "Add employee",
+  "Nama karyawan": "Employee name",
+  "Mis. Wayan": "e.g. Wayan",
+  "Password awal": "Initial password",
+  "Minimal 8 karakter": "At least 8 characters",
+  "Karyawan login dengan email dan password ini.": "The employee signs in with this email and password.",
+  "Karyawan ditambahkan.": "Employee added.",
+  "Gagal menambah karyawan.": "Failed to add the employee.",
+  "Gagal menyiapkan akun demo.": "Failed to prepare the demo account.",
+  "Nama karyawan minimal 2 karakter.": "Employee name must be at least 2 characters.",
+  "Password karyawan minimal 8 karakter.": "Employee password must be at least 8 characters.",
+  "Batas anggota workspace tercapai.": "Workspace member limit reached.",
+  "Karyawan tidak ditemukan.": "Employee not found.",
+  "Karyawan dihapus.": "Employee removed.",
+  "Gagal menghapus karyawan.": "Failed to remove the employee.",
+  "Hapus karyawan": "Remove employee",
+  "Hapus {name} dari tim? Tugas yang ditugaskan akan menjadi tanpa akun.":
+    "Remove {name} from the team? Assigned tasks will become unassigned.",
+  "Hanya Owner yang bisa menambah karyawan.": "Only the Owner can add employees.",
+  "Hanya Owner yang bisa menghapus karyawan.": "Only the Owner can remove employees.",
+  "Hanya Owner yang bisa membuat proyek.": "Only the Owner can create projects.",
+  "Hanya Owner yang bisa mengubah proyek.": "Only the Owner can edit projects.",
+  "Hanya Owner yang bisa menghapus proyek.": "Only the Owner can delete projects.",
+  "Hanya Owner yang bisa menambah tugas.": "Only the Owner can add tasks.",
+  "Hanya Owner yang bisa menghapus tugas.": "Only the Owner can delete tasks.",
+  "Hanya Owner yang bisa mengatur hari libur.": "Only the Owner can manage holidays.",
+  "Hanya Owner yang bisa menyusun ulang jadwal.": "Only the Owner can rebuild the schedule.",
+  "Hanya Owner yang bisa mengunggah lampiran.": "Only the Owner can upload attachments.",
+  "Karyawan hanya bisa mengubah tugas yang ditugaskan kepadanya.":
+    "Employees can only edit tasks assigned to them.",
+  "Karyawan hanya bisa mengubah status dan deskripsi progres tugasnya.":
+    "Employees can only change the status and progress note of their tasks.",
+  "Anggota tim tidak ditemukan.": "Team member not found.",
+  "Tugas ini bukan untukmu.": "This task is not assigned to you.",
+  "Akun karyawan": "Employee account",
+  "Tanpa akun": "No account",
+  "Edit proyek": "Edit project",
+  "Perubahan deadline akan menyusun ulang tanggal tugas.":
+    "Changing the deadline will reschedule the task dates.",
+  "Proyek diperbarui.": "Project updated.",
+  "Gagal mengubah proyek.": "Failed to update the project.",
+  "Nomor WhatsApp": "WhatsApp number",
+  "Deadline": "Deadline",
+  "Jam deadline": "Deadline time",
+  "1 anggota": "1 member",
+  "{n} anggota": "{n} members",
+  "Owner mengelola proyek dan membagi tugas. Karyawan hanya bisa memperbarui tugas yang ditugaskan kepadanya.":
+    "The Owner manages projects and assigns work. Employees can only update tasks assigned to them.",
+  "UMKM tanpa karyawan tetap bisa memakai Tuntas sebagai Owner tunggal.":
+    "A business without employees can still use Tuntas with a single Owner.",
 };
 
 export function translate(lang: Lang, source: string, vars?: Record<string, string | number>): string {

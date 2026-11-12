@@ -54,6 +54,22 @@ export default function LoginForm({ initialMode = "login" }: { initialMode?: Mod
     }
   }
 
+  async function openDemo() {
+    setError("");
+    setLoading("demo");
+    try {
+      const response = await fetch("/api/auth/demo", { method: "POST" });
+      const payload = (await response.json()) as { error?: string };
+      if (!response.ok) {
+        throw new Error(payload.error ? t(payload.error) : t("Gagal membuka akun demo."));
+      }
+      window.location.href = "/kanban";
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("Gagal membuka akun demo."));
+      setLoading(null);
+    }
+  }
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setError("");
@@ -283,7 +299,7 @@ export default function LoginForm({ initialMode = "login" }: { initialMode?: Mod
                   type="button"
                   className="btn-primary mt-3 w-full"
                   disabled={loading !== null}
-                  onClick={() => submitLogin("demo@tuntas.id", "demo123", "demo")}
+                  onClick={openDemo}
                 >
                   {loading === "demo" ? (
                     <>

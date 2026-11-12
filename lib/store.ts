@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { migrateDatabase } from "./migrate";
 import { createSeedDatabase } from "./seed";
 import type { Database } from "./types";
 
@@ -152,6 +153,49 @@ async function insertSupabase(db: Database): Promise<void> {
   }
 }
 
+async function writeSupabaseState(
+  db: Database,
+  expectedVersion: number,
+): Promise<number | null> {
+  const nextVersion = expectedVersion + 1;
+  const response = await supabaseRequest(
+    `${STATE_TABLE}?id=eq.${encodeURIComponent(STATE_ID)}&version=eq.${expectedVersion}`,
+    {
+      method: "PATCH",
+      headers: { Prefer: "return=representation" },
+      body: JSON.stringify({
+        data: db,
+        version: nextVersion,
+        updated_at: new Date().toISOString(),
+      }),
+    },
+  );
+
+  if (!response.ok) throw await supabaseError(response, "menyimpan data");
+
+  const rows = (await response.json()) as unknown;
+  return Array.isArray(rows) && rows.length > 0 ? nextVersion : null;
+}
+
+async function ensureSupabaseMigrated(stored: StoredDatabase): Promise<StoredDatabase> {
+  let current = stored;
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    const migrated = migrateDatabase(current.db);
+    if (!migrated.changed) return current;
+
+    const nextVersion = await writeSupabaseState(migrated.db, current.version);
+    if (nextVersion !== null) {
+      return { db: migrated.db, version: nextVersion };
+    }
+
+    const fresh = await readSupabase();
+    if (!fresh) throw new Error("Data Supabase hilang saat migrasi workspace.");
+    current = fresh;
+  }
+
+  throw new Error("Migrasi data workspace gagal karena data terus berubah.");
+}
+
 async function loadSupabase(force = false): Promise<StoredDatabase> {
   if (!force) {
     const cached = cachedStored("supabase");
@@ -177,6 +221,7 @@ async function loadSupabase(force = false): Promise<StoredDatabase> {
     stored = await globalForDb.__tuntasSeeding;
   }
 
+  stored = await ensureSupabaseMigrated(stored);
   return cacheStored("supabase", stored);
 }
 
@@ -188,26 +233,11 @@ async function mutateSupabase<T>(
     const draft = cloneDatabase(current.db);
     const result = await mutation(draft);
 
-    const response = await supabaseRequest(
-      `${STATE_TABLE}?id=eq.${encodeURIComponent(STATE_ID)}&version=eq.${current.version}`,
-      {
-        method: "PATCH",
-        headers: { Prefer: "return=representation" },
-        body: JSON.stringify({
-          data: draft,
-          version: current.version + 1,
-          updated_at: new Date().toISOString(),
-        }),
-      },
-    );
-
-    if (!response.ok) throw await supabaseError(response, "menyimpan data");
-
-    const rows = (await response.json()) as unknown;
-    if (Array.isArray(rows) && rows.length > 0) {
+    const nextVersion = await writeSupabaseState(draft, current.version);
+    if (nextVersion !== null) {
       cacheStored("supabase", {
         db: draft,
-        version: current.version + 1,
+        version: nextVersion,
       });
       return result;
     }
@@ -251,6 +281,12 @@ async function loadLocal(force = false): Promise<StoredDatabase> {
   if (!db) {
     db = createSeedDatabase();
     await writeLocalFile(db);
+  } else {
+    const migrated = migrateDatabase(db);
+    if (migrated.changed) {
+      db = migrated.db;
+      await writeLocalFile(db);
+    }
   }
   return cacheStored("file", { db, version: 0 });
 }

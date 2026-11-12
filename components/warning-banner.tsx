@@ -123,11 +123,13 @@ export function WarningBanner({
   businessName,
   lateTasks,
   bufferRemaining,
+  canManage = false,
 }: {
   project: Project;
   businessName: string;
   lateTasks: Task[];
   bufferRemaining: number;
+  canManage?: boolean;
 }) {
   const { lang, t } = useI18n();
   const [waOpen, setWaOpen] = useState(false);
@@ -195,15 +197,17 @@ export function WarningBanner({
           <button type="button" className="btn-primary btn-sm" onClick={() => setWaOpen(true)}>
             <MessageCircle className="h-3.5 w-3.5" /> {t("Kirim pengingat via WhatsApp")}
           </button>
-          <button
-            type="button"
-            className="btn-secondary btn-sm"
-            onClick={reschedule}
-            disabled={rescheduling}
-          >
-            <RefreshCw className={`h-3.5 w-3.5 ${rescheduling ? "animate-spin" : ""}`} />
-            {rescheduling ? t("Menyusun…") : t("Atur ulang jadwal")}
-          </button>
+          {canManage && (
+            <button
+              type="button"
+              className="btn-secondary btn-sm"
+              onClick={reschedule}
+              disabled={rescheduling}
+            >
+              <RefreshCw className={`h-3.5 w-3.5 ${rescheduling ? "animate-spin" : ""}`} />
+              {rescheduling ? t("Menyusun…") : t("Atur ulang jadwal")}
+            </button>
+          )}
         </div>
       </div>
 

@@ -14,6 +14,7 @@ import {
   Plus,
   Sun,
   Users,
+  UsersRound,
   X,
 } from "lucide-react";
 import { Logo } from "./logo";
@@ -51,6 +52,16 @@ const NAV = [
     match: (path: string) => path === "/proyek" || path === "/proyek/baru",
   },
   { href: "/klien", label: "Klien", icon: Users, match: (path: string) => path.startsWith("/klien") },
+];
+
+const OWNER_NAV = [
+  ...NAV,
+  {
+    href: "/tim",
+    label: "Tim",
+    icon: UsersRound,
+    match: (path: string) => path.startsWith("/tim"),
+  },
 ];
 
 function AccountMenu({ user, onLogout }: { user: PublicUser; onLogout: () => void }) {
@@ -128,6 +139,7 @@ export function AppShell({
   }
 
   const activeId = pathname.startsWith("/proyek/") ? pathname.split("/")[2] : undefined;
+  const navigation = user.role === "owner" ? OWNER_NAV : NAV;
 
   const sidebar = (
     <div className="flex h-full flex-col">
@@ -149,7 +161,7 @@ export function AppShell({
       <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-4">
         <div className="section-title px-3 pb-1.5">{t("Menu")}</div>
         <nav className="space-y-0.5">
-          {NAV.map((item) => {
+          {navigation.map((item) => {
             const active = item.match(pathname);
             return (
               <Link

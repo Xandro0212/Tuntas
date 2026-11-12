@@ -1,3 +1,5 @@
+import { toPublicUser } from "./auth";
+import { GLOBAL_WORKSPACE_ID } from "./migrate";
 import { getDb } from "./store";
 import { diffDays, normalizeWhatsApp, todayISO } from "./dates";
 import { getBufferDates } from "./schedule";
@@ -9,6 +11,7 @@ import type {
   ProjectSummary,
   PublicUser,
   Task,
+  Workspace,
 } from "./types";
 
 export interface ProjectBundle {
@@ -45,21 +48,49 @@ export function localizeHoliday(lang: Lang, holiday: Holiday): Holiday {
 }
 
 export async function getProjectsForUser(
-  userId: string,
+  user: PublicUser,
   lang: Lang = "id",
 ): Promise<Project[]> {
   const db = await getDb();
   return db.projects
-    .filter((project) => project.userId === userId)
+    .filter((project) => project.workspaceId === user.workspaceId)
     .sort((a, b) => a.deadline.localeCompare(b.deadline))
     .map((project) => localizeProject(lang, project));
 }
 
-export async function getHolidays(lang: Lang = "id"): Promise<Holiday[]> {
+export async function getHolidays(
+  workspaceId: string,
+  lang: Lang = "id",
+): Promise<Holiday[]> {
   const db = await getDb();
-  return [...db.holidays]
+  return db.holidays
+    .filter(
+      (holiday) =>
+        holiday.workspaceId === workspaceId ||
+        holiday.workspaceId === GLOBAL_WORKSPACE_ID,
+    )
     .sort((a, b) => a.date.localeCompare(b.date))
     .map((holiday) => localizeHoliday(lang, holiday));
+}
+
+export async function getWorkspace(
+  workspaceId: string,
+): Promise<Workspace | null> {
+  const db = await getDb();
+  return db.workspaces.find((workspace) => workspace.id === workspaceId) ?? null;
+}
+
+export async function getWorkspaceMembers(
+  workspaceId: string,
+): Promise<PublicUser[]> {
+  const db = await getDb();
+  return db.users
+    .filter((user) => user.workspaceId === workspaceId)
+    .sort((a, b) => {
+      if (a.role !== b.role) return a.role === "owner" ? -1 : 1;
+      return a.name.localeCompare(b.name);
+    })
+    .map(toPublicUser);
 }
 
 export function summarizeProject(
@@ -97,12 +128,14 @@ export function summarizeProject(
 }
 
 export async function getProjectBundle(
-  userId: string,
+  user: PublicUser,
   projectId: string,
   lang: Lang = "id",
 ): Promise<ProjectBundle | null> {
   const db = await getDb();
-  const rawProject = db.projects.find((item) => item.id === projectId && item.userId === userId);
+  const rawProject = db.projects.find(
+    (item) => item.id === projectId && item.workspaceId === user.workspaceId,
+  );
   if (!rawProject) return null;
   const project = localizeProject(lang, rawProject);
   const phases = db.phases
@@ -113,7 +146,7 @@ export async function getProjectBundle(
     .filter((task) => task.projectId === projectId)
     .sort((a, b) => a.order - b.order)
     .map((task) => localizeTask(lang, task));
-  const holidays = await getHolidays(lang);
+  const holidays = await getHolidays(rawProject.workspaceId, lang);
   return {
     project,
     phases,
@@ -123,10 +156,12 @@ export async function getProjectBundle(
   };
 }
 
-export async function getUserTasks(userId: string, lang: Lang = "id"): Promise<Task[]> {
+export async function getUserTasks(user: PublicUser, lang: Lang = "id"): Promise<Task[]> {
   const db = await getDb();
   const projectIds = new Set(
-    db.projects.filter((project) => project.userId === userId).map((project) => project.id),
+    db.projects
+      .filter((project) => project.workspaceId === user.workspaceId)
+      .map((project) => project.id),
   );
   return db.tasks
     .filter((task) => projectIds.has(task.projectId))
@@ -145,14 +180,17 @@ export interface OtherProjectTask {
 }
 
 export async function getOtherProjectTasks(
-  userId: string,
+  user: PublicUser,
   excludeProjectId: string,
   lang: Lang = "id",
 ): Promise<OtherProjectTask[]> {
   const db = await getDb();
   const projects = new Map(
     db.projects
-      .filter((project) => project.userId === userId && project.id !== excludeProjectId)
+      .filter(
+        (project) =>
+          project.workspaceId === user.workspaceId && project.id !== excludeProjectId,
+      )
       .map((project) => [project.id, project]),
   );
   const phases = new Map(db.phases.map((phase) => [phase.id, phase]));
@@ -187,10 +225,10 @@ export interface ClientRecord {
 }
 
 export async function getClients(
-  userId: string,
+  user: PublicUser,
   lang: Lang = "id",
 ): Promise<ClientRecord[]> {
-  const projects = await getProjectsForUser(userId, lang);
+  const projects = await getProjectsForUser(user, lang);
   const map = new Map<string, ClientRecord>();
   for (const project of projects) {
     const key = `${project.clientName.toLowerCase()}|${normalizeWhatsApp(project.clientWa)}`;
@@ -212,9 +250,9 @@ export async function getClients(
 }
 
 export async function getWorkspaceOverview(user: PublicUser, lang: Lang = "id") {
-  const projects = await getProjectsForUser(user.id, lang);
+  const projects = await getProjectsForUser(user, lang);
   const bundles = await Promise.all(
-    projects.map((project) => getProjectBundle(user.id, project.id, lang)),
+    projects.map((project) => getProjectBundle(user, project.id, lang)),
   );
   const presentBundles = bundles.filter(
     (bundle): bundle is ProjectBundle => Boolean(bundle),

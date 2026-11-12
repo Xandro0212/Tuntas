@@ -63,6 +63,16 @@ export async function requireUser(): Promise<PublicUser> {
   return user;
 }
 
+export async function requireOwner(): Promise<PublicUser> {
+  const user = await requireUser();
+  if (user.role !== "owner") redirect("/hari-ini");
+  return user;
+}
+
+export function isOwner(user: PublicUser): boolean {
+  return user.role === "owner";
+}
+
 export async function setSessionCookie(userId: string) {
   const store = await cookies();
   store.set(COOKIE_NAME, encodeSession(userId), {

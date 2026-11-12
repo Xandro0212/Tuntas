@@ -27,7 +27,9 @@ export async function GET(
   const { id } = await params;
   const lang = await getLang();
   const db = await getDb();
-  const rawProject = db.projects.find((item) => item.id === id && item.userId === user.id);
+  const rawProject = db.projects.find(
+    (item) => item.id === id && item.workspaceId === user.workspaceId,
+  );
   if (!rawProject) return new Response("Not found", { status: 404 });
   const project = localizeProject(lang, rawProject);
   const tasks = db.tasks

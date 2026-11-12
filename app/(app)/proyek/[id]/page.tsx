@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
-import { getProjectBundle, getProjectsForUser } from "@/lib/data";
+import { getProjectBundle, getProjectsForUser, getWorkspaceMembers } from "@/lib/data";
 import { getLang } from "@/lib/lang-server";
 import { ProjectTracker } from "@/components/project-tracker";
 import { KanbanView } from "@/components/kanban-view";
@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const user = await requireUser();
   const lang = await getLang();
-  const bundle = await getProjectBundle(user.id, id, lang);
+  const bundle = await getProjectBundle(user, id, lang);
   return { title: bundle?.project.title ?? (lang === "en" ? "Project" : "Proyek") };
 }
 
@@ -27,13 +27,13 @@ export default async function ProjectPage({
   const { view } = await searchParams;
   const user = await requireUser();
   const lang = await getLang();
-  const bundle = await getProjectBundle(user.id, id, lang);
+  const bundle = await getProjectBundle(user, id, lang);
   if (!bundle) notFound();
 
-  const projects = (await getProjectsForUser(user.id, lang)).map((project) => ({
-    id: project.id,
-    title: project.title,
-  }));
+  const [projects, members] = await Promise.all([
+    getProjectsForUser(user, lang),
+    getWorkspaceMembers(user.workspaceId),
+  ]);
 
   return (
     <>
@@ -43,10 +43,13 @@ export default async function ProjectPage({
         phases={bundle.phases}
         initialTasks={bundle.tasks}
         holidays={bundle.holidays}
-        projects={projects}
+        projects={projects.map((project) => ({ id: project.id, title: project.title }))}
         view={view === "daftar" ? "daftar" : "kanban"}
         businessName={user.businessName}
         today={todayISO()}
+        user={user}
+        members={members}
+        canManage={user.role === "owner"}
       />
     </>
   );

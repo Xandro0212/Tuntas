@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { getSessionUser } from "@/lib/auth";
-import { mutateDb } from "@/lib/store";
+import { getDb, mutateDb } from "@/lib/store";
 import { scheduleTasks } from "@/lib/schedule";
 import { getHolidays } from "@/lib/data";
 import type { Category, Project, Task, TaskType } from "@/lib/types";
@@ -23,6 +23,12 @@ interface IncomingTask {
 export async function POST(request: Request) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Silakan masuk terlebih dahulu." }, { status: 401 });
+  if (user.role !== "owner") {
+    return NextResponse.json(
+      { error: "Hanya Owner yang bisa membuat proyek." },
+      { status: 403 },
+    );
+  }
 
   try {
     const body = (await request.json()) as {
@@ -66,7 +72,10 @@ export async function POST(request: Request) {
       ? body.workdays
       : [1, 2, 3, 4, 5, 6];
     const team = Array.isArray(body.team) ? body.team.filter(Boolean).slice(0, 20) : [];
-    const holidays = await getHolidays();
+    const [holidays, db] = await Promise.all([
+      getHolidays(user.workspaceId),
+      getDb(),
+    ]);
     const holidayDates = holidays.map((holiday) => holiday.date);
 
     const projectId = `p_${randomUUID()}`;
@@ -92,6 +101,7 @@ export async function POST(request: Request) {
     const project: Project = {
       id: projectId,
       userId: user.id,
+      workspaceId: user.workspaceId,
       title: title.slice(0, 160),
       category,
       clientName: clientName.slice(0, 100),
@@ -121,6 +131,12 @@ export async function POST(request: Request) {
         dueDate: schedule.projectFinish,
       };
       const type = TYPES.has(task.type) ? task.type : "internal";
+      const assignee = (task.assignee || team[0] || "Saya").slice(0, 60);
+      const assigneeUser = db.users.find(
+        (item) =>
+          item.workspaceId === user.workspaceId &&
+          item.name.trim().toLowerCase() === assignee.trim().toLowerCase(),
+      );
       return {
         id: taskTempToId.get(task.tempId)!,
         projectId,
@@ -133,7 +149,8 @@ export async function POST(request: Request) {
         dependsOn: (task.dependsOn ?? [])
           .map((dep) => taskTempToId.get(dep))
           .filter((dep): dep is string => Boolean(dep)),
-        assignee: (task.assignee || team[0] || "Saya").slice(0, 60),
+        assignee,
+        assigneeUserId: assigneeUser?.id ?? null,
         status: "todo",
         source: task.source === "manual" ? "manual" : "ai",
         order: index + 1,

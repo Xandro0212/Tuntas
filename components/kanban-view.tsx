@@ -31,7 +31,15 @@ import {
   todayISO,
 } from "@/lib/dates";
 import { getBufferDates } from "@/lib/schedule";
-import type { Holiday, Phase, Project, Task, TaskStatus, TaskType } from "@/lib/types";
+import type {
+  Holiday,
+  Phase,
+  Project,
+  PublicUser,
+  Task,
+  TaskStatus,
+  TaskType,
+} from "@/lib/types";
 
 const STATUS_STYLE: Record<TaskStatus, { dot: string; soft: string; text: string }> = {
   todo: { dot: "#94a3b8", soft: "#f1f5f9", text: "#475569" },
@@ -49,6 +57,9 @@ interface KanbanProps {
   view: "kanban" | "daftar";
   businessName: string;
   today: string;
+  user: PublicUser;
+  members: PublicUser[];
+  canManage: boolean;
 }
 
 export function KanbanView({
@@ -60,6 +71,9 @@ export function KanbanView({
   view,
   businessName,
   today,
+  user,
+  members,
+  canManage,
 }: KanbanProps) {
   const { lang, t } = useI18n();
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
@@ -127,6 +141,7 @@ export function KanbanView({
         project={project}
         projects={projects}
         eyebrow={t("Hari ini, {date}", { date: formatLongDate(today, true, lang) })}
+        canManage={canManage}
       />
 
       <div className="grid gap-3 sm:grid-cols-3">
@@ -216,6 +231,7 @@ export function KanbanView({
         businessName={businessName}
         lateTasks={lateTasks}
         bufferRemaining={bufferRemaining}
+        canManage={canManage}
       />
 
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
@@ -274,7 +290,9 @@ export function KanbanView({
             updateStatus(task, task.status === "done" ? "todo" : "done")
           }
           onMove={updateStatus}
-          onAdd={() => setAdding("todo")}
+          onAdd={() => canManage && setAdding("todo")}
+          canManage={canManage}
+          user={user}
         />
       ) : (
         <div className="flex gap-3 overflow-x-auto pb-2">
@@ -334,8 +352,12 @@ export function KanbanView({
                     return (
                       <article
                         key={task.id}
-                        draggable
+                        draggable={canManage || task.assigneeUserId === user.id}
                         onDragStart={(event) => {
+                          if (!(canManage || task.assigneeUserId === user.id)) {
+                            event.preventDefault();
+                            return;
+                          }
                           lastDragRef.current = Date.now();
                           setDraggingId(task.id);
                           event.dataTransfer.effectAllowed = "move";
@@ -416,37 +438,39 @@ export function KanbanView({
                         </div>
 
                         {/* Touch devices cannot use HTML5 drag-and-drop reliably. */}
-                        <div
-                          className="mt-2 flex items-center gap-1.5 rounded-lg border border-line bg-paper px-2 py-1.5 xl:hidden"
-                          draggable={false}
-                          onDragStart={(event) => event.preventDefault()}
-                          onClick={(event) => event.stopPropagation()}
-                        >
-                          <span className="shrink-0 text-[9px] font-bold uppercase tracking-[0.08em] text-muted">
-                            {t("Pindah")}
-                          </span>
-                          <select
-                            aria-label={t("Pindahkan tugas ke kolom lain")}
-                            value={task.status}
-                            onChange={(event) =>
-                              updateStatus(task, event.target.value as TaskStatus)
-                            }
-                            onMouseDown={(event) => event.stopPropagation()}
-                            onTouchStart={(event) => event.stopPropagation()}
-                            className="min-w-0 flex-1 cursor-pointer bg-transparent text-[11px] font-semibold text-ink outline-none"
+                        {(canManage || task.assigneeUserId === user.id) && (
+                          <div
+                            className="mt-2 flex items-center gap-1.5 rounded-lg border border-line bg-paper px-2 py-1.5 xl:hidden"
+                            draggable={false}
+                            onDragStart={(event) => event.preventDefault()}
+                            onClick={(event) => event.stopPropagation()}
                           >
-                            {STATUSES.map((option) => (
-                              <option key={option.id} value={option.id}>
-                                {t(option.label)}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
+                            <span className="shrink-0 text-[9px] font-bold uppercase tracking-[0.08em] text-muted">
+                              {t("Pindah")}
+                            </span>
+                            <select
+                              aria-label={t("Pindahkan tugas ke kolom lain")}
+                              value={task.status}
+                              onChange={(event) =>
+                                updateStatus(task, event.target.value as TaskStatus)
+                              }
+                              onMouseDown={(event) => event.stopPropagation()}
+                              onTouchStart={(event) => event.stopPropagation()}
+                              className="min-w-0 flex-1 cursor-pointer bg-transparent text-[11px] font-semibold text-ink outline-none"
+                            >
+                              {STATUSES.map((option) => (
+                                <option key={option.id} value={option.id}>
+                                  {t(option.label)}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        )}
                       </article>
                     );
                   })}
 
-                  {!list.length && (
+                  {!list.length && canManage && (
                     <button
                       type="button"
                       onClick={() => setAdding(status.id)}
@@ -471,13 +495,15 @@ export function KanbanView({
                   )}
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setAdding(status.id)}
-                  className="mt-2 flex w-full items-center gap-1.5 rounded-xl px-2 py-2 text-[11px] font-semibold text-muted transition hover:bg-paper hover:text-green"
-                >
-                  <Plus className="h-3.5 w-3.5" /> {t("Tambah tugas")}
-                </button>
+                {canManage && (
+                  <button
+                    type="button"
+                    onClick={() => setAdding(status.id)}
+                    className="mt-2 flex w-full items-center gap-1.5 rounded-xl px-2 py-2 text-[11px] font-semibold text-muted transition hover:bg-paper hover:text-green"
+                  >
+                    <Plus className="h-3.5 w-3.5" /> {t("Tambah tugas")}
+                  </button>
+                )}
               </section>
             );
           })}
@@ -489,6 +515,9 @@ export function KanbanView({
           task={editing}
           phases={phases}
           team={project.team}
+          members={members}
+          canManage={canManage}
+          user={user}
           onClose={() => setEditing(null)}
           onSaved={(updated) => {
             setTasks((current) =>
@@ -508,6 +537,7 @@ export function KanbanView({
           projectId={project.id}
           phases={phases}
           team={project.team}
+          members={members}
           initialStatus={adding}
           onClose={() => setAdding(null)}
           onCreated={(task) => {
@@ -596,6 +626,8 @@ function TaskList({
   onToggleDone,
   onMove,
   onAdd,
+  canManage,
+  user,
 }: {
   tasks: Task[];
   phases: Phase[];
@@ -604,6 +636,8 @@ function TaskList({
   onToggleDone: (task: Task) => void;
   onMove: (task: Task, status: TaskStatus) => void;
   onAdd: () => void;
+  canManage: boolean;
+  user: PublicUser;
 }) {
   const { lang, t } = useI18n();
   const phaseById = new Map(phases.map((phase, index) => [phase.id, { ...phase, index }]));
@@ -636,6 +670,7 @@ function TaskList({
               const phase = phaseById.get(task.phaseId);
               const tone = phaseTone(phase?.name ?? "Tugas", phase?.index ?? 0);
               const late = task.status !== "done" && task.dueDate < today;
+              const canEditTask = canManage || task.assigneeUserId === user.id;
               return (
                 <div
                   key={task.id}
@@ -651,8 +686,9 @@ function TaskList({
                     }`}
                     onClick={(event) => {
                       event.stopPropagation();
-                      onToggleDone(task);
+                      if (canEditTask) onToggleDone(task);
                     }}
+                    disabled={!canEditTask}
                     aria-label={task.status === "done" ? t("Tandai belum selesai") : t("Tandai selesai")}
                   >
                     {task.status === "done" && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
@@ -683,23 +719,25 @@ function TaskList({
                     {formatDateRange(task.startDate, task.dueDate, lang)}
                   </span>
                   <div className="col-span-2 flex items-center justify-end gap-2 sm:col-span-1 sm:justify-start">
-                    <select
-                      aria-label={t("Pindahkan tugas ke kolom lain")}
-                      value={task.status}
-                      onChange={(event) =>
-                        onMove(task, event.target.value as TaskStatus)
-                      }
-                      onClick={(event) => event.stopPropagation()}
-                      onMouseDown={(event) => event.stopPropagation()}
-                      onTouchStart={(event) => event.stopPropagation()}
-                      className="mr-auto max-w-[140px] cursor-pointer rounded-md border border-line bg-card px-1.5 py-1 text-[10px] font-semibold text-ink-2 outline-none xl:hidden"
-                    >
-                      {STATUSES.map((status) => (
-                        <option key={status.id} value={status.id}>
-                          {t(status.label)}
-                        </option>
-                      ))}
-                    </select>
+                    {canEditTask && (
+                      <select
+                        aria-label={t("Pindahkan tugas ke kolom lain")}
+                        value={task.status}
+                        onChange={(event) =>
+                          onMove(task, event.target.value as TaskStatus)
+                        }
+                        onClick={(event) => event.stopPropagation()}
+                        onMouseDown={(event) => event.stopPropagation()}
+                        onTouchStart={(event) => event.stopPropagation()}
+                        className="mr-auto max-w-[140px] cursor-pointer rounded-md border border-line bg-card px-1.5 py-1 text-[10px] font-semibold text-ink-2 outline-none xl:hidden"
+                      >
+                        {STATUSES.map((status) => (
+                          <option key={status.id} value={status.id}>
+                            {t(status.label)}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                     <Avatar name={task.assignee} size="xs" />
                     <span className="hidden truncate text-[10.5px] text-muted sm:inline">
                       {task.assignee}
@@ -714,18 +752,22 @@ function TaskList({
       {!tasks.length && (
         <div className="flex flex-col items-center gap-2 px-6 py-12 text-center">
           <p className="text-[12.5px] text-muted">{t("Belum ada tugas di proyek ini.")}</p>
-          <button type="button" className="btn-mint btn-sm" onClick={onAdd}>
-            <Plus className="h-3.5 w-3.5" /> {t("Tambah tugas pertama")}
-          </button>
+          {canManage && (
+            <button type="button" className="btn-mint btn-sm" onClick={onAdd}>
+              <Plus className="h-3.5 w-3.5" /> {t("Tambah tugas pertama")}
+            </button>
+          )}
         </div>
       )}
-      <button
-        type="button"
-        onClick={onAdd}
-        className="flex w-full items-center gap-1.5 border-t border-dashed border-line px-4 py-3 text-[11.5px] font-semibold text-muted transition hover:bg-paper hover:text-green"
-      >
-        <Plus className="h-3.5 w-3.5" /> {t("Tambah tugas")}
-      </button>
+      {canManage && (
+        <button
+          type="button"
+          onClick={onAdd}
+          className="flex w-full items-center gap-1.5 border-t border-dashed border-line px-4 py-3 text-[11.5px] font-semibold text-muted transition hover:bg-paper hover:text-green"
+        >
+          <Plus className="h-3.5 w-3.5" /> {t("Tambah tugas")}
+        </button>
+      )}
     </div>
   );
 }
@@ -734,6 +776,9 @@ function TaskEditModal({
   task,
   phases,
   team,
+  members,
+  canManage,
+  user,
   onClose,
   onSaved,
   onDeleted,
@@ -741,16 +786,22 @@ function TaskEditModal({
   task: Task;
   phases: Phase[];
   team: string[];
+  members: PublicUser[];
+  canManage: boolean;
+  user: PublicUser;
   onClose: () => void;
   onSaved: (task: Task) => void;
   onDeleted: (id: string) => void;
 }) {
   const { lang, t } = useI18n();
+  const canEditDetails = canManage;
+  const canEditTask = canManage || task.assigneeUserId === user.id;
   const [form, setForm] = useState({
     title: task.title,
     phaseId: task.phaseId,
     type: task.type,
     assignee: task.assignee,
+    assigneeUserId: task.assigneeUserId ?? "",
     status: task.status,
     startDate: task.startDate,
     dueDate: task.dueDate,
@@ -762,6 +813,7 @@ function TaskEditModal({
   const [error, setError] = useState("");
 
   async function save() {
+    if (!canEditTask) return;
     setSaving(true);
     setError("");
     try {
@@ -770,13 +822,22 @@ function TaskEditModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           status: form.status,
-          phaseId: form.phaseId,
-          type: form.type,
-          startDate: form.startDate,
-          dueDate: form.dueDate,
-          durationDays: form.durationDays,
-          ...(form.title !== task.title ? { title: form.title } : {}),
-          ...(form.assignee !== task.assignee ? { assignee: form.assignee } : {}),
+          ...(canEditDetails
+            ? {
+                phaseId: form.phaseId,
+                type: form.type,
+                startDate: form.startDate,
+                dueDate: form.dueDate,
+                durationDays: form.durationDays,
+                ...(form.title !== task.title ? { title: form.title } : {}),
+                ...(form.assignee !== task.assignee
+                  ? { assignee: form.assignee }
+                  : {}),
+                ...(form.assigneeUserId !== (task.assigneeUserId ?? "")
+                  ? { assigneeUserId: form.assigneeUserId || null }
+                  : {}),
+              }
+            : {}),
           ...(form.progressNote !== (task.progressNote ?? "")
             ? { progressNote: form.progressNote }
             : {}),
@@ -817,23 +878,29 @@ function TaskEditModal({
       wide
       footer={
         <div className="flex w-full flex-wrap items-center justify-between gap-2">
-          <button
-            type="button"
-            className="btn-ghost btn-sm text-danger hover:bg-danger/[0.06]"
-            onClick={remove}
-            disabled={deleting}
-          >
-            {deleting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
-            {t("Hapus")}
-          </button>
+          {canManage ? (
+            <button
+              type="button"
+              className="btn-ghost btn-sm text-danger hover:bg-danger/[0.06]"
+              onClick={remove}
+              disabled={deleting}
+            >
+              {deleting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
+              {t("Hapus")}
+            </button>
+          ) : (
+            <span />
+          )}
           <div className="flex gap-2">
             <button type="button" className="btn-secondary" onClick={onClose}>
-              {t("Batal")}
+              {canEditTask ? t("Batal") : t("Tutup")}
             </button>
-            <button type="button" className="btn-primary" onClick={save} disabled={saving}>
-              {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-              {saving ? t("Menyimpan…") : t("Simpan perubahan")}
-            </button>
+            {canEditTask && (
+              <button type="button" className="btn-primary" onClick={save} disabled={saving}>
+                {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+                {saving ? t("Menyimpan…") : t("Simpan perubahan")}
+              </button>
+            )}
           </div>
         </div>
       }
@@ -852,6 +919,7 @@ function TaskEditModal({
             id="task-title"
             className="field"
             value={form.title}
+            disabled={!canEditDetails}
             onChange={(event) => setForm({ ...form, title: event.target.value })}
           />
         </div>
@@ -863,6 +931,7 @@ function TaskEditModal({
             id="task-progress-note"
             className="field min-h-[72px] resize-y text-[12px] leading-relaxed"
             maxLength={500}
+            disabled={!canEditTask}
             placeholder={t(
               "Mis. plakat sedang dalam pengantaran dengan estimasi penyampaian tgl 10 Nov pukul 16:45.",
             )}
@@ -882,6 +951,7 @@ function TaskEditModal({
               id="task-phase"
               className="field"
               value={form.phaseId}
+              disabled={!canEditDetails}
               onChange={(event) => setForm({ ...form, phaseId: event.target.value })}
             >
               {phases.map((phase) => (
@@ -899,6 +969,7 @@ function TaskEditModal({
               id="task-status"
               className="field"
               value={form.status}
+              disabled={!canEditTask}
               onChange={(event) => setForm({ ...form, status: event.target.value as TaskStatus })}
             >
               {STATUSES.map((status) => (
@@ -916,6 +987,7 @@ function TaskEditModal({
               id="task-type"
               className="field"
               value={form.type}
+              disabled={!canEditDetails}
               onChange={(event) => setForm({ ...form, type: event.target.value as TaskType })}
             >
               {Object.entries(TASK_TYPE_LABEL).map(([value, label]) => (
@@ -933,6 +1005,7 @@ function TaskEditModal({
               id="task-assignee"
               className="field"
               list={`team-${task.id}`}
+              disabled={!canEditDetails}
               value={form.assignee}
               onChange={(event) => setForm({ ...form, assignee: event.target.value })}
             />
@@ -943,6 +1016,33 @@ function TaskEditModal({
             </datalist>
           </div>
           <div>
+            <label className="label" htmlFor="task-assignee-account">
+              {t("Akun karyawan")}
+            </label>
+            <select
+              id="task-assignee-account"
+              className="field"
+              disabled={!canEditDetails}
+              value={form.assigneeUserId}
+              onChange={(event) => {
+                const assigneeUserId = event.target.value;
+                const member = members.find((item) => item.id === assigneeUserId);
+                setForm({
+                  ...form,
+                  assigneeUserId,
+                  assignee: member?.name ?? form.assignee,
+                });
+              }}
+            >
+              <option value="">{t("Tanpa akun")}</option>
+              {members.map((member) => (
+                <option key={member.id} value={member.id}>
+                  {member.name} · {member.role === "owner" ? t("Owner") : t("Karyawan")}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
             <label className="label" htmlFor="task-start">
               {t("Mulai")}
             </label>
@@ -950,6 +1050,7 @@ function TaskEditModal({
               id="task-start"
               type="date"
               className="field"
+              disabled={!canEditDetails}
               value={form.startDate}
               onChange={(event) => setForm({ ...form, startDate: event.target.value })}
             />
@@ -962,6 +1063,7 @@ function TaskEditModal({
               id="task-due"
               type="date"
               className="field"
+              disabled={!canEditDetails}
               value={form.dueDate}
               onChange={(event) => setForm({ ...form, dueDate: event.target.value })}
             />
@@ -980,6 +1082,7 @@ function AddTaskModal({
   projectId,
   phases,
   team,
+  members,
   initialStatus,
   onClose,
   onCreated,
@@ -987,6 +1090,7 @@ function AddTaskModal({
   projectId: string;
   phases: Phase[];
   team: string[];
+  members: PublicUser[];
   initialStatus: TaskStatus;
   onClose: () => void;
   onCreated: (task: Task) => void;
@@ -997,6 +1101,7 @@ function AddTaskModal({
     phaseId: phases[0]?.id ?? "",
     type: "internal" as TaskType,
     assignee: team[0] ?? "Saya",
+    assigneeUserId: "",
     durationDays: 1,
     status: initialStatus,
     progressNote: "",
@@ -1134,6 +1239,32 @@ function AddTaskModal({
                 <option key={name} value={name} />
               ))}
             </datalist>
+          </div>
+          <div>
+            <label className="label" htmlFor="new-task-assignee-account">
+              {t("Akun karyawan")}
+            </label>
+            <select
+              id="new-task-assignee-account"
+              className="field"
+              value={form.assigneeUserId}
+              onChange={(event) => {
+                const assigneeUserId = event.target.value;
+                const member = members.find((item) => item.id === assigneeUserId);
+                setForm({
+                  ...form,
+                  assigneeUserId,
+                  assignee: member?.name ?? form.assignee,
+                });
+              }}
+            >
+              <option value="">{t("Tanpa akun")}</option>
+              {members.map((member) => (
+                <option key={member.id} value={member.id}>
+                  {member.name} · {member.role === "owner" ? t("Owner") : t("Karyawan")}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <label className="label" htmlFor="new-task-duration">

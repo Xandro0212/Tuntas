@@ -6,14 +6,26 @@ export type TaskStatus = "todo" | "doing" | "waiting" | "done";
 
 export type HolidaySource = "national" | "bali" | "user";
 
+export type Role = "owner" | "employee";
+
+export interface Workspace {
+  id: string;
+  name: string;
+  ownerId: string;
+  createdAt: string;
+}
+
 export interface User {
   id: string;
+  workspaceId: string;
+  role: Role;
   name: string;
   businessName: string;
   email: string;
   passwordHash: string;
   salt: string;
   createdAt: string;
+  isDemo?: boolean;
 }
 
 export type PublicUser = Omit<User, "passwordHash" | "salt">;
@@ -27,6 +39,7 @@ export interface Attachment {
 export interface Project {
   id: string;
   userId: string;
+  workspaceId: string;
   title: string;
   category: Category;
   clientName: string;
@@ -61,6 +74,7 @@ export interface Task {
   durationDays: number;
   dependsOn: string[];
   assignee: string;
+  assigneeUserId?: string | null;
   status: TaskStatus;
   source: "ai" | "manual";
   order: number;
@@ -70,12 +84,14 @@ export interface Task {
 
 export interface Holiday {
   id: string;
+  workspaceId: string;
   date: string;
   name: string;
   source: HolidaySource;
 }
 
 export interface Database {
+  workspaces: Workspace[];
   users: User[];
   projects: Project[];
   phases: Phase[];

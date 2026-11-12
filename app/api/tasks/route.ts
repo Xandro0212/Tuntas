@@ -15,6 +15,12 @@ export async function POST(request: Request) {
   const user = await getSessionUser();
   const lang = await getLang();
   if (!user) return NextResponse.json({ error: "Silakan masuk terlebih dahulu." }, { status: 401 });
+  if (user.role !== "owner") {
+    return NextResponse.json(
+      { error: "Hanya Owner yang bisa menambah tugas." },
+      { status: 403 },
+    );
+  }
 
   try {
     const body = (await request.json()) as {
@@ -23,12 +29,15 @@ export async function POST(request: Request) {
       title?: string;
       type?: TaskType;
       assignee?: string;
+      assigneeUserId?: string | null;
       durationDays?: number;
       status?: TaskStatus;
       progressNote?: string;
     };
     const db = await getDb();
-    const project = db.projects.find((item) => item.id === body.projectId && item.userId === user.id);
+    const project = db.projects.find(
+      (item) => item.id === body.projectId && item.workspaceId === user.workspaceId,
+    );
     if (!project) return NextResponse.json({ error: "Proyek tidak ditemukan." }, { status: 404 });
     const phase = db.phases.find((item) => item.id === body.phaseId && item.projectId === project.id);
     if (!phase) return NextResponse.json({ error: "Tahap tidak ditemukan." }, { status: 400 });
@@ -39,7 +48,7 @@ export async function POST(request: Request) {
     }
 
     const durationDays = Math.min(60, Math.max(1, Math.round(Number(body.durationDays) || 1)));
-    const holidays = (await getHolidays()).map((holiday) => holiday.date);
+    const holidays = (await getHolidays(project.workspaceId)).map((holiday) => holiday.date);
     const date = scheduleSingleTask({
       deadline: project.deadline,
       bufferDays: project.bufferDays,
@@ -48,6 +57,13 @@ export async function POST(request: Request) {
       durationDays,
     });
     const status = STATUSES.has(body.status as TaskStatus) ? (body.status as TaskStatus) : "todo";
+    const assigneeUser =
+      body.assigneeUserId && typeof body.assigneeUserId === "string"
+        ? db.users.find(
+            (item) =>
+              item.id === body.assigneeUserId && item.workspaceId === project.workspaceId,
+          )
+        : undefined;
     const task = {
       id: `t_${randomUUID()}`,
       projectId: project.id,
@@ -58,7 +74,13 @@ export async function POST(request: Request) {
       dueDate: date.dueDate,
       durationDays,
       dependsOn: [],
-      assignee: (body.assignee || project.team[0] || "Saya").slice(0, 60),
+      assignee: (
+        assigneeUser?.name ||
+        body.assignee ||
+        project.team[0] ||
+        "Saya"
+      ).slice(0, 60),
+      assigneeUserId: assigneeUser?.id ?? null,
       status,
       source: "manual" as const,
       order: Math.max(0, ...db.tasks.filter((item) => item.projectId === project.id).map((item) => item.order)) + 1,
@@ -81,6 +103,12 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Silakan masuk terlebih dahulu." }, { status: 401 });
+  if (user.role !== "owner") {
+    return NextResponse.json(
+      { error: "Hanya Owner yang bisa menghapus tugas." },
+      { status: 403 },
+    );
+  }
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
@@ -88,10 +116,17 @@ export async function DELETE(request: Request) {
     const db = await getDb();
     const task = db.tasks.find((item) => item.id === id);
     if (!task) return NextResponse.json({ error: "Tugas tidak ditemukan." }, { status: 404 });
-    const project = db.projects.find((item) => item.id === task.projectId && item.userId === user.id);
+    const project = db.projects.find(
+      (item) => item.id === task.projectId && item.workspaceId === user.workspaceId,
+    );
     if (!project) return NextResponse.json({ error: "Tugas tidak ditemukan." }, { status: 404 });
     await mutateDb((database) => {
       database.tasks = database.tasks.filter((item) => item.id !== id);
+      for (const other of database.tasks) {
+        if (other.dependsOn.includes(id)) {
+          other.dependsOn = other.dependsOn.filter((dep) => dep !== id);
+        }
+      }
       const target = database.projects.find((item) => item.id === project.id);
       if (target) target.updatedAt = new Date().toISOString();
     });

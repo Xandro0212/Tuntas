@@ -24,11 +24,11 @@ export default async function ClientsPage() {
   const lang = await getLang();
   const t = (source: string, vars?: Record<string, string | number>) =>
     translate(lang, source, vars);
-  const clients = await getClients(user.id, lang);
+  const clients = await getClients(user, lang);
   const today = todayISO();
   const clientProjects = clients.flatMap((client) => client.projects);
   const clientBundles = await Promise.all(
-    clientProjects.map((project) => getProjectBundle(user.id, project.id, lang)),
+    clientProjects.map((project) => getProjectBundle(user, project.id, lang)),
   );
   const summaries = new Map(
     clientProjects.map((project, index) => [project.id, clientBundles[index]!]),

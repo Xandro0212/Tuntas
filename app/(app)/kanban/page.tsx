@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export default async function KanbanRedirect() {
   const user = await requireUser();
-  const projects = await getProjectsForUser(user.id);
+  const projects = await getProjectsForUser(user);
   if (!projects.length) redirect("/proyek/baru");
   const activeId = await getActiveProjectId();
   const selected =

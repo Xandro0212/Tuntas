@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Download, MessageCircle } from "lucide-react";
 import { ProjectSwitcher } from "./project-switcher";
 import { DeleteProjectButton } from "./delete-project-button";
+import { EditProjectButton } from "./edit-project-button";
 import { useI18n } from "./language-provider";
 import { normalizeWhatsApp, relativeDeadline } from "@/lib/dates";
 import { CATEGORY_LABEL } from "@/lib/constants";
@@ -14,11 +15,13 @@ export function ProjectIdentity({
   projects,
   eyebrow,
   showExport = true,
+  canManage = false,
 }: {
   project: Project;
   projects: { id: string; title: string }[];
   eyebrow?: string;
   showExport?: boolean;
+  canManage?: boolean;
 }) {
   const { lang, t } = useI18n();
   const wa = normalizeWhatsApp(project.clientWa);
@@ -71,10 +74,15 @@ export function ProjectIdentity({
             <span className="hidden sm:inline">{t("Ekspor .ics")}</span>
           </a>
         )}
-        <Link href="/proyek/baru" className="btn-primary btn-sm hidden sm:inline-flex">
-          {t("+ Proyek")}
-        </Link>
-        <DeleteProjectButton projectId={project.id} projectTitle={project.title} />
+        {canManage && (
+          <Link href="/proyek/baru" className="btn-primary btn-sm hidden sm:inline-flex">
+            {t("+ Proyek")}
+          </Link>
+        )}
+        {canManage && <EditProjectButton project={project} />}
+        {canManage && (
+          <DeleteProjectButton projectId={project.id} projectTitle={project.title} />
+        )}
       </div>
     </div>
   );

@@ -10,17 +10,25 @@ export async function POST(
 ) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Silakan masuk terlebih dahulu." }, { status: 401 });
+  if (user.role !== "owner") {
+    return NextResponse.json(
+      { error: "Hanya Owner yang bisa menyusun ulang jadwal." },
+      { status: 403 },
+    );
+  }
   try {
     const { id } = await params;
     const db = await getDb();
-    const project = db.projects.find((item) => item.id === id && item.userId === user.id);
+    const project = db.projects.find(
+      (item) => item.id === id && item.workspaceId === user.workspaceId,
+    );
     if (!project) return NextResponse.json({ error: "Proyek tidak ditemukan." }, { status: 404 });
     const tasks = db.tasks
       .filter((task) => task.projectId === project.id)
       .sort((a, b) => a.order - b.order);
     if (!tasks.length) return NextResponse.json({ error: "Proyek belum punya tugas." }, { status: 400 });
 
-    const holidays = (await getHolidays()).map((holiday) => holiday.date);
+    const holidays = (await getHolidays(project.workspaceId)).map((holiday) => holiday.date);
     const schedule = scheduleTasks({
       deadline: project.deadline,
       workdays: project.workdays,

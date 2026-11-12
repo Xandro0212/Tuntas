@@ -15,12 +15,12 @@ export async function generateMetadata() {
 export default async function TodayPage() {
   const user = await requireUser();
   const lang = await getLang();
-  const projects = await getProjectsForUser(user.id, lang);
+  const projects = await getProjectsForUser(user, lang);
   const today = todayISO();
   const tomorrow = addDays(today, 1);
   const bundles = (
     await Promise.all(
-      projects.map((project) => getProjectBundle(user.id, project.id, lang)),
+      projects.map((project) => getProjectBundle(user, project.id, lang)),
     )
   ).filter((bundle): bundle is NonNullable<typeof bundle> => Boolean(bundle));
 

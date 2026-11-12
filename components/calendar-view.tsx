@@ -60,6 +60,7 @@ export function CalendarView({
   projects,
   otherTasks,
   today,
+  canManage,
 }: {
   project: Project;
   phases: Phase[];
@@ -68,6 +69,7 @@ export function CalendarView({
   projects: { id: string; title: string }[];
   otherTasks: OtherProjectTask[];
   today: string;
+  canManage: boolean;
 }) {
   const router = useRouter();
   const { lang, t } = useI18n();
@@ -186,7 +188,12 @@ export function CalendarView({
 
   return (
     <div className="space-y-5">
-      <ProjectIdentity project={project} projects={projects} eyebrow={t("Kalender proyek")} />
+      <ProjectIdentity
+        project={project}
+        projects={projects}
+        eyebrow={t("Kalender proyek")}
+        canManage={canManage}
+      />
 
       <div className="panel flex flex-col gap-3 p-3.5 md:flex-row md:items-center md:justify-between">
         <div>
@@ -520,7 +527,7 @@ export function CalendarView({
                     )}
                   </div>
                 </div>
-                {holiday.source === "user" ? (
+                {canManage && holiday.source === "user" ? (
                   <button
                     type="button"
                     className="icon-btn h-7 w-7 text-muted hover:text-danger"
@@ -546,6 +553,7 @@ export function CalendarView({
             )}
           </div>
 
+          {canManage && (
           <form onSubmit={addHoliday} className="mt-3 grid gap-2 sm:grid-cols-[130px_1fr_auto]">
             <input
               type="date"
@@ -576,6 +584,7 @@ export function CalendarView({
               {t("Tambah")}
             </button>
           </form>
+          )}
         </div>
 
         <div className="panel overflow-hidden p-4">
