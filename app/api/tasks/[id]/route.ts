@@ -6,6 +6,7 @@ import { getHolidays, localizeTask } from "@/lib/data";
 import { getLang } from "@/lib/lang-server";
 import { todayISO } from "@/lib/dates";
 import { isWorkday } from "@/lib/schedule";
+import { sendWhatsAppText, taskUpdateMessage } from "@/lib/whatsapp";
 import type { TaskStatus, TaskType } from "@/lib/types";
 
 const STATUSES = new Set<TaskStatus>(["todo", "doing", "waiting", "done"]);
@@ -167,6 +168,25 @@ export async function PATCH(
         entityId: task.id,
       });
     });
+
+    if (
+      project.whatsappNotify !== false &&
+      project.clientWa &&
+      (updates.status === "done" ||
+        updates.status === "waiting" ||
+        updates.progressNote !== undefined)
+    ) {
+      try {
+        const message = taskUpdateMessage(
+          project,
+          { ...task, ...updates },
+          user.businessName,
+        );
+        if (message) await sendWhatsAppText(project.clientWa, message);
+      } catch {
+        // The task is already saved; WhatsApp failure should not roll it back.
+      }
+    }
 
     return NextResponse.json({
       ok: true,

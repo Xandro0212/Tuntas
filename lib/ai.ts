@@ -476,6 +476,27 @@ function normalizePlan(raw: unknown, input: PlanInput): AiPlan {
     task.depends_on = task.depends_on.filter((dep) => validIds.has(dep) && dep !== task.id);
   }
 
+  // An LLM can occasionally return a dependency cycle. Remove only the edge
+  // that closes the cycle so the scheduler does not fall back to a long
+  // sequential plan and falsely report that the project should have started.
+  const byId = new Map(tasks.map((task) => [task.id, task]));
+  const state = new Map<string, 0 | 1 | 2>();
+  const visit = (id: string) => {
+    state.set(id, 1);
+    const task = byId.get(id);
+    if (task) {
+      task.depends_on = task.depends_on.filter((dep) => {
+        if (state.get(dep) === 1) return false;
+        if ((state.get(dep) ?? 0) === 0) visit(dep);
+        return true;
+      });
+    }
+    state.set(id, 2);
+  };
+  for (const task of tasks) {
+    if ((state.get(task.id) ?? 0) === 0) visit(task.id);
+  }
+
   return {
     questions: [],
     phases,

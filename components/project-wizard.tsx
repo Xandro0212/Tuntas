@@ -128,6 +128,7 @@ export function ProjectWizard({
   const [engine, setEngine] = useState<"demo" | "llm">("demo");
   const [loading, setLoading] = useState<"questions" | "plan" | "apply" | null>(null);
   const [error, setError] = useState("");
+  const [scheduleWarningDismissed, setScheduleWarningDismissed] = useState(false);
   const [interim, setInterim] = useState("");
   const [recording, setRecording] = useState(false);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
@@ -135,6 +136,10 @@ export function ProjectWizard({
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    setScheduleWarningDismissed(false);
+  }, [draftTasks, form.deadline]);
 
   useEffect(() => {
     if (!recording) return;
@@ -1389,14 +1394,41 @@ export function ProjectWizard({
                   {schedule.bufferDates.map((date) => formatShortDate(date, lang)).join(" · ")}
                 </div>
               </div>
-              {draftTasks.length > 0 && schedule.projectStart < today && (
-                <div className="mt-2 flex items-start gap-1.5 rounded-lg bg-rust-soft px-2.5 py-2 text-[10px] leading-relaxed text-rust">
-                  <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" />
-                  {t(
-                    "Target mulai sudah lewat. Deadline mungkin terlalu dekat — pertimbangkan mengurangi durasi atau menambah orang.",
-                  )}
-                </div>
-              )}
+              {!scheduleWarningDismissed &&
+                draftTasks.length > 0 &&
+                schedule.projectStart < today && (
+                  <div className="mt-2 rounded-lg bg-rust-soft px-2.5 py-2 text-[10px] leading-relaxed text-rust">
+                    <div className="flex items-start gap-1.5">
+                      <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" />
+                      <div>
+                        {t(
+                          "Target mulai {start} sudah lewat dari hari ini ({today}). Rencana ini butuh {n} hari kerja, jadi deadline mungkin terlalu dekat.",
+                          {
+                            start: formatShortDate(schedule.projectStart, lang),
+                            today: formatShortDate(today, lang),
+                            n: schedule.totalDuration,
+                          },
+                        )}
+                      </div>
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      <button
+                        type="button"
+                        className="rounded-md border border-rust/25 bg-white/60 px-2 py-1 text-[9.5px] font-bold text-rust"
+                        onClick={() => setStep(1)}
+                      >
+                        {t("Ubah deadline")}
+                      </button>
+                      <button
+                        type="button"
+                        className="rounded-md px-2 py-1 text-[9.5px] font-semibold text-rust/75 hover:bg-white/50"
+                        onClick={() => setScheduleWarningDismissed(true)}
+                      >
+                        {t("Mengerti")}
+                      </button>
+                    </div>
+                  </div>
+                )}
               <div className="mt-2 text-[10px] leading-relaxed text-muted">
                 {t("Deadline klien: {date}", {
                   date: formatLongDate(form.deadline, false, lang),

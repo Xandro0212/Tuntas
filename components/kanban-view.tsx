@@ -30,7 +30,7 @@ import {
   relativeDeadline,
   todayISO,
 } from "@/lib/dates";
-import { getBufferDates } from "@/lib/schedule";
+import { getBufferDates, isWorkday } from "@/lib/schedule";
 import type {
   Holiday,
   Phase,
@@ -519,6 +519,8 @@ export function KanbanView({
           members={members}
           canManage={canManage}
           user={user}
+          workdays={project.workdays}
+          holidays={holidays}
           onClose={() => setEditing(null)}
           onSaved={(updated) => {
             setTasks((current) =>
@@ -780,6 +782,8 @@ function TaskEditModal({
   members,
   canManage,
   user,
+  workdays,
+  holidays,
   onClose,
   onSaved,
   onDeleted,
@@ -790,6 +794,8 @@ function TaskEditModal({
   members: PublicUser[];
   canManage: boolean;
   user: PublicUser;
+  workdays: number[];
+  holidays: Holiday[];
   onClose: () => void;
   onSaved: (task: Task) => void;
   onDeleted: (id: string) => void;
@@ -812,9 +818,50 @@ function TaskEditModal({
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
+  const [dateError, setDateError] = useState("");
+
+  function validateDates(startDate: string, dueDate: string): boolean {
+    const holidaySet = new Set(holidays.map((holiday) => holiday.date));
+    for (const [value, label] of [
+      [startDate, t("Mulai")],
+      [dueDate, t("Selesai")],
+    ] as const) {
+      const holiday = holidays.find((item) => item.date === value);
+      if (holiday) {
+        const message = t(
+          "Tanggal {date} adalah hari libur: {name}. Pilih hari lain.",
+          {
+            date: formatLongDate(value, false, lang),
+            name: holiday.name,
+          },
+        );
+        setDateError(message);
+        toast.error(message);
+        return false;
+      }
+      if (!isWorkday(value, workdays, holidaySet)) {
+        const message = t(
+          "{label} {date} bukan hari kerja tim. Pilih hari kerja.",
+          { label, date: formatLongDate(value, false, lang) },
+        );
+        setDateError(message);
+        toast.error(message);
+        return false;
+      }
+    }
+    if (startDate > dueDate) {
+      const message = t("Tanggal mulai harus sebelum tanggal selesai.");
+      setDateError(message);
+      toast.error(message);
+      return false;
+    }
+    setDateError("");
+    return true;
+  }
 
   async function save() {
     if (!canEditTask) return;
+    if (canEditDetails && !validateDates(form.startDate, form.dueDate)) return;
     setSaving(true);
     setError("");
     try {
@@ -897,7 +944,12 @@ function TaskEditModal({
               {canEditTask ? t("Batal") : t("Tutup")}
             </button>
             {canEditTask && (
-              <button type="button" className="btn-primary" onClick={save} disabled={saving}>
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={save}
+                disabled={saving || Boolean(dateError)}
+              >
                 {saving && <Loader2 className="h-4 w-4 animate-spin" />}
                 {saving ? t("Menyimpan…") : t("Simpan perubahan")}
               </button>
@@ -1053,7 +1105,11 @@ function TaskEditModal({
               className="field"
               disabled={!canEditDetails}
               value={form.startDate}
-              onChange={(event) => setForm({ ...form, startDate: event.target.value })}
+              onChange={(event) => {
+                const startDate = event.target.value;
+                setForm({ ...form, startDate });
+                validateDates(startDate, form.dueDate);
+              }}
             />
           </div>
           <div>
@@ -1066,10 +1122,19 @@ function TaskEditModal({
               className="field"
               disabled={!canEditDetails}
               value={form.dueDate}
-              onChange={(event) => setForm({ ...form, dueDate: event.target.value })}
+              onChange={(event) => {
+                const dueDate = event.target.value;
+                setForm({ ...form, dueDate });
+                validateDates(form.startDate, dueDate);
+              }}
             />
           </div>
         </div>
+        {dateError && (
+          <div className="rounded-lg border border-rust/25 bg-rust-soft px-3 py-2 text-[11.5px] leading-relaxed text-rust">
+            {dateError}
+          </div>
+        )}
         <div className="flex items-center gap-2 rounded-lg bg-paper px-3 py-2 text-[11px] text-muted">
           <CalendarDays className="h-3.5 w-3.5" />
           {t("Tanggal tidak boleh jatuh di hari Minggu atau hari libur.")}

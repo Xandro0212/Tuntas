@@ -22,6 +22,7 @@ export function EditProjectButton({ project }: { project: Project }) {
     deadlineTime: project.deadlineTime ?? "",
     story: project.story,
     value: String(project.value ?? 0),
+    whatsappNotify: project.whatsappNotify !== false,
   });
 
   async function save() {
@@ -35,6 +36,7 @@ export function EditProjectButton({ project }: { project: Project }) {
           ...form,
           value: Number(form.value) || 0,
           deadlineTime: form.deadlineTime || undefined,
+          whatsappNotify: form.whatsappNotify,
         }),
       });
       const payload = (await response.json()) as { error?: string };
@@ -167,6 +169,17 @@ export function EditProjectButton({ project }: { project: Project }) {
                 onChange={(event) => setForm({ ...form, value: event.target.value })}
               />
             </div>
+            <label className="flex items-center gap-2 rounded-xl border border-line bg-paper px-3 py-2.5 text-[11.5px] font-medium text-ink-2 sm:col-span-2">
+              <input
+                type="checkbox"
+                checked={form.whatsappNotify}
+                onChange={(event) =>
+                  setForm({ ...form, whatsappNotify: event.target.checked })
+                }
+                className="h-4 w-4 accent-[#7c3aed]"
+              />
+              {t("Kirim notifikasi WhatsApp otomatis ke klien")}
+            </label>
             <div className="sm:col-span-2">
               <label className="label" htmlFor="edit-project-story">
                 {t("Cerita proyek")}

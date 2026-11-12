@@ -183,6 +183,14 @@ const EN: Record<string, string> = {
   "Penanggung jawab": "Assignee",
   "Tanggal tidak boleh jatuh di hari Minggu atau hari libur.":
     "Dates cannot fall on Sundays or holidays.",
+  "Target mulai {start} sudah lewat dari hari ini ({today}). Rencana ini butuh {n} hari kerja, jadi deadline mungkin terlalu dekat.":
+    "The target start {start} is before today ({today}). This plan needs {n} working days, so the deadline may be too close.",
+  "Ubah deadline": "Change deadline",
+  "Mengerti": "Got it",
+  "Tanggal {date} adalah hari libur: {name}. Pilih hari lain.":
+    "{date} is a holiday: {name}. Pick another day.",
+  "{label} {date} bukan hari kerja tim. Pilih hari kerja.":
+    "{label} {date} is not a team working day. Pick a working day.",
   "Simpan perubahan": "Save changes",
   "Tugas diperbarui.": "Task updated.",
   "Gagal menyimpan tugas.": "Failed to save the task.",
@@ -701,6 +709,20 @@ const EN: Record<string, string> = {
   "Jam deadline": "Deadline time",
   "1 anggota": "1 member",
   "{n} anggota": "{n} members",
+  "Gagal mengirim WhatsApp.": "Failed to send WhatsApp.",
+  "Konfirmasi pesanan dikirim ke WhatsApp klien.":
+    "Order confirmation sent to the client's WhatsApp.",
+  "Kirim konfirmasi pesanan via WhatsApp": "Send order confirmation via WhatsApp",
+  "Konfirmasi WA": "WA confirmation",
+  "Kirim notifikasi WhatsApp otomatis ke klien":
+    "Send automatic WhatsApp notifications to the client",
+  "Hanya Owner yang bisa mengirim pesan WhatsApp.":
+    "Only the Owner can send WhatsApp messages.",
+  "Nomor WhatsApp klien belum diisi.": "The client's WhatsApp number is empty.",
+  "WhatsApp API belum dikonfigurasi. Isi WHATSAPP_TOKEN dan WHATSAPP_PHONE_NUMBER_ID.":
+    "WhatsApp API is not configured. Set WHATSAPP_TOKEN and WHATSAPP_PHONE_NUMBER_ID.",
+  "Terlalu banyak pesan WhatsApp. Coba lagi nanti.":
+    "Too many WhatsApp messages. Please try again later.",
   "Aktivitas": "Activity",
   "Jejak perubahan": "Change history",
   "Perubahan penting di workspace ini, terbaru di atas.":

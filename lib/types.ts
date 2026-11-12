@@ -53,6 +53,8 @@ export interface Project {
   team: string[];
   workdays: number[];
   attachments: Attachment[];
+  whatsappNotify?: boolean;
+  clientConfirmedAt?: string | null;
   createdAt: string;
   updatedAt: string;
 }

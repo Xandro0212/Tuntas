@@ -6,6 +6,7 @@ import { ProjectSwitcher } from "./project-switcher";
 import { DeleteProjectButton } from "./delete-project-button";
 import { EditProjectButton } from "./edit-project-button";
 import { PhaseManager } from "./phase-manager";
+import { NotifyWhatsAppButton } from "./notify-whatsapp-button";
 import { useI18n } from "./language-provider";
 import { normalizeWhatsApp, relativeDeadline } from "@/lib/dates";
 import { CATEGORY_LABEL } from "@/lib/constants";
@@ -83,6 +84,9 @@ export function ProjectIdentity({
 
       <div className="flex shrink-0 flex-wrap items-center gap-2">
         <ProjectSwitcher projects={projects} currentId={project.id} />
+        {canManage && project.clientWa && (
+          <NotifyWhatsAppButton projectId={project.id} />
+        )}
         {showExport && (
           <a
             href={`/api/projects/${project.id}/ics`}

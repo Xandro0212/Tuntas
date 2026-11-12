@@ -39,6 +39,7 @@ export async function PATCH(
       story?: string;
       value?: number;
       team?: string[];
+      whatsappNotify?: boolean;
     };
     const db = await getDb();
     const project = db.projects.find(
@@ -114,6 +115,9 @@ export async function PATCH(
         target.team = Array.from(
           new Set(body.team.map((name) => String(name).trim()).filter(Boolean)),
         ).slice(0, 20);
+      }
+      if (body.whatsappNotify !== undefined) {
+        target.whatsappNotify = Boolean(body.whatsappNotify);
       }
       if (deadline !== undefined) target.deadline = deadline;
       if (deadlineChanged) {

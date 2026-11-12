@@ -5,6 +5,7 @@ import { recordActivity } from "@/lib/activity";
 import { getDb, mutateDb } from "@/lib/store";
 import { scheduleTasks } from "@/lib/schedule";
 import { getHolidays } from "@/lib/data";
+import { projectConfirmationMessage, sendWhatsAppText } from "@/lib/whatsapp";
 import type { Category, Project, Task, TaskType } from "@/lib/types";
 
 const CATEGORIES = new Set<Category>(["kerajinan", "katering", "konveksi", "jasa", "lainnya"]);
@@ -121,6 +122,8 @@ export async function POST(request: Request) {
             size: Number(file.size) || 0,
           }))
         : [],
+      whatsappNotify: true,
+      clientConfirmedAt: null,
       createdAt: now,
       updatedAt: now,
     };
@@ -178,6 +181,17 @@ export async function POST(request: Request) {
         entityId: project.id,
       });
     });
+
+    if (project.whatsappNotify !== false && project.clientWa) {
+      try {
+        await sendWhatsAppText(
+          project.clientWa,
+          projectConfirmationMessage(project, user.businessName),
+        );
+      } catch {
+        // WhatsApp is an enhancement; a delivery failure must not lose the project.
+      }
+    }
 
     return NextResponse.json({ id: projectId });
   } catch {
