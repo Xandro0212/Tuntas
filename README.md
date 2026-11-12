@@ -58,7 +58,7 @@ Akun demo bersama tetap tersedia untuk akses manual:
 
 - **Landing page ID/EN** — pilihan bahasa Indonesia/Inggris di header landing, tersimpan di `localStorage` + cookie
 - **Owner & Employee** — Owner mengelola workspace, proyek, tim, dan tugas; Employee hanya bisa memperbarui tugas yang ditugaskan kepadanya. UMKM tanpa karyawan tetap berjalan sebagai Owner tunggal
-- **Tim** — Owner bisa menambah/menghapus akun karyawan dan menugaskan tugas ke akun tersebut
+- **Tim** — Owner membuat tautan undangan; karyawan membuat password sendiri, lalu bisa ditugaskan ke tugas. Owner juga bisa menghapus karyawan dan mencabut undangan
 - **Buat proyek** — form cerita proyek, **Modal proyek**, rekam suara (Web Speech API), tempel chat WA, lampiran foto/PDF
 - **Edit proyek** — Owner bisa mengubah judul, klien, deadline, cerita, dan nilai proyek; perubahan deadline otomatis menyusun ulang tanggal tugas
 - **Kelola tahap** — Owner bisa menambah, mengganti nama, dan menghapus tahap proyek; tahap yang masih punya tugas tidak bisa dihapus
@@ -101,6 +101,7 @@ Model datanya sekarang memiliki:
 - `projects.workspaceId` — isolasi proyek per workspace
 - `tasks.assigneeUserId` — penugasan tugas ke akun karyawan
 - `holidays.workspaceId` — hari libur per workspace; hari libur nasional/Bali memakai workspace `*`
+- `invites` — tautan undangan karyawan sekali pakai, berlaku 7 hari
 
 ### Setup Supabase
 
@@ -130,7 +131,7 @@ Lampiran disimpan di **Supabase Storage** (bucket privat `tuntas-uploads`) saat 
 
 ### Rate limit
 
-Login, registrasi, demo, AI, upload, dan pembuatan karyawan memiliki rate limit dasar per IP/user. Limiter berjalan in-memory per instance; untuk produksi multi-instance skala besar, gunakan Redis/Upstash atau rate limiter terdistribusi.
+Login, registrasi, demo, AI, upload, pembuatan undangan, dan penerimaan undangan memiliki rate limit dasar per IP/user. Limiter berjalan in-memory per instance; untuk produksi multi-instance skala besar, gunakan Redis/Upstash atau rate limiter terdistribusi.
 
 ## Stack
 

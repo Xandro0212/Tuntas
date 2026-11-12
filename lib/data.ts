@@ -7,6 +7,7 @@ import { getBufferDates } from "./schedule";
 import { translate, type Lang } from "./i18n";
 import type {
   Holiday,
+  Invite,
   Phase,
   Project,
   ProjectSummary,
@@ -92,6 +93,26 @@ export async function getWorkspaceMembers(
       return a.name.localeCompare(b.name);
     })
     .map(toPublicUser);
+}
+
+export async function getWorkspaceInvites(
+  workspaceId: string,
+): Promise<Invite[]> {
+  const db = await getDb();
+  const now = new Date().toISOString();
+  return db.invites
+    .filter(
+      (invite) =>
+        invite.workspaceId === workspaceId &&
+        !invite.usedAt &&
+        invite.expiresAt > now,
+    )
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export async function getInviteByToken(token: string): Promise<Invite | null> {
+  const db = await getDb();
+  return db.invites.find((invite) => invite.token === token) ?? null;
 }
 
 export function summarizeProject(

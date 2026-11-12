@@ -91,8 +91,21 @@ export interface Holiday {
   source: HolidaySource;
 }
 
+export interface Invite {
+  id: string;
+  token: string;
+  workspaceId: string;
+  email: string;
+  name: string;
+  createdBy: string;
+  createdAt: string;
+  expiresAt: string;
+  usedAt?: string | null;
+}
+
 export interface Database {
   workspaces: Workspace[];
+  invites: Invite[];
   users: User[];
   projects: Project[];
   phases: Phase[];

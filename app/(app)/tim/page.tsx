@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
-import { getWorkspace, getWorkspaceMembers } from "@/lib/data";
+import { getWorkspace, getWorkspaceInvites, getWorkspaceMembers } from "@/lib/data";
 import { getLang } from "@/lib/lang-server";
 import { translate } from "@/lib/i18n";
 import { TeamManager } from "@/components/team-manager";
@@ -17,14 +17,16 @@ export default async function TeamPage() {
   if (user.role !== "owner") redirect("/hari-ini");
   const lang = await getLang();
   const t = (source: string) => translate(lang, source);
-  const [members, workspace] = await Promise.all([
+  const [members, invites, workspace] = await Promise.all([
     getWorkspaceMembers(user.workspaceId),
+    getWorkspaceInvites(user.workspaceId),
     getWorkspace(user.workspaceId),
   ]);
 
   return (
     <TeamManager
       initialMembers={members}
+      initialInvites={invites}
       workspaceName={workspace?.name ?? user.businessName}
       currentUserId={user.id}
       title={t("Tim")}
