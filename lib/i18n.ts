@@ -660,6 +660,31 @@ const EN: Record<string, string> = {
   "Jam deadline": "Deadline time",
   "1 anggota": "1 member",
   "{n} anggota": "{n} members",
+  "Prioritas otomatis": "Automatic priority",
+  "Saran prioritas": "Priority suggestion",
+  "AI eksternal sedang tidak tersedia. Rencana disusun dengan planner lokal.":
+    "The external AI is unavailable. The plan was built with the local planner.",
+  "AI eksternal tidak tersedia.": "The external AI is unavailable.",
+  "Kelola tahap": "Manage phases",
+  "Ubah nama, tambah, atau hapus tahap proyek.":
+    "Rename, add, or remove project phases.",
+  "Nama tahap minimal 2 karakter.": "Phase name must be at least 2 characters.",
+  "Gagal mengubah tahap.": "Failed to update the phase.",
+  "Gagal menambah tahap.": "Failed to add the phase.",
+  "Gagal menghapus tahap.": "Failed to delete the phase.",
+  "Tahap diperbarui.": "Phase updated.",
+  "Tahap ditambahkan.": "Phase added.",
+  "Tahap dihapus.": "Phase deleted.",
+  "Simpan tahap": "Save phase",
+  "Hapus tahap": "Delete phase",
+  "Nama tahap baru": "New phase name",
+  "Tambah tahap": "Add phase",
+  "Hapus tahap {name}? Tahap hanya bisa dihapus jika tidak punya tugas.":
+    "Delete phase {name}? A phase can only be deleted when it has no tasks.",
+  "Proyek harus punya minimal satu tahap.": "A project needs at least one phase.",
+  "Tahap ini masih punya tugas. Pindahkan tugas ke tahap lain terlebih dahulu.":
+    "This phase still has tasks. Move those tasks to another phase first.",
+  "Hanya Owner yang bisa mengatur tahap.": "Only the Owner can manage phases.",
   "Owner mengelola proyek dan membagi tugas. Karyawan hanya bisa memperbarui tugas yang ditugaskan kepadanya.":
     "The Owner manages projects and assigns work. Employees can only update tasks assigned to them.",
   "UMKM tanpa karyawan tetap bisa memakai Tuntas sebagai Owner tunggal.":

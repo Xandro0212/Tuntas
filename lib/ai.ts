@@ -515,9 +515,12 @@ Buat rencana tugasnya sekarang.`;
 
   let lastError: Error | null = null;
   for (let attempt = 0; attempt < 3; attempt += 1) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 25_000);
     try {
       const response = await fetch(`${baseUrl}/chat/completions`, {
         method: "POST",
+        signal: controller.signal,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${apiKey}`,
@@ -552,6 +555,8 @@ Buat rencana tugasnya sekarang.`;
     } catch (error) {
       lastError = error instanceof Error ? error : new Error("Gagal memanggil AI.");
       if (attempt < 2) await new Promise((resolve) => setTimeout(resolve, 400 * (attempt + 1)));
+    } finally {
+      clearTimeout(timer);
     }
   }
   throw lastError ?? new Error("Gagal menyusun rencana dengan AI.");

@@ -24,6 +24,15 @@ npm run build
 npm start
 ```
 
+Testing:
+
+```bash
+npm test
+```
+
+CI menjalankan unit test dan production build pada setiap push/PR:
+`.github/workflows/ci.yml`.
+
 ## Tampilan publik
 
 Halaman utama di `/` adalah landing page publik dengan animasi (hero board, marquee, reveal saat scroll, counter, hover cards), pilihan bahasa **ID/EN**, dan tombol **Coba demo** yang langsung masuk ke akun contoh. Logo baru diekstrak dari gambar yang diberikan: ikon transparan dan wordmark cream/cokelat tersedia di `public/brand/`, lalu dipakai di landing, login, sidebar, serta favicon. Versi SVG juga disimpan sebagai aset alternatif.
@@ -52,6 +61,7 @@ Akun demo bersama tetap tersedia untuk akses manual:
 - **Tim** — Owner bisa menambah/menghapus akun karyawan dan menugaskan tugas ke akun tersebut
 - **Buat proyek** — form cerita proyek, **Modal proyek**, rekam suara (Web Speech API), tempel chat WA, lampiran foto/PDF
 - **Edit proyek** — Owner bisa mengubah judul, klien, deadline, cerita, dan nilai proyek; perubahan deadline otomatis menyusun ulang tanggal tugas
+- **Kelola tahap** — Owner bisa menambah, mengganti nama, dan menghapus tahap proyek; tahap yang masih punya tugas tidak bisa dihapus
 - **Pertanyaan AI** — maksimal 3 pertanyaan pilihan ganda sebelum menyusun rencana
 - **Draf rencana** — tahap, tugas, durasi, ketergantungan, PJ, risiko; bisa diedit, dihapus, ditambah sebelum diterapkan
 - **Penjadwalan mundur** — Minggu selalu libur, hari libur nasional/Bali/ditambahkan sendiri dilewati, cadangan 10% durasi (minimal 1 hari kerja)

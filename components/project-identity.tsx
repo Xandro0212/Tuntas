@@ -5,10 +5,11 @@ import { Download, MessageCircle } from "lucide-react";
 import { ProjectSwitcher } from "./project-switcher";
 import { DeleteProjectButton } from "./delete-project-button";
 import { EditProjectButton } from "./edit-project-button";
+import { PhaseManager } from "./phase-manager";
 import { useI18n } from "./language-provider";
 import { normalizeWhatsApp, relativeDeadline } from "@/lib/dates";
 import { CATEGORY_LABEL } from "@/lib/constants";
-import type { Project } from "@/lib/types";
+import type { Phase, Project } from "@/lib/types";
 
 export function ProjectIdentity({
   project,
@@ -16,12 +17,14 @@ export function ProjectIdentity({
   eyebrow,
   showExport = true,
   canManage = false,
+  phases,
 }: {
   project: Project;
   projects: { id: string; title: string }[];
   eyebrow?: string;
   showExport?: boolean;
   canManage?: boolean;
+  phases?: Phase[];
 }) {
   const { lang, t } = useI18n();
   const wa = normalizeWhatsApp(project.clientWa);
@@ -78,6 +81,9 @@ export function ProjectIdentity({
           <Link href="/proyek/baru" className="btn-primary btn-sm hidden sm:inline-flex">
             {t("+ Proyek")}
           </Link>
+        )}
+        {canManage && phases && (
+          <PhaseManager projectId={project.id} phases={phases} />
         )}
         {canManage && <EditProjectButton project={project} />}
         {canManage && (

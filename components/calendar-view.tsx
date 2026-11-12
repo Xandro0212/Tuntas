@@ -193,6 +193,7 @@ export function CalendarView({
         projects={projects}
         eyebrow={t("Kalender proyek")}
         canManage={canManage}
+        phases={phases}
       />
 
       <div className="panel flex flex-col gap-3 p-3.5 md:flex-row md:items-center md:justify-between">

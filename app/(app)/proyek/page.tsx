@@ -108,7 +108,7 @@ export default async function ProjectsPage() {
             </p>
           </div>
           <span className="chip-sm shrink-0 border border-green/20 bg-green-soft text-green">
-            <Sparkles className="h-3 w-3" /> {t("Rekomendasi AI")}
+            <Sparkles className="h-3 w-3" /> {t("Prioritas otomatis")}
           </span>
         </div>
 
@@ -182,7 +182,7 @@ export default async function ProjectsPage() {
 
           <div className="min-w-0 rounded-2xl border border-green/20 bg-green-soft p-3.5">
             <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-green">
-              <Sparkles className="h-3.5 w-3.5" /> {t("Saran AI")}
+              <Sparkles className="h-3.5 w-3.5" /> {t("Saran prioritas")}
             </div>
             <p className="mt-2 text-[11.5px] leading-relaxed text-ink-2">
               {priority.recommendation}

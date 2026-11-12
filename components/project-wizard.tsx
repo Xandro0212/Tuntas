@@ -264,9 +264,15 @@ export function ProjectWizard({
         error?: string;
         plan?: AiPlan;
         engine?: "demo" | "llm";
+        fallback?: boolean;
       };
       if (!response.ok || !data.plan) {
         throw new Error(data.error ? t(data.error) : t("AI belum bisa menyusun rencana."));
+      }
+      if (data.fallback) {
+        toast.warning(
+          t("AI eksternal sedang tidak tersedia. Rencana disusun dengan planner lokal."),
+        );
       }
       const plan = data.plan;
       setEngine(data.engine === "llm" ? "llm" : "demo");

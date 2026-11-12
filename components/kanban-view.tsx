@@ -142,6 +142,7 @@ export function KanbanView({
         projects={projects}
         eyebrow={t("Hari ini, {date}", { date: formatLongDate(today, true, lang) })}
         canManage={canManage}
+        phases={phases}
       />
 
       <div className="grid gap-3 sm:grid-cols-3">
