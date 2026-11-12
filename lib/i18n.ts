@@ -611,6 +611,30 @@ const EN: Record<string, string> = {
     "This browser does not support voice recording. Paste the WhatsApp chat instead.",
   "Izin mikrofon ditolak.": "Microphone permission was denied.",
   "Mendengarkan… ceritakan proyeknya.": "Listening… tell us about the project.",
+  "Stop & masukkan": "Stop & insert",
+  "Batalkan rekaman": "Discard recording",
+  "Hasil rekaman ditambahkan ke cerita.": "The recording was added to the story.",
+  "Browser ini belum mendukung rekam suara. Gunakan Chrome/Edge atau ketik cerita.":
+    "This browser does not support voice recording. Use Chrome/Edge or type the story.",
+  "Rekam suara belum didukung browser ini. Gunakan Chrome/Edge di Android/desktop, atau ketik dan tempel cerita.":
+    "Voice recording is not supported in this browser. Use Chrome/Edge on Android/desktop, or type and paste the story.",
+  "Mendengarkan…": "Listening…",
+  "Mulai bicara… hasil akan muncul di sini.":
+    "Start speaking… the result will appear here.",
+  "{n} kata": "{n} words",
+  "Tekan Stop untuk menambahkan ke cerita.":
+    "Press Stop to add it to the story.",
+  "Izin mikrofon ditolak. Aktifkan mikrofon di pengaturan browser.":
+    "Microphone permission was denied. Enable the microphone in browser settings.",
+  "Tidak ada suara terdeteksi. Coba rekam lagi.":
+    "No speech detected. Try recording again.",
+  "Mikrofon tidak ditemukan.": "Microphone not found.",
+  "Layanan suara browser sedang bermasalah. Periksa koneksi.":
+    "The browser speech service is having trouble. Check your connection.",
+  "Bahasa rekaman belum didukung browser ini.":
+    "The recording language is not supported by this browser.",
+  "Rekaman berhenti. Coba lagi.": "Recording stopped. Try again.",
+  "Mikrofon belum bisa dimulai. Coba lagi.": "The microphone could not start. Try again.",
   "Clipboard masih kosong.": "Clipboard is empty.",
   "Chat WhatsApp ditempel ke cerita.": "WhatsApp chat pasted into the story.",
   "Clipboard tidak bisa dibaca. Tempel manual dengan Ctrl+V.":

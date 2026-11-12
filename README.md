@@ -59,7 +59,8 @@ Akun demo bersama tetap tersedia untuk akses manual:
 - **Landing page ID/EN** — pilihan bahasa Indonesia/Inggris di header landing, tersimpan di `localStorage` + cookie
 - **Owner & Employee** — Owner mengelola workspace, proyek, tim, dan tugas; Employee hanya bisa memperbarui tugas yang ditugaskan kepadanya. UMKM tanpa karyawan tetap berjalan sebagai Owner tunggal
 - **Tim** — Owner membuat tautan undangan; karyawan membuat password sendiri, lalu bisa ditugaskan ke tugas. Owner juga bisa menghapus karyawan dan mencabut undangan
-- **Buat proyek** — form cerita proyek, **Modal proyek**, rekam suara (Web Speech API), tempel chat WA, lampiran foto/PDF
+- **Buat proyek** — form cerita proyek, **Modal proyek**, Speech-to-Text dengan transkrip live, timer, jumlah kata, bahasa ID/EN, dan auto-punctuation, tempel chat WA, lampiran foto/PDF
+- **Speech-to-Text** — memakai Web Speech API; Chrome/Edge Android/desktop didukung, browser tanpa dukungan menampilkan fallback untuk mengetik/menempel cerita
 - **Edit proyek** — Owner bisa mengubah judul, klien, deadline, cerita, dan nilai proyek; perubahan deadline otomatis menyusun ulang tanggal tugas
 - **Kelola tahap** — Owner bisa menambah, mengganti nama, menaikkan/menurunkan urutan, dan menghapus tahap proyek; tahap yang masih punya tugas tidak bisa dihapus
 - **Aktivitas** — jejak perubahan proyek, tugas, tahap, hari libur, karyawan, undangan, dan jadwal di halaman `/aktivitas`

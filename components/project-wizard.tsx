@@ -15,7 +15,6 @@ import {
   Hammer,
   Image as ImageIcon,
   Loader2,
-  Mic,
   Paperclip,
   Plus,
   Shirt,
@@ -36,6 +35,7 @@ import {
   phaseTone,
 } from "@/lib/constants";
 import { PROJECT_DEMOS, type ProjectDemo } from "@/lib/demo-presets";
+import { SpeechToText } from "./speech-to-text";
 import {
   addDays,
   formatDateRange,
@@ -129,24 +129,14 @@ export function ProjectWizard({
   const [loading, setLoading] = useState<"questions" | "plan" | "apply" | null>(null);
   const [error, setError] = useState("");
   const [scheduleWarningDismissed, setScheduleWarningDismissed] = useState(false);
-  const [interim, setInterim] = useState("");
-  const [recording, setRecording] = useState(false);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [uploading, setUploading] = useState(false);
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
     setScheduleWarningDismissed(false);
   }, [draftTasks, form.deadline]);
-
-  useEffect(() => {
-    if (!recording) return;
-    return () => {
-      recognitionRef.current?.stop?.();
-    };
-  }, [recording]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -204,6 +194,15 @@ export function ProjectWizard({
     setActiveDemo(demo.id);
     setError("");
     toast.success(t("Demo dimuat. Kamu bisa mengubahnya sebelum menyusun rencana."));
+  }
+
+  function appendStory(text: string) {
+    const clean = text.trim();
+    if (!clean) return;
+    setForm((current) => ({
+      ...current,
+      story: `${current.story}${current.story ? " " : ""}${clean}`.slice(0, 6000),
+    }));
   }
 
   function validate() {
@@ -415,55 +414,6 @@ export function ProjectWizard({
     setAttachments((current) => [...current, ...uploaded].slice(0, 8));
     setUploading(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
-  }
-
-  function startRecording() {
-    const win = window as any;
-    const SpeechRecognition = win.SpeechRecognition || win.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      toast.error(t("Browser ini belum mendukung rekam suara. Tempel chat WA saja."));
-      return;
-    }
-    const recognition = new SpeechRecognition();
-    recognition.lang = "id-ID";
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    let finalText = "";
-    let processed = 0;
-    recognition.onresult = (event: any) => {
-      let interimText = "";
-      for (let index = processed; index < event.results.length; index += 1) {
-        const result = event.results[index];
-        if (result.isFinal) finalText += `${result[0].transcript} `;
-        else interimText += result[0].transcript;
-      }
-      if (event.results[event.results.length - 1]?.isFinal) processed = event.results.length;
-      setInterim(interimText);
-    };
-    recognition.onerror = (event: any) => {
-      if (event.error === "not-allowed") toast.error(t("Izin mikrofon ditolak."));
-      setRecording(false);
-      setInterim("");
-    };
-    recognition.onend = () => {
-      if (finalText.trim()) {
-        setForm((current) => ({
-          ...current,
-          story: `${current.story}${current.story ? " " : ""}${finalText.trim()}`.slice(0, 6000),
-        }));
-      }
-      setRecording(false);
-      setInterim("");
-      recognitionRef.current = null;
-    };
-    recognition.start();
-    recognitionRef.current = recognition;
-    setRecording(true);
-    toast.success(t("Mendengarkan… ceritakan proyeknya."));
-  }
-
-  function stopRecording() {
-    recognitionRef.current?.stop?.();
   }
 
   async function pasteWhatsApp() {
@@ -758,32 +708,8 @@ export function ProjectWizard({
                 value={form.story}
                 onChange={(event) => setForm({ ...form, story: event.target.value })}
               />
-              {interim && (
-                <p className="mt-1 text-[11px] italic text-muted">
-                  {t("Mendengar: {text}", { text: interim })}
-                </p>
-              )}
+              <SpeechToText onTranscript={appendStory} />
               <div className="mt-2 flex flex-wrap gap-1.5">
-                <button
-                  type="button"
-                  onClick={recording ? stopRecording : startRecording}
-                  className={`btn btn-xs border ${
-                    recording
-                      ? "border-rust/30 bg-rust-soft text-rust"
-                      : "border-line bg-card text-ink-2 hover:bg-paper"
-                  }`}
-                >
-                  {recording ? (
-                    <>
-                      <span className="h-2 w-2 animate-pulse rounded-full bg-rust" />{" "}
-                      {t("Stop rekaman")}
-                    </>
-                  ) : (
-                    <>
-                      <Mic className="h-3.5 w-3.5" /> {t("Rekam suara")}
-                    </>
-                  )}
-                </button>
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
