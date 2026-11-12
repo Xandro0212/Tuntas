@@ -80,9 +80,9 @@ const ID: LandingCopy = {
   language: "Bahasa",
   hero: {
     badge: "Kanban + AI untuk UMKM",
-    line1: "Dari cerita klien,",
-    line2: "Jadi rencana",
-    line3: "Yang tuntas.",
+    line1: "Kerja Lebih Cerdas,",
+    line2: "Hasil Lebih Tuntas",
+    line3: "",
     description:
       "Tuntas membaca cerita proyekmu, memecahnya menjadi tugas, lalu menghitung tanggal mundur dari deadline. Minggu dan hari libur dilewati. Cadangan waktu dijaga.",
     ctaDemo: "Coba demo gratis",
@@ -235,9 +235,9 @@ const EN: LandingCopy = {
   language: "Language",
   hero: {
     badge: "Kanban + AI for small business",
-    line1: "From a client's story,",
-    line2: "Into a plan",
-    line3: "That gets done.",
+    line1: "Your AI Companion",
+    line2: "for Getting Things Done",
+    line3: "",
     tagline: "Tell us your deadline. Tuntas builds the roadmap to get you there.",
     description:
       "Tuntas transforms your project story into an actionable task plan, calculates every deadline backward, skips Sundays and holidays, and protects buffer time so you can finish without the last-minute chaos.",

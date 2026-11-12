@@ -430,8 +430,8 @@ export function LandingPage({
   useEffect(() => {
     document.title =
       lang === "en"
-        ? "Tuntas — From a client story to a plan that gets done"
-        : "Tuntas — Dari cerita klien jadi rencana yang tuntas";
+        ? "Tuntas — Your AI Companion for Getting Things Done"
+        : "Tuntas — Kerja Lebih Cerdas, Hasil Lebih Tuntas";
   }, [lang]);
 
   const copy = LANDING_COPY[lang];

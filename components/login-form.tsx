@@ -120,12 +120,10 @@ export default function LoginForm({ initialMode = "login" }: { initialMode?: Mod
               <Sparkles className="h-3.5 w-3.5" /> {t("KANBAN + AI UNTUK UMKM")}
             </span>
             <h1 className="mt-5 text-[46px] font-extrabold leading-[1.05] tracking-[-0.045em] text-ink">
-              {lang === "en" ? "From a client's story," : "Dari cerita klien,"}
-              <br />
-              {lang === "en" ? "Into a plan" : "Jadi rencana"}
+              {lang === "en" ? "Your AI Companion" : "Kerja Lebih Cerdas,"}
               <br />
               <span className="text-gradient">
-                {lang === "en" ? "That gets done." : "Yang tuntas."}
+                {lang === "en" ? "for Getting Things Done" : "Hasil Lebih Tuntas"}
               </span>
             </h1>
             <p className="mt-5 max-w-[430px] text-[15px] leading-relaxed text-ink-2/85">

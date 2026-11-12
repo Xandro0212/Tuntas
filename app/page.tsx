@@ -9,8 +9,8 @@ export async function generateMetadata() {
   return {
     title:
       lang === "en"
-        ? "Tuntas — From a client story to a plan that gets done"
-        : "Tuntas — Dari cerita klien jadi rencana yang tuntas",
+        ? "Tuntas — Your AI Companion for Getting Things Done"
+        : "Tuntas — Kerja Lebih Cerdas, Hasil Lebih Tuntas",
     description:
       lang === "en"
         ? "Kanban + client project calendar for small businesses. AI turns a project story into tasks, counting dates backward from the deadline and skipping Sundays and holidays."

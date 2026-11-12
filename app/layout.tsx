@@ -10,8 +10,8 @@ export async function generateMetadata(): Promise<Metadata> {
     title: {
       default:
         lang === "en"
-          ? "Tuntas — From a client story to a plan that gets done"
-          : "Tuntas — Dari cerita klien jadi rencana yang tuntas",
+          ? "Tuntas — Your AI Companion for Getting Things Done"
+          : "Tuntas — Kerja Lebih Cerdas, Hasil Lebih Tuntas",
       template: "%s · Tuntas",
     },
     description:
