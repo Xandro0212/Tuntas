@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { getSessionUser, toPublicUser } from "@/lib/auth";
+import { recordActivity } from "@/lib/activity";
 import { createPasswordHash } from "@/lib/password";
 import { getDb, mutateDb } from "@/lib/store";
 import { rateLimit } from "@/lib/rate-limit";
@@ -87,6 +88,13 @@ export async function POST(request: Request) {
 
     await mutateDb((database) => {
       database.users.push(employee);
+      recordActivity(database, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "employee.create",
+        detail: employee.name,
+        entityId: employee.id,
+      });
     });
 
     return NextResponse.json({ member: toPublicUser(employee) });

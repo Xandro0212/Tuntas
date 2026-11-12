@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth";
+import { recordActivity } from "@/lib/activity";
 import { mutateDb } from "@/lib/store";
 
 export async function DELETE(
@@ -18,9 +19,21 @@ export async function DELETE(
   try {
     const { id } = await params;
     await mutateDb((database) => {
-      database.invites = database.invites.filter(
-        (invite) => !(invite.id === id && invite.workspaceId === user.workspaceId),
+      const invite = database.invites.find(
+        (item) => item.id === id && item.workspaceId === user.workspaceId,
       );
+      database.invites = database.invites.filter(
+        (item) => !(item.id === id && item.workspaceId === user.workspaceId),
+      );
+      if (invite) {
+        recordActivity(database, {
+          workspaceId: user.workspaceId,
+          user,
+          action: "invite.delete",
+          detail: `${invite.name} · ${invite.email}`,
+          entityId: invite.id,
+        });
+      }
     });
     return NextResponse.json({ ok: true });
   } catch {

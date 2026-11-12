@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { getSessionUser } from "@/lib/auth";
+import { recordActivity } from "@/lib/activity";
 import { getDb, mutateDb } from "@/lib/store";
 
 export async function POST(
@@ -52,6 +53,13 @@ export async function POST(
       database.phases.push(phase);
       const target = database.projects.find((item) => item.id === project.id);
       if (target) target.updatedAt = new Date().toISOString();
+      recordActivity(database, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "phase.create",
+        detail: phase.name,
+        entityId: phase.id,
+      });
     });
 
     return NextResponse.json({ phase });

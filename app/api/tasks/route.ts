@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { getSessionUser } from "@/lib/auth";
+import { recordActivity } from "@/lib/activity";
 import { mutateDb, getDb } from "@/lib/store";
 import { scheduleSingleTask } from "@/lib/schedule";
 import { getHolidays, localizeTask } from "@/lib/data";
@@ -92,6 +93,13 @@ export async function POST(request: Request) {
       database.tasks.push(task);
       const target = database.projects.find((item) => item.id === project.id);
       if (target) target.updatedAt = new Date().toISOString();
+      recordActivity(database, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "task.create",
+        detail: task.title,
+        entityId: task.id,
+      });
     });
 
     return NextResponse.json({ task: localizeTask(lang, task) });
@@ -129,6 +137,13 @@ export async function DELETE(request: Request) {
       }
       const target = database.projects.find((item) => item.id === project.id);
       if (target) target.updatedAt = new Date().toISOString();
+      recordActivity(database, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "task.delete",
+        detail: task.title,
+        entityId: task.id,
+      });
     });
     return NextResponse.json({ ok: true });
   } catch {

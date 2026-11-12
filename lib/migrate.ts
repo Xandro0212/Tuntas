@@ -31,6 +31,10 @@ export function migrateDatabase(input: Database): { db: Database; changed: boole
     db.invites = [];
     changed = true;
   }
+  if (!Array.isArray(db.activities)) {
+    db.activities = [];
+    changed = true;
+  }
 
   for (const user of db.users) {
     if (!user.workspaceId) {

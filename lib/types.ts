@@ -103,9 +103,40 @@ export interface Invite {
   usedAt?: string | null;
 }
 
+export type ActivityAction =
+  | "project.create"
+  | "project.update"
+  | "project.delete"
+  | "task.create"
+  | "task.update"
+  | "task.delete"
+  | "phase.create"
+  | "phase.update"
+  | "phase.delete"
+  | "holiday.create"
+  | "holiday.delete"
+  | "employee.create"
+  | "employee.delete"
+  | "invite.create"
+  | "invite.accept"
+  | "invite.delete"
+  | "schedule.update";
+
+export interface Activity {
+  id: string;
+  workspaceId: string;
+  userId: string;
+  userName: string;
+  action: ActivityAction;
+  detail: string;
+  entityId: string;
+  createdAt: string;
+}
+
 export interface Database {
   workspaces: Workspace[];
   invites: Invite[];
+  activities: Activity[];
   users: User[];
   projects: Project[];
   phases: Phase[];

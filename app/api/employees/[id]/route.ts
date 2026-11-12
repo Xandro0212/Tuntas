@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth";
+import { recordActivity } from "@/lib/activity";
 import { getDb, mutateDb } from "@/lib/store";
 
 export async function DELETE(
@@ -35,6 +36,13 @@ export async function DELETE(
           task.assigneeUserId = null;
         }
       }
+      recordActivity(database, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "employee.delete",
+        detail: employee.name,
+        entityId: employee.id,
+      });
     });
 
     return NextResponse.json({ ok: true });

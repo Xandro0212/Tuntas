@@ -2,6 +2,7 @@ import { requireUser } from "@/lib/auth";
 import { getProjectsForUser } from "@/lib/data";
 import { getLang } from "@/lib/lang-server";
 import { AppShell } from "@/components/app-shell";
+import { AutoRefresh } from "@/components/auto-refresh";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <AppShell user={user} projects={projects}>
+      <AutoRefresh />
       {children}
     </AppShell>
   );

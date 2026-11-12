@@ -61,7 +61,9 @@ Akun demo bersama tetap tersedia untuk akses manual:
 - **Tim** — Owner membuat tautan undangan; karyawan membuat password sendiri, lalu bisa ditugaskan ke tugas. Owner juga bisa menghapus karyawan dan mencabut undangan
 - **Buat proyek** — form cerita proyek, **Modal proyek**, rekam suara (Web Speech API), tempel chat WA, lampiran foto/PDF
 - **Edit proyek** — Owner bisa mengubah judul, klien, deadline, cerita, dan nilai proyek; perubahan deadline otomatis menyusun ulang tanggal tugas
-- **Kelola tahap** — Owner bisa menambah, mengganti nama, dan menghapus tahap proyek; tahap yang masih punya tugas tidak bisa dihapus
+- **Kelola tahap** — Owner bisa menambah, mengganti nama, menaikkan/menurunkan urutan, dan menghapus tahap proyek; tahap yang masih punya tugas tidak bisa dihapus
+- **Aktivitas** — jejak perubahan proyek, tugas, tahap, hari libur, karyawan, undangan, dan jadwal di halaman `/aktivitas`
+- **Auto-refresh** — halaman diperbarui otomatis setiap 30 detik dan saat tab kembali aktif, sehingga perubahan dari perangkat lain cepat terlihat
 - **Pertanyaan AI** — maksimal 3 pertanyaan pilihan ganda sebelum menyusun rencana
 - **Draf rencana** — tahap, tugas, durasi, ketergantungan, PJ, risiko; bisa diedit, dihapus, ditambah sebelum diterapkan
 - **Penjadwalan mundur** — Minggu selalu libur, hari libur nasional/Bali/ditambahkan sendiri dilewati, cadangan 10% durasi (minimal 1 hari kerja)
@@ -132,6 +134,10 @@ Lampiran disimpan di **Supabase Storage** (bucket privat `tuntas-uploads`) saat 
 ### Rate limit
 
 Login, registrasi, demo, AI, upload, pembuatan undangan, dan penerimaan undangan memiliki rate limit dasar per IP/user. Limiter berjalan in-memory per instance; untuk produksi multi-instance skala besar, gunakan Redis/Upstash atau rate limiter terdistribusi.
+
+### Proteksi CSRF
+
+`proxy.ts` memeriksa `Origin` dan `Sec-Fetch-Site` untuk semua request API yang mengubah data (`POST`, `PATCH`, `DELETE`). Request dari domain lain ditolak dengan `403`; request non-browser tanpa header tetap kompatibel.
 
 ## Stack
 

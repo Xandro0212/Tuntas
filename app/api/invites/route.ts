@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { randomBytes, randomUUID } from "node:crypto";
 import { getSessionUser } from "@/lib/auth";
+import { recordActivity } from "@/lib/activity";
 import { getWorkspaceInvites } from "@/lib/data";
 import { rateLimit } from "@/lib/rate-limit";
 import { getDb, mutateDb } from "@/lib/store";
@@ -84,6 +85,13 @@ export async function POST(request: Request) {
     await mutateDb((database) => {
       if (!Array.isArray(database.invites)) database.invites = [];
       database.invites.push(invite);
+      recordActivity(database, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "invite.create",
+        detail: `${invite.name} · ${invite.email}`,
+        entityId: invite.id,
+      });
     });
 
     return NextResponse.json({

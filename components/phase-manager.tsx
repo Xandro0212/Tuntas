@@ -2,7 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ListOrdered, Loader2, Plus, Save, Trash2 } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  ListOrdered,
+  Loader2,
+  Plus,
+  Save,
+  Trash2,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Modal } from "./modal";
 import { useI18n } from "./language-provider";
@@ -50,6 +58,27 @@ export function PhaseManager({
         throw new Error(payload.error ? t(payload.error) : t("Gagal mengubah tahap."));
       }
       toast.success(t("Tahap diperbarui."));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("Gagal mengubah tahap."));
+    } finally {
+      setSaving(null);
+    }
+  }
+
+  async function move(phase: Phase, direction: "up" | "down") {
+    setSaving(phase.id);
+    setError("");
+    try {
+      const response = await fetch(`/api/projects/${projectId}/phases/${phase.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ direction }),
+      });
+      const payload = (await response.json()) as { error?: string };
+      if (!response.ok) {
+        throw new Error(payload.error ? t(payload.error) : t("Gagal mengubah tahap."));
+      }
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : t("Gagal mengubah tahap."));
@@ -171,6 +200,24 @@ export function PhaseManager({
                       }))
                     }
                   />
+                  <button
+                    type="button"
+                    className="btn-ghost btn-sm px-1.5 text-muted hover:text-ink"
+                    onClick={() => move(phase, "up")}
+                    disabled={saving === phase.id || index === 0}
+                    aria-label={t("Naikkan tahap")}
+                  >
+                    <ChevronUp className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-ghost btn-sm px-1.5 text-muted hover:text-ink"
+                    onClick={() => move(phase, "down")}
+                    disabled={saving === phase.id || index === phases.length - 1}
+                    aria-label={t("Turunkan tahap")}
+                  >
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  </button>
                   <button
                     type="button"
                     className="btn-ghost btn-sm px-2 text-muted hover:text-green"

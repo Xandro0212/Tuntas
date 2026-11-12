@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth";
+import { recordActivity } from "@/lib/activity";
 import { getDb, mutateDb } from "@/lib/store";
 import { getHolidays, localizeTask } from "@/lib/data";
 import { getLang } from "@/lib/lang-server";
@@ -158,6 +159,13 @@ export async function PATCH(
       if (target) Object.assign(target, updates);
       const owner = database.projects.find((item) => item.id === project.id);
       if (owner) owner.updatedAt = new Date().toISOString();
+      recordActivity(database, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "task.update",
+        detail: target?.title ?? task.title,
+        entityId: task.id,
+      });
     });
 
     return NextResponse.json({
@@ -200,6 +208,13 @@ export async function DELETE(
       }
       const owner = database.projects.find((item) => item.id === project.id);
       if (owner) owner.updatedAt = new Date().toISOString();
+      recordActivity(database, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "task.delete",
+        detail: task.title,
+        entityId: task.id,
+      });
     });
     return NextResponse.json({ ok: true });
   } catch {

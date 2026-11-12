@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth";
+import { recordActivity } from "@/lib/activity";
 import { getDb, mutateDb } from "@/lib/store";
 import { scheduleTasks } from "@/lib/schedule";
 import { getHolidays } from "@/lib/data";
@@ -54,6 +55,13 @@ export async function POST(
         target.bufferDays = schedule.bufferDays;
         target.updatedAt = new Date().toISOString();
       }
+      recordActivity(database, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "schedule.update",
+        detail: project.title,
+        entityId: project.id,
+      });
     });
 
     return NextResponse.json({

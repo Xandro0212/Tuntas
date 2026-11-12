@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { getSessionUser } from "@/lib/auth";
+import { recordActivity } from "@/lib/activity";
 import { getDb, mutateDb } from "@/lib/store";
 import { scheduleTasks } from "@/lib/schedule";
 import { getHolidays } from "@/lib/data";
@@ -169,6 +170,13 @@ export async function POST(request: Request) {
         });
       });
       db.tasks.push(...tasks);
+      recordActivity(db, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "project.create",
+        detail: project.title,
+        entityId: project.id,
+      });
     });
 
     return NextResponse.json({ id: projectId });

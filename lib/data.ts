@@ -6,6 +6,7 @@ import { diffDays, normalizeWhatsApp, todayISO } from "./dates";
 import { getBufferDates } from "./schedule";
 import { translate, type Lang } from "./i18n";
 import type {
+  Activity,
   Holiday,
   Invite,
   Phase,
@@ -113,6 +114,17 @@ export async function getWorkspaceInvites(
 export async function getInviteByToken(token: string): Promise<Invite | null> {
   const db = await getDb();
   return db.invites.find((invite) => invite.token === token) ?? null;
+}
+
+export async function getWorkspaceActivities(
+  workspaceId: string,
+  limit = 80,
+): Promise<Activity[]> {
+  const db = await getDb();
+  return db.activities
+    .filter((activity) => activity.workspaceId === workspaceId)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .slice(0, limit);
 }
 
 export function summarizeProject(

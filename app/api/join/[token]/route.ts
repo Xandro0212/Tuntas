@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { setSessionCookie } from "@/lib/auth";
+import { recordActivity } from "@/lib/activity";
 import { createPasswordHash } from "@/lib/password";
 import { rateLimit, rateLimitKey } from "@/lib/rate-limit";
 import { getDb, mutateDb } from "@/lib/store";
@@ -71,6 +72,13 @@ export async function POST(
         createdAt: now,
       });
       current.usedAt = now;
+      recordActivity(database, {
+        workspaceId: current.workspaceId,
+        user: { id, name },
+        action: "invite.accept",
+        detail: current.email,
+        entityId: current.id,
+      });
     });
 
     await setSessionCookie(id);

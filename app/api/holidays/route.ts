@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth";
+import { recordActivity } from "@/lib/activity";
 import { getDb, mutateDb } from "@/lib/store";
 import { getHolidays } from "@/lib/data";
 import { scheduleTasks } from "@/lib/schedule";
@@ -42,6 +43,13 @@ export async function POST(request: Request) {
     };
     await mutateDb((database) => {
       database.holidays.push(holiday);
+      recordActivity(database, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "holiday.create",
+        detail: `${holiday.name} · ${holiday.date}`,
+        entityId: holiday.id,
+      });
     });
 
     // Sesuaikan jadwal proyek milik pengguna yang punya tugas pada tanggal tersebut.
@@ -130,6 +138,13 @@ export async function DELETE(request: Request) {
     }
     await mutateDb((database) => {
       database.holidays = database.holidays.filter((item) => item.id !== id);
+      recordActivity(database, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "holiday.delete",
+        detail: `${holiday.name} · ${holiday.date}`,
+        entityId: holiday.id,
+      });
     });
     return NextResponse.json({ ok: true });
   } catch {

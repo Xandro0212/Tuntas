@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { getSessionUser } from "@/lib/auth";
+import { recordActivity } from "@/lib/activity";
 import { getDb, mutateDb } from "@/lib/store";
 import { getLang } from "@/lib/lang-server";
 import { translate } from "@/lib/i18n";
@@ -126,6 +127,13 @@ export async function PATCH(
         }
       }
       target.updatedAt = new Date().toISOString();
+      recordActivity(database, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "project.update",
+        detail: target.title,
+        entityId: target.id,
+      });
     });
 
     const updated = (await getDb()).projects.find((item) => item.id === project.id);
@@ -174,6 +182,13 @@ export async function DELETE(
       db.projects = db.projects.filter((item) => item.id !== id);
       db.phases = db.phases.filter((item) => item.projectId !== id);
       db.tasks = db.tasks.filter((item) => item.projectId !== id);
+      recordActivity(db, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "project.delete",
+        detail: project.title,
+        entityId: project.id,
+      });
     });
 
     for (const attachment of project.attachments ?? []) {

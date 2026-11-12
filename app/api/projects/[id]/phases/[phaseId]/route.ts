@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth";
+import { recordActivity } from "@/lib/activity";
 import { getDb, mutateDb } from "@/lib/store";
 
 async function loadContext(id: string, phaseId: string, workspaceId: string) {
@@ -34,7 +35,42 @@ export async function PATCH(
     if (!context) {
       return NextResponse.json({ error: "Tahap tidak ditemukan." }, { status: 404 });
     }
-    const body = (await request.json()) as { name?: string };
+    const body = (await request.json()) as {
+      name?: string;
+      direction?: "up" | "down";
+    };
+
+    if (body.direction === "up" || body.direction === "down") {
+      const ordered = context.db.phases
+        .filter((phase) => phase.projectId === id)
+        .sort((a, b) => a.order - b.order);
+      const index = ordered.findIndex((phase) => phase.id === phaseId);
+      const targetIndex = body.direction === "up" ? index - 1 : index + 1;
+      if (index === -1 || targetIndex < 0 || targetIndex >= ordered.length) {
+        return NextResponse.json({ ok: true });
+      }
+
+      await mutateDb((database) => {
+        const first = database.phases.find((item) => item.id === ordered[index].id);
+        const second = database.phases.find((item) => item.id === ordered[targetIndex].id);
+        if (first && second) {
+          const order = first.order;
+          first.order = second.order;
+          second.order = order;
+        }
+        const project = database.projects.find((item) => item.id === id);
+        if (project) project.updatedAt = new Date().toISOString();
+        recordActivity(database, {
+          workspaceId: user.workspaceId,
+          user,
+          action: "phase.update",
+          detail: ordered[index].name,
+          entityId: phaseId,
+        });
+      });
+      return NextResponse.json({ ok: true });
+    }
+
     const name = (body.name ?? "").trim();
     if (name.length < 2) {
       return NextResponse.json(
@@ -48,6 +84,13 @@ export async function PATCH(
       if (target) target.name = name.slice(0, 80);
       const project = database.projects.find((item) => item.id === id);
       if (project) project.updatedAt = new Date().toISOString();
+      recordActivity(database, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "phase.update",
+        detail: name,
+        entityId: phaseId,
+      });
     });
 
     return NextResponse.json({ ok: true });
@@ -103,6 +146,13 @@ export async function DELETE(
       });
       const project = database.projects.find((item) => item.id === id);
       if (project) project.updatedAt = new Date().toISOString();
+      recordActivity(database, {
+        workspaceId: user.workspaceId,
+        user,
+        action: "phase.delete",
+        detail: context.phase.name,
+        entityId: phaseId,
+      });
     });
 
     return NextResponse.json({ ok: true });

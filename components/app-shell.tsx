@@ -8,6 +8,7 @@ import {
   ChevronDown,
   Columns3,
   FolderKanban,
+  History,
   LayoutList,
   LogOut,
   Menu,
@@ -52,6 +53,12 @@ const NAV = [
     match: (path: string) => path === "/proyek" || path === "/proyek/baru",
   },
   { href: "/klien", label: "Klien", icon: Users, match: (path: string) => path.startsWith("/klien") },
+  {
+    href: "/aktivitas",
+    label: "Aktivitas",
+    icon: History,
+    match: (path: string) => path.startsWith("/aktivitas"),
+  },
 ];
 
 const OWNER_NAV = [
