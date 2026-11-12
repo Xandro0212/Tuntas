@@ -660,6 +660,14 @@ const EN: Record<string, string> = {
   "Jam deadline": "Deadline time",
   "1 anggota": "1 member",
   "{n} anggota": "{n} members",
+  "Terlalu banyak percobaan. Coba lagi nanti.":
+    "Too many attempts. Please try again later.",
+  "Terlalu banyak permintaan AI. Coba lagi nanti.":
+    "Too many AI requests. Please try again later.",
+  "Terlalu banyak unggahan. Coba lagi nanti.":
+    "Too many uploads. Please try again later.",
+  "Terlalu banyak permintaan. Coba lagi nanti.":
+    "Too many requests. Please try again later.",
   "Prioritas otomatis": "Automatic priority",
   "Saran prioritas": "Priority suggestion",
   "AI eksternal sedang tidak tersedia. Rencana disusun dengan planner lokal.":

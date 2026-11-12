@@ -812,10 +812,10 @@ export function ProjectWizard({
                       key={file.url}
                       className="flex items-center gap-2 rounded-lg border border-line bg-paper/60 py-1 pl-1 pr-2"
                     >
-                      {/\.(png|jpe?g|webp|gif)$/i.test(file.url) ? (
+                      {/\.(png|jpe?g|webp|gif)$/i.test(file.previewUrl ?? file.url) ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
-                          src={file.url}
+                          src={file.previewUrl ?? file.url}
                           alt={file.name}
                           className="h-8 w-8 rounded-md object-cover"
                         />

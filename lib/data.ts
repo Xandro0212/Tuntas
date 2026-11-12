@@ -1,6 +1,7 @@
 import { toPublicUser } from "./auth";
 import { GLOBAL_WORKSPACE_ID } from "./migrate";
 import { getDb } from "./store";
+import { signAttachmentUrl } from "./uploads";
 import { diffDays, normalizeWhatsApp, todayISO } from "./dates";
 import { getBufferDates } from "./schedule";
 import { translate, type Lang } from "./i18n";
@@ -137,7 +138,17 @@ export async function getProjectBundle(
     (item) => item.id === projectId && item.workspaceId === user.workspaceId,
   );
   if (!rawProject) return null;
-  const project = localizeProject(lang, rawProject);
+  const localized = localizeProject(lang, rawProject);
+  const attachments = await Promise.all(
+    localized.attachments.map(async (file) => {
+      try {
+        return { ...file, previewUrl: await signAttachmentUrl(file.url) };
+      } catch {
+        return file;
+      }
+    }),
+  );
+  const project = { ...localized, attachments };
   const phases = db.phases
     .filter((phase) => phase.projectId === projectId)
     .sort((a, b) => a.order - b.order)

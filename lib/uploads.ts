@@ -48,7 +48,20 @@ async function ensureBucket(): Promise<void> {
           Authorization: `Bearer ${SUPABASE_KEY}`,
         },
       });
-      if (response.ok) return;
+      if (response.ok) {
+        // Existing projects may have created a public bucket earlier. Force it
+        // private so files can only be read through short-lived signed URLs.
+        const update = await fetch(supabaseStorageUrl(`bucket/${BUCKET}`), {
+          method: "PUT",
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: BUCKET, name: BUCKET, public: false }),
+        });
+        if (update.ok) return;
+      }
 
       const create = await fetch(supabaseStorageUrl("bucket"), {
         method: "POST",
@@ -57,7 +70,7 @@ async function ensureBucket(): Promise<void> {
           Authorization: `Bearer ${SUPABASE_KEY}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: BUCKET, name: BUCKET, public: true }),
+        body: JSON.stringify({ id: BUCKET, name: BUCKET, public: false }),
       });
       if (!create.ok && create.status !== 409) {
         throw new Error(`Gagal menyiapkan bucket upload (${create.status}).`);
@@ -93,11 +106,44 @@ async function saveToSupabase(
   if (!response.ok) {
     throw new Error(`Gagal mengunggah file ke Supabase (${response.status}).`);
   }
+  const url = `supabase://${BUCKET}/${objectPath}`;
+  const previewUrl = await signAttachmentUrl(url);
   return {
     name: file.name.slice(0, 120),
-    url: supabaseStorageUrl(`object/public/${BUCKET}/${objectPath}`),
+    url,
+    previewUrl,
     size: file.size,
   };
+}
+
+export async function signAttachmentUrl(url: string): Promise<string> {
+  if (!url.startsWith("supabase://")) return url;
+  if (!SUPABASE_URL || !SUPABASE_KEY) return url;
+
+  const rest = url.slice("supabase://".length);
+  const separator = rest.indexOf("/");
+  if (separator === -1) return url;
+  const bucket = rest.slice(0, separator);
+  const objectPath = rest.slice(separator + 1);
+  const response = await fetch(
+    supabaseStorageUrl(`object/sign/${bucket}/${objectPath}`),
+    {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ expiresIn: 60 * 60 }),
+    },
+  );
+  if (!response.ok) {
+    throw new Error(`Gagal membuat signed URL (${response.status}).`);
+  }
+  const payload = (await response.json()) as { signedURL?: string };
+  return payload.signedURL
+    ? `${SUPABASE_URL}/storage/v1${payload.signedURL}`
+    : url;
 }
 
 async function saveToLocal(
@@ -111,6 +157,7 @@ async function saveToLocal(
   return {
     name: file.name.slice(0, 120),
     url: `/uploads/${filename}`,
+    previewUrl: `/uploads/${filename}`,
     size: file.size,
   };
 }
@@ -131,6 +178,28 @@ export async function saveUpload(
 
 export async function deleteUpload(url: string): Promise<void> {
   if (!url) return;
+
+  if (url.startsWith("supabase://") && SUPABASE_URL && SUPABASE_KEY) {
+    const rest = url.slice("supabase://".length);
+    const separator = rest.indexOf("/");
+    if (separator === -1) return;
+    const bucket = rest.slice(0, separator);
+    const objectPath = rest.slice(separator + 1);
+    const response = await fetch(
+      supabaseStorageUrl(`object/${bucket}/${objectPath}`),
+      {
+        method: "DELETE",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+        },
+      },
+    );
+    if (!response.ok && response.status !== 404) {
+      throw new Error(`Gagal menghapus file Supabase (${response.status}).`);
+    }
+    return;
+  }
 
   const marker = `/storage/v1/object/public/${BUCKET}/`;
   const markerIndex = url.indexOf(marker);

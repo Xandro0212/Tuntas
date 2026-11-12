@@ -4,10 +4,18 @@ import { setSessionCookie } from "@/lib/auth";
 import { createPasswordHash } from "@/lib/password";
 import { createSeedDatabase } from "@/lib/seed";
 import { mutateDb } from "@/lib/store";
+import { rateLimit, rateLimitKey } from "@/lib/rate-limit";
 
 const DEMO_TTL_MS = 24 * 60 * 60 * 1000;
 
-export async function POST() {
+export async function POST(request: Request) {
+  const limit = rateLimit(rateLimitKey(request, "demo"), 30, 60 * 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Terlalu banyak percobaan. Coba lagi nanti." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
+    );
+  }
   try {
     const seed = createSeedDatabase();
     const now = new Date().toISOString();

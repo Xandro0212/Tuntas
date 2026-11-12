@@ -33,6 +33,7 @@ export type PublicUser = Omit<User, "passwordHash" | "salt">;
 export interface Attachment {
   name: string;
   url: string;
+  previewUrl?: string;
   size?: number;
 }
 

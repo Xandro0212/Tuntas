@@ -3,6 +3,7 @@ import { getSessionUser } from "@/lib/auth";
 import { getLang } from "@/lib/lang-server";
 import { translate } from "@/lib/i18n";
 import { generateLlmPlan, generateMockPlan, generateQuestions, type PlanInput } from "@/lib/ai";
+import { rateLimit } from "@/lib/rate-limit";
 import type { Category } from "@/lib/types";
 
 const CATEGORIES = new Set<Category>(["kerajinan", "katering", "konveksi", "jasa", "lainnya"]);
@@ -11,6 +12,13 @@ export async function POST(request: Request) {
   const user = await getSessionUser();
   const lang = await getLang();
   if (!user) return NextResponse.json({ error: "Silakan masuk terlebih dahulu." }, { status: 401 });
+  const limit = rateLimit(`plan:${user.id}`, 30, 10 * 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Terlalu banyak permintaan AI. Coba lagi nanti." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
+    );
+  }
 
   try {
     const body = (await request.json()) as {

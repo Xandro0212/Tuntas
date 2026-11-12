@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { getSessionUser, toPublicUser } from "@/lib/auth";
 import { createPasswordHash } from "@/lib/password";
 import { getDb, mutateDb } from "@/lib/store";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -26,6 +27,13 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Hanya Owner yang bisa menambah karyawan." },
       { status: 403 },
+    );
+  }
+  const limit = rateLimit(`employee:${user.id}`, 20, 60 * 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Terlalu banyak permintaan. Coba lagi nanti." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
     );
   }
 

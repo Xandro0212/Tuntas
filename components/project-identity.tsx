@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Download, MessageCircle } from "lucide-react";
+import { Download, MessageCircle, Paperclip } from "lucide-react";
 import { ProjectSwitcher } from "./project-switcher";
 import { DeleteProjectButton } from "./delete-project-button";
 import { EditProjectButton } from "./edit-project-button";
@@ -63,6 +63,22 @@ export function ProjectIdentity({
             {t("Deadline {relative}", { relative: relativeDeadline(project.deadline, lang) })}
           </span>
         </div>
+        {project.attachments.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {project.attachments.map((file) => (
+              <a
+                key={file.url}
+                href={file.previewUrl ?? file.url}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex max-w-[220px] items-center gap-1.5 rounded-lg border border-line bg-paper px-2 py-1 text-[10px] font-medium text-ink-2 transition hover:border-green/35 hover:text-green"
+              >
+                <Paperclip className="h-3 w-3 shrink-0" />
+                <span className="truncate">{file.name}</span>
+              </a>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="flex shrink-0 flex-wrap items-center gap-2">

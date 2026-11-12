@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth";
 import { extensionForMime, saveUpload } from "@/lib/uploads";
+import { rateLimit } from "@/lib/rate-limit";
 
 const MAX_SIZE = 5 * 1024 * 1024;
 
@@ -11,6 +12,13 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Hanya Owner yang bisa mengunggah lampiran." },
       { status: 403 },
+    );
+  }
+  const limit = rateLimit(`upload:${user.id}`, 30, 10 * 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Terlalu banyak unggahan. Coba lagi nanti." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
     );
   }
   try {

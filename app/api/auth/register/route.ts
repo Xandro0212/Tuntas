@@ -3,8 +3,16 @@ import { randomUUID } from "node:crypto";
 import { setSessionCookie } from "@/lib/auth";
 import { getDb, mutateDb } from "@/lib/store";
 import { createPasswordHash } from "@/lib/password";
+import { rateLimit, rateLimitKey } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
+  const limit = rateLimit(rateLimitKey(request, "register"), 10, 60 * 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Terlalu banyak percobaan. Coba lagi nanti." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
+    );
+  }
   try {
     const body = (await request.json()) as {
       name?: string;

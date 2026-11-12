@@ -126,7 +126,11 @@ Reset data demo di Supabase: hapus baris `id = 'main'` dari tabel `tuntas_state`
 
 ### Lampiran
 
-Lampiran disimpan di **Supabase Storage** (bucket `tuntas-uploads`) saat environment Supabase tersedia. Pada mode lokal tanpa Supabase, fallback memakai `public/uploads/`. Ekstensi file ditentukan dari MIME yang diizinkan, bukan dari nama file asli.
+Lampiran disimpan di **Supabase Storage** (bucket privat `tuntas-uploads`) saat environment Supabase tersedia. Aplikasi menyimpan path objek, lalu membuat **signed URL berlaku 1 jam** saat halaman proyek dibuka. Pada mode lokal tanpa Supabase, fallback memakai `public/uploads/`. Ekstensi file ditentukan dari MIME yang diizinkan, bukan dari nama file asli.
+
+### Rate limit
+
+Login, registrasi, demo, AI, upload, dan pembuatan karyawan memiliki rate limit dasar per IP/user. Limiter berjalan in-memory per instance; untuk produksi multi-instance skala besar, gunakan Redis/Upstash atau rate limiter terdistribusi.
 
 ## Stack
 
